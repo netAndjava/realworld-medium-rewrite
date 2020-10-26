@@ -17,3 +17,7 @@ type Article struct {
 	Content string
 	Status  PublicStatus
 }
+
+//ArticleRepository article repository
+type ArticleRepository interface {
+}
