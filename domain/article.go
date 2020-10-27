@@ -11,8 +11,12 @@ const (
 	Public
 )
 
+//NUUID 数字类型UUID
+type NUUID int64
+
 //Article 文章实体
 type Article struct {
+	ID      NUUID
 	Title   string
 	Content string
 	Status  PublicStatus

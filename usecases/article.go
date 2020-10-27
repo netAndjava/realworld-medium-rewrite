@@ -29,3 +29,6 @@ func(itor ArticleInteractor)SavePublicArticleDraft
 
 //PublishPublicArticleDraft 发布对已发布文章的修改草稿
 func(itor ArticleInteractor)PublishPublicArticleDraft
+
+//GenerateUUID
+func GenerateUUID() domain.NUUID 
