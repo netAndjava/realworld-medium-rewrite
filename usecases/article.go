@@ -20,3 +20,12 @@ func(itor ArticleInteractor)GetAuthorPublicArticles
 
 //GetAllPublicArticles 获取所有已发布文章
 func(itor ArticleInteractor)GetAllPublicArticles
+
+//GetPublicArticleDraft 获取对修改已发布文章编辑的草稿
+func(itor ArticleInteractor)GetPublicArticleDraft
+
+//SavePublicArticleDraft 保存已发布文章草稿
+func(itor ArticleInteractor)SavePublicArticleDraft
+
+//PublishPublicArticleDraft 发布对已发布文章的修改草稿
+func(itor ArticleInteractor)PublishPublicArticleDraft
