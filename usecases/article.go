@@ -3,7 +3,7 @@ package usecases
 
 import "iohttps.com/live/realworld-medium-rewrite/domain"
 
-//ArticleInteractor article interactor
+// ArticleInteractor article interactor
 type ArticleInteractor struct {
 	ArticleRepo domain.ArticleRepository
 }
