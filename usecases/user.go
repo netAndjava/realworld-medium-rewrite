@@ -13,6 +13,9 @@ type Token struct {
 	UserID domain.NUUID
 }
 
+//SUUID string类型uuid
+type SUUID string
+
 //Register 用户注册
 func (itor UserInteractor) Register()
 
