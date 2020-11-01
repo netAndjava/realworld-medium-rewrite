@@ -20,6 +20,9 @@ func (itor ArticleInteractor) GetAuthorDrafts()
 // GetAuthorPublicArticles 获取作者的已发布文章
 func (itor ArticleInteractor) GetAuthorPublicArticles()
 
+//GetArticleDetail 获取文章详情
+func (itor ArticleInteractor) GetArticleDetail()
+
 // GetAllPublicArticles 获取所有已发布文章
 func (itor ArticleInteractor) GetAllPublicArticles()
 

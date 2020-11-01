@@ -1,8 +1,10 @@
 // Package usecases provides ...
 package usecases
 
+import "iohttps.com/live/realworld-medium-rewrite/domain"
+
 type UserInteractor struct {
-	UserRepo domain.UserReporsitory
+	UserRepo domain.UserRepository
 }
 
-func (itor) Register()
+func (itor UserInteractor) Register()
