@@ -3,6 +3,7 @@ package usecases
 
 import "iohttps.com/live/realworld-medium-rewrite/domain"
 
+//UserInteractor ....
 type UserInteractor struct {
 	UserRepo domain.UserRepository
 }
@@ -30,3 +31,6 @@ func (itor UserInteractor) CheckIfLoggedin()
 
 //getUserByToken 通过token获取用户身份
 func (itor UserInteractor) getUserByToken()
+
+//Logout 用户退出登录
+func (itor UserInteractor) Logout()
