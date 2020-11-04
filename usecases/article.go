@@ -21,7 +21,7 @@ func (itor ArticleInteractor) GetAuthorDrafts()
 func (itor ArticleInteractor) GetAuthorPublicArticles()
 
 //GetArticleDetail 获取文章详情
-func (itor ArticleInteractor) GetArticleDetail()
+func (itor ArticleInteractor) GetArticle()
 
 // GetAllPublicArticles 获取所有已发布文章
 func (itor ArticleInteractor) GetAllPublicArticles()
@@ -35,5 +35,5 @@ func (itor ArticleInteractor) SavePublicArticleDraft()
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
 func (itor ArticleInteractor) PublishPublicArticleDraft()
 
-// GenerateUUID ...
+// GenerateUUID 生成树枝类型的id
 func GenerateUUID() domain.NUUID
