@@ -26,6 +26,8 @@ func (itor UserInteractor) Login()
 //CheckIdentityByEmail 通过email来校验身份
 func (itor UserInteractor) CheckIdentityByEmail()
 
+func (itor UserInteractor) GenerateToken()
+
 //CheckLoginStatus 校验用户是否登录
 func (itor UserInteractor) CheckIfLoggedin()
 
