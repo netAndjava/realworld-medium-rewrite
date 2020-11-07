@@ -37,3 +37,12 @@ func (itor UserInteractor) getUserByToken()
 
 //Logout 用户退出登录
 func (itor UserInteractor) Logout()
+
+//GenerateVerificationCode 生成验证码
+func (itor UserInteractor) GenerateVerificationCode()
+
+//SendVerificationCode 发送验证码到邮箱
+func (itor UserInteractor) SendVerificationCode()
+
+//CheckVerificationCode 校验验证码是否正确
+func (itor UserInteractor) CheckVerificationCode()
