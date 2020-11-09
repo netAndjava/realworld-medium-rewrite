@@ -292,15 +292,29 @@
 
    1. 系统生成验证码(考虑验证生成拆分出验证码通用子领域)
 
-      2. 抽取生成验证码为公共子域
+      1. 抽取生成验证码为公共子域
+
+      ```
          type VerificationCode{
-         code string
+              code string
+         }
+         type VerificationCodChecker interface {
+              IfIsCorrect() //判断验证码是否正确
          }
          interface VerificationCodeGeneratorService{
-         Generate() //生成验证码
+            Generate() //生成验证码
          }
+      ```
 
    2. 系统发送验证码到邮箱(邮箱服务子领域)
+
+      1. 抽取邮箱服务公共子域
+
+      ```
+        type EmailSenderService interface {
+            Send() //发送邮件
+        }
+      ```
 
    3. 校验邮箱验证码是否正确
 
