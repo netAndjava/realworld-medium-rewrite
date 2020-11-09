@@ -29,7 +29,7 @@ func (itor UserInteractor) CheckIdentityByEmail()
 //GenerateToken 生成token
 func (itor UserInteractor) GenerateToken()
 
-//CheckLoginStatus 校验用户是否登录
+//CheckIfLoggedin 校验用户是否登录
 func (itor UserInteractor) CheckIfLoggedin()
 
 //getUserByToken 通过token获取用户身份
@@ -37,12 +37,3 @@ func (itor UserInteractor) getUserByToken()
 
 //Logout 用户退出登录
 func (itor UserInteractor) Logout()
-
-//GenerateVerificationCode 生成验证码
-func (itor UserInteractor) GenerateVerificationCode()
-
-//SendVerificationCode 发送验证码到邮箱
-func (itor UserInteractor) SendVerificationCode()
-
-//CheckVerificationCode 校验验证码是否正确
-func (itor UserInteractor) CheckVerificationCode()
