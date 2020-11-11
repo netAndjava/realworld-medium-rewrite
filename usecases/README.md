@@ -298,6 +298,7 @@
          type VerificationCode{
               code string
          }
+         //验证码校验接口
          type VerificationCodChecker interface {
               IfIsCorrect() //判断验证码是否正确
          }
@@ -317,6 +318,8 @@
       ```
 
    3. 校验邮箱验证码是否正确
+
+      1. 添加验证码校验接口到验证码生成服务公共子领域
 
 ### 用户更换邮箱时邮箱校验
 
