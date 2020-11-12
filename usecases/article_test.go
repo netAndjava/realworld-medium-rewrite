@@ -47,6 +47,14 @@ func TestPublish(t *testing.T) {
 func TestGetAuthorDrafts(t *testing.T) {
 	a := assert.New(t)
 	//测试成功
-	arts, err := itor.GetAuthorDrafts(ID)
-	a.True(a.Nil(err) && a.IsType(arts, []domain.Article, nil))
+	arts, err := itor.GetAuthorDrafts(domain.NUUID(1))
+	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
+}
+
+//TestGetAuthorPublicArticles 获取作者已发布文章
+func TestGetAuthorPublicArticles(t *testing.T) {
+	a := assert.New(t)
+	//测试成功
+	arts, err := itor.GetAuthorPublicArticles(domain.NUUID(1))
+	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
 }

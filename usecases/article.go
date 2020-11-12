@@ -25,7 +25,9 @@ func (itor ArticleInteractor) GetAuthorDrafts(userID domain.NUUID) ([]domain.Art
 }
 
 // GetAuthorPublicArticles 获取作者的已发布文章
-func (itor ArticleInteractor) GetAuthorPublicArticles()
+func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
+	return []domain.Article{}, nil
+}
 
 //GetArticleDetail 获取文章详情
 func (itor ArticleInteractor) GetArticle()
