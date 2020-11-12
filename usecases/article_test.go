@@ -58,3 +58,14 @@ func TestGetAuthorPublicArticles(t *testing.T) {
 	arts, err := itor.GetAuthorPublicArticles(domain.NUUID(1))
 	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
 }
+
+//TestGetArticle 获取文章详情
+func TestGetArticle(t *testing.T) {
+	a := assert.New(t)
+	//测试失败
+	//1.1获取的文章不存在
+	_, err := itor.GetArticle(domain.NUUID(0))
+	a.NotNil(err)
+	art, err := itor.GetArticle(domain.NUUID(1))
+	a.Nil(err)
+}
