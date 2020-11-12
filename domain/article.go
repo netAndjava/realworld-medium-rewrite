@@ -1,6 +1,8 @@
 // Package domain provides ...
 package domain
 
+import "iohttps.com/nqq/product-news-collect/domain"
+
 //PublicStatus 文章发布状态
 type PublicStatus int8
 
@@ -26,4 +28,5 @@ type Article struct {
 type ArticleRepository interface {
 	Create(a Article) error
 	Publish(ID NUUID) error
+	GetAuthorDrafts(userID NUUID) ([]domain.Article, error)
 }

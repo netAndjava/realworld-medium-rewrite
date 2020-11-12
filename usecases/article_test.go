@@ -43,3 +43,10 @@ func TestPublish(t *testing.T) {
 	//测试发布成功
 
 }
+
+func TestGetAuthorDrafts(t *testing.T) {
+	a := assert.New(t)
+	//测试成功
+	arts, err := itor.GetAuthorDrafts(ID)
+	a.True(a.Nil(err) && a.IsType(arts, []domain.Article, nil))
+}
