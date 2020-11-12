@@ -24,4 +24,6 @@ type Article struct {
 
 //ArticleRepository article repository
 type ArticleRepository interface {
+	Create(a Article) error
+	Publish(ID NUUID) error
 }

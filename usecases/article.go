@@ -14,8 +14,10 @@ func (itor ArticleInteractor) SaveDraft(generate func() domain.NUUID, a domain.A
 	return domain.NUUID(0), nil
 }
 
-// Public 发布文章
-func (itor ArticleInteractor) Public()
+//Publish 发布文章
+func (itor ArticleInteractor) Publish(ID, userID domain.NUUID) error {
+	return nil
+}
 
 // GetAuthorDrafts 获取作者的草稿列表
 func (itor ArticleInteractor) GetAuthorDrafts()

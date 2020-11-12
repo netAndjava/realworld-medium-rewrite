@@ -30,3 +30,16 @@ func TestSaveDraft(t *testing.T) {
 	ID, err = itor.SaveDraft(GenerateUUID, article)
 	a.True(a.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
 }
+
+func TestPublish(t *testing.T) {
+	a := assert.New(t)
+	//1.测试发布失败
+	//1.1发布的文章不存在
+	art := domain.Article{}
+	err := itor.Publish(art.ID, 0)
+	a.NotNil(err)
+	//1.2 作者没有权限
+	//1.3 文章的标题或者内容为空
+	//测试发布成功
+
+}
