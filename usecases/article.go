@@ -40,7 +40,9 @@ func (itor ArticleInteractor) GetAllPublicArticles() ([]domain.Article, error) {
 }
 
 // GetPublicArticleDraft 获取对修改已发布文章编辑的草稿
-func (itor ArticleInteractor) GetPublicArticleDraft()
+func (itor ArticleInteractor) GetPublicArticleDraft(ID domain.NUUID) (domain.Article, error) {
+	return domain.Article{}, nil
+}
 
 // SavePublicArticleDraft 保存已发布文章草稿
 func (itor ArticleInteractor) SavePublicArticleDraft()

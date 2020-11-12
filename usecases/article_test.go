@@ -74,3 +74,13 @@ func TestGetAllPublicArticles(t *testing.T) {
 	arts, err := itor.GetAllPublicArticles()
 	assert.True(assert.Nil(err) && assert.IsType(arts, []domain.Article{}, nil))
 }
+
+func TestGetPublicArticleDraft(t *testing.T) {
+	a := assert.New(t)
+	//测试失败
+	//查找的文章不存在
+	_, err := itor.GetPublicArticleDraft(0, 0)
+	assert.NotNil(err)
+	_, err = itor.GetPublicArticleDraft(1, 1)
+	assert.Nil(err)
+}

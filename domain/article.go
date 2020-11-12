@@ -27,6 +27,7 @@ type ArticleRepository interface {
 	Create(a Article) error
 	Publish(ID NUUID) error
 	GetAuthorDrafts(userID NUUID) ([]Article, error)
+	GetAuthorPublicArticles(userID NUUID) ([]Article, error)
 	GetAllPublicArticles(userID NUUID) ([]Article, error)
 	GetArticle(ID NUUID) (Article, error)
 }
