@@ -9,7 +9,10 @@ type ArticleInteractor struct {
 }
 
 // SaveDraft 保存草稿
-func (itor ArticleInteractor) SaveDraft()
+func (itor ArticleInteractor) SaveDraft(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
+	// TODO:  <12-11-20, nqq> //
+	return domain.NUUID(0), nil
+}
 
 // Public 发布文章
 func (itor ArticleInteractor) Public()
@@ -36,4 +39,5 @@ func (itor ArticleInteractor) SavePublicArticleDraft()
 func (itor ArticleInteractor) PublishPublicArticleDraft()
 
 // GenerateUUID 生成树枝类型的id
-func GenerateUUID() domain.NUUID
+func GenerateUUID() domain.NUUID {
+}
