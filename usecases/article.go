@@ -30,10 +30,14 @@ func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]do
 }
 
 //GetArticleDetail 获取文章详情
-func (itor ArticleInteractor) GetArticle()
+func (itor ArticleInteractor) GetArticle(ID domain.NUUID) (domain.Article, error) {
+	return domain.Article{}, nil
+}
 
 // GetAllPublicArticles 获取所有已发布文章
-func (itor ArticleInteractor) GetAllPublicArticles()
+func (itor ArticleInteractor) GetAllPublicArticles() ([]domain.Article, error) {
+	return []domain.Article{}, nil
+}
 
 // GetPublicArticleDraft 获取对修改已发布文章编辑的草稿
 func (itor ArticleInteractor) GetPublicArticleDraft()
