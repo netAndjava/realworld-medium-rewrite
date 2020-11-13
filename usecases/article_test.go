@@ -22,7 +22,7 @@ func TestSaveDraft(t *testing.T) {
 	//1.2 创建草稿文章成功
 	article.Title = "test"
 	ID, err := itor.SaveDraft(GenerateUUID, article)
-	a.True(assert.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
+	a.True(a.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
 
 	//2. 更新草稿文章
 	article.Title = "testja"
@@ -71,16 +71,17 @@ func TestGetArticle(t *testing.T) {
 }
 
 func TestGetAllPublicArticles(t *testing.T) {
+	a := assert.New(t)
 	arts, err := itor.GetAllPublicArticles()
-	assert.True(assert.Nil(err) && assert.IsType(arts, []domain.Article{}, nil))
+	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
 }
 
 func TestGetPublicArticleDraft(t *testing.T) {
 	a := assert.New(t)
 	//测试失败
 	//查找的文章不存在
-	_, err := itor.GetPublicArticleDraft(0, 0)
-	assert.NotNil(err)
-	_, err = itor.GetPublicArticleDraft(1, 1)
-	assert.Nil(err)
+	_, err := itor.GetPublicArticleDraft(0)
+	a.NotNil(err)
+	_, err = itor.GetPublicArticleDraft(1)
+	a.Nil(err)
 }

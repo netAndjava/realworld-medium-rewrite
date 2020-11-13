@@ -29,7 +29,7 @@ func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]do
 	return []domain.Article{}, nil
 }
 
-//GetArticleDetail 获取文章详情
+//GetArticle 获取文章详情
 func (itor ArticleInteractor) GetArticle(ID domain.NUUID) (domain.Article, error) {
 	return domain.Article{}, nil
 }
@@ -52,4 +52,5 @@ func (itor ArticleInteractor) PublishPublicArticleDraft()
 
 // GenerateUUID 生成树枝类型的id
 func GenerateUUID() domain.NUUID {
+	return domain.NUUID(0)
 }
