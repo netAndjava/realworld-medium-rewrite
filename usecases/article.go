@@ -50,7 +50,9 @@ func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article) error {
 }
 
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
-func (itor ArticleInteractor) PublishPublicArticleDraft()
+func (itor ArticleInteractor) PublishPublicArticleDraft(a domain.Article, userID domain.NUUID) error {
+	return nil
+}
 
 // GenerateUUID 生成树枝类型的id
 func GenerateUUID() domain.NUUID {
