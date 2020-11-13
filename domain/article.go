@@ -20,6 +20,7 @@ type Article struct {
 	Title   string
 	Content string
 	Status  PublicStatus
+	Author  User
 }
 
 //ArticleRepository article repository

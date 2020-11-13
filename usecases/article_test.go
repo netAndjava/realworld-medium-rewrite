@@ -101,3 +101,25 @@ func TestSavePublicArticleDraft(t *testing.T) {
 	a.Nil(err)
 
 }
+
+func TestPublishPublicArticleDraft(t *testing.T) {
+	a := assert.New(t)
+	//测试发布失败
+	art := domain.Article{}
+	//1. 发布的内容为空
+	err := itor.PublishPublicArticleDraft(art, 1)
+	a.NotNil(err)
+	//2.发布的文章不存在
+	art.Title = "test"
+	art.Content = "test"
+	itor.PublishPublicArticleDraft(a, 1)
+	a.NotNil(err)
+	//3.发布的人不是文章作者
+	art.Author.ID = 3
+	itor.PublishPublicArticleDraft(a, 1)
+	a.NotNil(err)
+
+	//测试发布成功
+	err = itor.PublishPublicArticleDraft(a, 3)
+	a.Nil(err)
+}

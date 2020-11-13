@@ -45,7 +45,9 @@ func (itor ArticleInteractor) GetPublicArticleDraft(ID domain.NUUID) (domain.Art
 }
 
 // SavePublicArticleDraft 保存已发布文章草稿
-func (itor ArticleInteractor) SavePublicArticleDraft()
+func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article) error {
+	return nil
+}
 
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
 func (itor ArticleInteractor) PublishPublicArticleDraft()
