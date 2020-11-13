@@ -85,3 +85,19 @@ func TestGetPublicArticleDraft(t *testing.T) {
 	_, err = itor.GetPublicArticleDraft(1)
 	a.Nil(err)
 }
+
+//TestSavePublicArticleDraft 测试保存已发布文章草稿
+func TestSavePublicArticleDraft(t *testing.T) {
+	a := assert.New(t)
+
+	//测试失败
+	//已发布文章不存在
+	art := domain.Article{}
+	err := itor.SavePublicArticleDraft(art)
+	a.NotNil(err)
+
+	art.ID = 1
+	err = itor.SavePublicArticleDraft(art)
+	a.Nil(err)
+
+}
