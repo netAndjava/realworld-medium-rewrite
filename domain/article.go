@@ -31,4 +31,6 @@ type ArticleRepository interface {
 	GetAuthorPublicArticles(userID NUUID) ([]Article, error)
 	GetAllPublicArticles(userID NUUID) ([]Article, error)
 	GetArticle(ID NUUID) (Article, error)
+	CreateDraftOfPublicArticle(a Article) error
+	UpdateDraftOfPublicArticle(a Article) error
 }
