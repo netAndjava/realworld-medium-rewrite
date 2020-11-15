@@ -12,4 +12,5 @@ type User struct {
 //UserRepository ....
 type UserRepository interface {
 	FindByEmail(e string) (User, error)
+	Create(u User) error
 }

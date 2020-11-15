@@ -32,10 +32,9 @@ func (itor UserInteractor) Login(checkIdentity func(user domain.User) error, u d
 }
 
 //CheckIdentityByEmail 通过email来校验身份
-func (itor UserInteractor) CheckIdentityByEmail()
-
-//GenerateToken 生成token
-func (itor UserInteractor) GenerateToken()
+func (itor UserInteractor) CheckIdentityByEmail(u domain.User) error {
+	return nil
+}
 
 //CheckIfLoggedin 校验用户是否登录
 func (itor UserInteractor) CheckIfLoggedin()
