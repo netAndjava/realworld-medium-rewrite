@@ -45,7 +45,12 @@ func (itor ArticleInteractor) GetPublicArticleDraft(ID domain.NUUID) (domain.Art
 }
 
 // SavePublicArticleDraft 保存已发布文章草稿
-func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article) error {
+func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article, userID domain.NUUID) error {
+	return nil
+}
+
+//CreatePublicArticleDraft 创建已发布文章草稿
+func (itor ArticleInteractor) CreatePublicArticleDraft(a domain.Article) error {
 	return nil
 }
 
