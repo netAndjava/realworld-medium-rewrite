@@ -55,7 +55,7 @@ func (itor ArticleInteractor) CreatePublicArticleDraft(a domain.Article, userID 
 }
 
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
-func (itor ArticleInteractor) PublishPublicArticleDraft(a domain.Article, userID domain.NUUID) error {
+func (itor ArticleInteractor) PublishPublicArticleDraft(ID domain.NUUID, userID domain.NUUID) error {
 	return nil
 }
 

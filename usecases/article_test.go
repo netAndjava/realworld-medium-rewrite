@@ -90,36 +90,37 @@ func TestGetPublicArticleDraft(t *testing.T) {
 func TestSavePublicArticleDraft(t *testing.T) {
 	a := assert.New(t)
 
-	//测试失败
-	//已发布文章不存在
+	//1.测试失败
+	//1.1草稿不存
+	//1.2用户没有权限
+
 	art := domain.Article{}
-	err := itor.SavePublicArticleDraft(art)
+	err := itor.SavePublicArticleDraft(art, domain.NUUID(1))
 	a.NotNil(err)
 
 	art.ID = 1
-	err = itor.SavePublicArticleDraft(art)
+	err = itor.SavePublicArticleDraft(art, domain.NUUID(1))
 	a.Nil(err)
 
+}
+
+func TestCreatePublicArticleDraft(t *testing.T) {
+	//测试失败
+	//1.1已发布文章不存在
+	//1.2 没有修改已发布文章权限
 }
 
 func TestPublishPublicArticleDraft(t *testing.T) {
 	a := assert.New(t)
 	//测试发布失败
-	art := domain.Article{}
-	//1. 发布的内容为空
-	err := itor.PublishPublicArticleDraft(art, 1)
+	// 1. 发布为文章不存在
+	err := itor.PublishPublicArticleDraft(10000, 1)
 	a.NotNil(err)
-	//2.发布的文章不存在
-	art.Title = "test"
-	art.Content = "test"
-	itor.PublishPublicArticleDraft(a, 1)
-	a.NotNil(err)
-	//3.发布的人不是文章作者
-	art.Author.ID = 3
-	itor.PublishPublicArticleDraft(a, 1)
+	//2.发布的人不是文章作者
+	itor.PublishPublicArticleDraft(3, 1)
 	a.NotNil(err)
 
 	//测试发布成功
-	err = itor.PublishPublicArticleDraft(a, 3)
+	err = itor.PublishPublicArticleDraft(3, 3)
 	a.Nil(err)
 }
