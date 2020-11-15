@@ -18,7 +18,9 @@ type Token struct {
 type SUUID string
 
 //Register 用户注册
-func (itor UserInteractor) Register()
+func (itor UserInteractor) Register(GenerateUUID, user domain.User) (domain.NUUID, error) {
+	return domain.NUUID(0), nil
+}
 
 //Login 用户登录
 func (itor UserInteractor) Login()
