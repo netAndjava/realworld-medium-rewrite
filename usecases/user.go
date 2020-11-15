@@ -14,6 +14,10 @@ type Token struct {
 	UserID domain.NUUID
 }
 
+type TokenRepository interface {
+	CreateToken(t Token) (SUUID, error)
+}
+
 //SUUID string类型uuid
 type SUUID string
 
