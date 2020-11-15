@@ -11,5 +11,5 @@ type User struct {
 
 //UserRepository ....
 type UserRepository interface {
-	/* TODO: add methods */
+	FindByEmail(e string) (User, error)
 }
