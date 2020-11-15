@@ -18,7 +18,7 @@ func TestRegister(t *testing.T) {
 	u := domain.User{Email: "1040@qq.com"}
 	// 测试注册成功
 	_, err := userItor.Register(GenerateUUID, u)
-	assert.Nil(err)
+	assert.New(t).Nil(err)
 }
 
 func TestLogin(t *testing.T) {
