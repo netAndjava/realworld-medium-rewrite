@@ -1,0 +1,11 @@
+digraph design {
+    {
+      rankdir=TB;
+     
+     author -> article[label="create"] 
+     reader -> article[label="view;comment"]
+     article -> comment
+     reader -> comment[label="add"]
+    };
+}
+

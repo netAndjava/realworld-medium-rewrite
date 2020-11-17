@@ -17,3 +17,5 @@
 ### 用户（在 web 中）
 
 1. 作者和读者都是用户
+
+![domain](./domain.dot.png)
