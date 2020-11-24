@@ -25,10 +25,13 @@ func TestSaveDraft(t *testing.T) {
 	a.True(a.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
 
 	//2. 更新草稿文章
+	//2.1 用户没有更新权限，更新失败
+	//2.2 更新成功
 	article.Title = "testja"
 	article.Content = "test"
 	ID, err = itor.SaveDraft(GenerateUUID, article)
 	a.True(a.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
+
 }
 
 func TestPublish(t *testing.T) {

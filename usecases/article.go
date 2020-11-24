@@ -9,10 +9,12 @@ type ArticleInteractor struct {
 }
 
 // SaveDraft 保存草稿
-func (itor ArticleInteractor) SaveDraft(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
+func (itor ArticleInteractor) SaveDraft(a domain.Article, userID domain.NUUID) error {
 	// TODO:  <12-11-20, nqq> //
-	return domain.NUUID(0), nil
+	return nil
 }
+
+func (itor ArticleInteractor) CreateDraft(a)
 
 //Publish 发布文章
 func (itor ArticleInteractor) Publish(ID, userID domain.NUUID) error {
