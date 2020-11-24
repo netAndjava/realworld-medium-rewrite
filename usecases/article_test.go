@@ -20,7 +20,7 @@ func TestSaveDraft(t *testing.T) {
 	article := domain.Article{}
 	article.Title = "testja"
 	article.Content = "test"
-	err = itor.SaveDraft(article, 10)
+	err := itor.SaveDraft(article, 10)
 	a.Nil(err)
 
 }
