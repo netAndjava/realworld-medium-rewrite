@@ -14,7 +14,10 @@ func (itor ArticleInteractor) SaveDraft(a domain.Article, userID domain.NUUID) e
 	return nil
 }
 
-func (itor ArticleInteractor) CreateDraft(a)
+// CreateDraft 创建草稿
+func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
+	return domain.NUUID(0), nil
+}
 
 //Publish 发布文章
 func (itor ArticleInteractor) Publish(ID, userID domain.NUUID) error {
