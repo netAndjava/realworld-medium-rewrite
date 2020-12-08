@@ -1,7 +1,11 @@
 // Package usecases provides ...
 package usecases
 
-import "iohttps.com/live/realworld-medium-rewrite/domain"
+import (
+	"errors"
+
+	"iohttps.com/live/realworld-medium-rewrite/domain"
+)
 
 // ArticleInteractor article interactor
 type ArticleInteractor struct {
@@ -15,8 +19,16 @@ func (itor ArticleInteractor) SaveDraft(a domain.Article, userID domain.NUUID) e
 }
 
 // CreateDraft 创建草稿
-func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
-	return domain.NUUID(0), nil
+func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain.Article, authorID domain.NUUID) (domain.NUUID, error) {
+	if len(a.Title) == 0 || len(a.Content) == 0 {
+		return domain.NUUID(0), errors.New("用户内容为空")
+	}
+	a.ID = generate()
+	a.Author.ID = authorID
+
+	err := itor.ArticleRepo.Create(a)
+
+	return a.ID, err
 }
 
 //Publish 发布文章
