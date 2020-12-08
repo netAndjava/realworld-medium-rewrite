@@ -26,12 +26,12 @@ type Article struct {
 //ArticleRepository article repository
 type ArticleRepository interface {
 	Create(a Article) error
-	SaveArticle(a Article) error
+	Save(a Article) error
 	Publish(ID NUUID) error
 	GetAuthorDrafts(userID NUUID) ([]Article, error)
 	GetAuthorPublicArticles(userID NUUID) ([]Article, error)
 	GetAllPublicArticles(userID NUUID) ([]Article, error)
-	GetArticle(ID NUUID) (Article, error)
+	Get(ID NUUID) (Article, error)
 	GetDraftOfPublicArticle(ID NUUID) (Article, error)
 	CreateDraftOfPublicArticle(a Article) error
 	UpdateDraftOfPublicArticle(a Article) error

@@ -30,12 +30,12 @@ func TestCreateDraft(t *testing.T) {
 	//1. 创建草稿态文章
 	//1.1 创建的内容为空的文章，创建失败
 	article := domain.Article{}
-	_, err := itor.CreateDraft(GenerateUUID, article)
+	_, err := itor.CreateDraft(GenerateUUID, article, 1)
 	a.NotNil(err)
 
 	//创建成功
 	article.Title = "time"
-	ID, err := itor.CreateDraft(GenerateUUID, article)
+	ID, err := itor.CreateDraft(GenerateUUID, article, 1)
 	a.True(a.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
 }
 

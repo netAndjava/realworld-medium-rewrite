@@ -14,8 +14,14 @@ type ArticleInteractor struct {
 
 // SaveDraft 保存草稿
 func (itor ArticleInteractor) SaveDraft(a domain.Article, userID domain.NUUID) error {
-	// TODO:  <12-11-20, nqq> //
-	return nil
+	art, err := itor.ArticleRepo.Get(a.ID)
+	if err != nil {
+		return err
+	}
+	if art.Author.ID != userID {
+		return errors.New("用户没有修改文章权限")
+	}
+	return itor.ArticleRepo.Save(art)
 }
 
 // CreateDraft 创建草稿
