@@ -54,7 +54,7 @@ func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]do
 
 //GetArticle 获取文章详情
 func (itor ArticleInteractor) GetArticle(ID domain.NUUID) (domain.Article, error) {
-	return domain.Article{}, nil
+	return itor.ArticleRepo.Get(ID)
 }
 
 // GetAllPublicArticles 获取所有已发布文章
