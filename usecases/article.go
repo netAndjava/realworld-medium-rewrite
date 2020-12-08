@@ -79,7 +79,15 @@ func (itor ArticleInteractor) GetPublicArticleDraft(ID domain.NUUID) (domain.Art
 
 // SavePublicArticleDraft 保存已发布文章草稿
 func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article, userID domain.NUUID) error {
-	return nil
+	art, err := itor.ArticleRepo.Get(a.ID)
+	if err != nil {
+		return err
+	}
+
+	if art.Author.ID != userID {
+		return errors.New("用户没有创建已发布文章草稿权限")
+	}
+	return itor.ArticleRepo.UpdateDraftOfPublicArticle(a)
 }
 
 //CreatePublicArticleDraft 创建已发布文章草稿
@@ -91,8 +99,7 @@ func (itor ArticleInteractor) CreatePublicArticleDraft(a domain.Article, userID 
 	if art.Author.ID != userID {
 		return errors.New("用户没有创建已发布文章草稿权限")
 	}
-	itor.ArticleRepo.CreateDraftOfPublicArticle(a)
-	return nil
+	return itor.ArticleRepo.CreateDraftOfPublicArticle(a)
 }
 
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
