@@ -44,7 +44,7 @@ func (itor ArticleInteractor) Publish(ID, userID domain.NUUID) error {
 
 // GetAuthorDrafts 获取作者的草稿列表
 func (itor ArticleInteractor) GetAuthorDrafts(userID domain.NUUID) ([]domain.Article, error) {
-	return []domain.Article{}, nil
+	return itor.ArticleRepo.GetAuthorDrafts(userID)
 }
 
 // GetAuthorPublicArticles 获取作者的已发布文章
