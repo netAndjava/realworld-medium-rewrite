@@ -69,7 +69,7 @@ func (itor ArticleInteractor) GetArticle(ID domain.NUUID) (domain.Article, error
 
 // GetAllPublicArticles 获取所有已发布文章
 func (itor ArticleInteractor) GetAllPublicArticles() ([]domain.Article, error) {
-	return []domain.Article{}, nil
+	return itor.ArticleRepo.GetAllPublicArticles()
 }
 
 // GetPublicArticleDraft 获取对修改已发布文章编辑的草稿
@@ -84,6 +84,14 @@ func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article, userID do
 
 //CreatePublicArticleDraft 创建已发布文章草稿
 func (itor ArticleInteractor) CreatePublicArticleDraft(a domain.Article, userID domain.NUUID) error {
+	art, err := itor.ArticleRepo.Get(a.ID)
+	if err != nil {
+		return err
+	}
+	if art.Author.ID != userID {
+		return errors.New("用户没有创建已发布文章草稿权限")
+	}
+	itor.ArticleRepo.CreateDraftOfPublicArticle(a)
 	return nil
 }
 
