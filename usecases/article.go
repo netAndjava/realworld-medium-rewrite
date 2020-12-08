@@ -111,7 +111,17 @@ func (itor ArticleInteractor) CreatePublicArticleDraft(a domain.Article, userID 
 
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
 func (itor ArticleInteractor) PublishPublicArticleDraft(ID domain.NUUID, userID domain.NUUID) error {
-	return nil
+	art, err := itor.GetPublicArticleDraft(ID)
+	if err != nil {
+		return err
+	}
+	if art.Author.ID != userID {
+		return errors.New("用户没有发布权限")
+	}
+	if err := art.Check(); err != nil {
+		return err
+	}
+	return itor.ArticleRepo.PublishPublicArticleDraft(ID)
 }
 
 // GenerateUUID 生成树枝类型的id
