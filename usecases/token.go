@@ -16,3 +16,6 @@ type TokenRepository interface {
 type TokeInteractor struct {
 	TokenRepos TokenRepository
 }
+
+//Login 判断用户登录
+func (itor Token) Login()
