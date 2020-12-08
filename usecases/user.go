@@ -8,27 +8,9 @@ type UserInteractor struct {
 	UserRepo domain.UserRepository
 }
 
-//Token ...
-type Token struct {
-	ID     SUUID
-	UserID domain.NUUID
-}
-
-type TokenRepository interface {
-	CreateToken(t Token) (SUUID, error)
-}
-
-//SUUID string类型uuid
-type SUUID string
-
 //Register 用户注册
 func (itor UserInteractor) Register(GenerateUUID func() domain.NUUID, user domain.User) (domain.NUUID, error) {
 	return domain.NUUID(0), nil
-}
-
-//Login 用户登录
-func (itor UserInteractor) Login(checkIdentity func(user domain.User) error, u domain.User) (SUUID, error) {
-	return SUUID(""), nil
 }
 
 //CheckIdentityByEmail 通过email来校验身份
