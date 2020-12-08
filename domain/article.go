@@ -13,6 +13,10 @@ const (
 	Public
 )
 
+var (
+	ErrNotFound = errors.New("没找到")
+)
+
 //NUUID 数字类型UUID
 type NUUID int64
 
