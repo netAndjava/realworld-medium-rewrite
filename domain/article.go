@@ -1,6 +1,8 @@
 // Package domain provides ...
 package domain
 
+import "errors"
+
 //PublicStatus 文章发布状态
 type PublicStatus int8
 
@@ -21,6 +23,16 @@ type Article struct {
 	Content string
 	Status  PublicStatus
 	Author  User
+}
+
+func (art Article) Check() error {
+	if len(art.Title) == 0 {
+		return errors.New("文章标题为空")
+	}
+	if len(art.Content) == 0 {
+		return errors.New("文章内容为空")
+	}
+	return nil
 }
 
 //ArticleRepository article repository

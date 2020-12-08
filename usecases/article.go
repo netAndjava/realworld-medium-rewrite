@@ -38,8 +38,18 @@ func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain
 }
 
 //Publish 发布文章
-func (itor ArticleInteractor) Publish(ID, userID domain.NUUID) error {
-	return nil
+func (itor ArticleInteractor) Publish(articleID, userID domain.NUUID) error {
+	article, err := itor.ArticleRepo.Get(articleID)
+	if err != nil {
+		return err
+	}
+	if err := article.Check(); err != nil {
+		return err
+	}
+	if article.Author.ID != userID {
+		return errors.New("用户没有发布文章权限")
+	}
+	return itor.ArticleRepo.Publish(articleID)
 }
 
 // GetAuthorDrafts 获取作者的草稿列表
