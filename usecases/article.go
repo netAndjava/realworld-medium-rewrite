@@ -59,7 +59,7 @@ func (itor ArticleInteractor) GetAuthorDrafts(userID domain.NUUID) ([]domain.Art
 
 // GetAuthorPublicArticles 获取作者的已发布文章
 func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
-	return []domain.Article{}, nil
+	return itor.ArticleRepo.GetAuthorPublicArticles(userID)
 }
 
 //GetArticle 获取文章详情
