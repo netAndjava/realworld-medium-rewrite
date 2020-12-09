@@ -18,6 +18,9 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 	return domain.User{}, nil
 }
 
+func (itor UserInteractor) GetUserByPhone(phone domain.PhoneNumber) (domain.User, error) {
+}
+
 //CheckIfLoggedin 校验用户是否登录
 //// TODO:因为token来校验用户是否登录，放在token中实现  <15-11-20, nqq> //
 // func (itor UserInteractor) CheckIfLoggedin()

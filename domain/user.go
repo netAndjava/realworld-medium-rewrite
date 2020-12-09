@@ -7,7 +7,10 @@ type User struct {
 	Name     string
 	Email    string
 	Password string
+	Phone    PhoneNumber
 }
+
+type PhoneNumber string
 
 //UserRepository ....
 type UserRepository interface {

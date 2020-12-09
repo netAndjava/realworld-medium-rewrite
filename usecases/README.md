@@ -199,7 +199,7 @@
 
    1. 用例一：用户名密码登录
 
-   2. 用例二：手机好会计登录
+   2. 用例二：手机快捷登录
 
    3. 用例三：Facebook、微信、QQ 等第三方授权登录
 
@@ -231,15 +231,20 @@ User                                         系统
 1. 用例描述
 
 ```
+
 // user mobile login
    O
   /|\ -------(API)-----------> 系统 ( high order function , lambda )
-   /\
+   /\                                  高阶函数在哪一层组合????
 User                            系统
--------1 mobile number-------> getMobileVerifyCodeForLogin(){ GenerateMobileVerifyCode(); return verifyCode}  GenerateMobileVerifyCode()
-<------2 verify code(gsm)-----
+-------1 mobile number-------> getMobileVerifyCodeForLogin(){
+        GenerateMobileVerifyCode();
+        SaveVerifyCode();
+        return verifyCode}  GenerateMobileVerifyCode()
+<------2 verify code(gsm)----- sendVerifyCode
 -------3 verify code---------> login(){
                                   if(verify()) {
+                                    GetUserByPhone()
                                     tokenSuccess, err := getTokenSuccess();   // token sub domain (session sub
                                     domain)
                                     return tokenSuccess;
@@ -255,14 +260,6 @@ login()  -----------> * rpc */ login()
 login()  ---> login() --> base functions { sub domain }
 ```
 
-```
-struct VerifyCode {
-
-}
-generate()
-verify()
-```
-
 2. 设计目的
 
    1. 方便用户通过手机号快捷登录
@@ -273,19 +270,27 @@ verify()
 
       1. 由生成验证码服务生成手机验证码
 
-   2. 发送验证码给用户
+```
+struct VerifyCode {
 
-      1. 抽取发送手机信息子域
+}
+generate()
+verify()
+```
 
-      ```
-        type SendMessagService interface {
-          Send()
-        }
-      ```
+2.  发送验证码给用户
 
-   3. 校验验证码
+    1. 抽取发送手机信息子域
 
-   4. 用户登录
+    ```
+      type SendMessagService interface {
+        Send()
+      }
+    ```
+
+3.  校验验证码
+
+4.  用户登录
 
 ### 用户注册时邮箱校验
 

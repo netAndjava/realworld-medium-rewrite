@@ -23,7 +23,6 @@ func (itor Token) Login(userID domain.NUUID, generate func() SUUID) (SUUID, erro
 	token := generate()
 	err := itor.TokenRepos.Save(Token{ID: token, UserID: userID})
 	return token, err
-
 }
 
 func GenerateToken() SUUID {
