@@ -21,14 +21,6 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 func (itor UserInteractor) GetUserByPhone(phone domain.PhoneNumber) (domain.User, error) {
 }
 
-//getUserByToken 通过token获取用户身份
-//// TODO: 通过token来获取用户信息，放在token中实现 <15-11-20, nqq> //
-// func (itor UserInteractor) getUserByToken()
-
-//Logout 用户退出登录
-//// TODO: 放在token中实现 <15-11-20, nqq> //
-// func (itor UserInteractor) Logout()
-
 //GenerateVericationCode 生成验证码
 func (itor UserInteractor) GenerateVericationCode()
 

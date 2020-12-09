@@ -39,6 +39,10 @@ func (itor TokenInteractor) CheckIfLoggedin(tokenID SUUID) (Token, error) {
 	return token, err
 }
 
+//Logout 用户退出登录
+//// TODO: 放在token中实现 <15-11-20, nqq> //
+func (itor TokenInteractor) Logout()
+
 func GenerateToken() SUUID {
 	return ""
 }
