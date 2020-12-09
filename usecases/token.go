@@ -25,6 +25,10 @@ func (itor Token) Login(userID domain.NUUID, generate func() SUUID) (SUUID, erro
 	return token, err
 }
 
+// TODO:因为token来校验用户是否登录，放在token中实现  <15-11-20, nqq> //
+//CheckIfLoggedin 校验用户是否登录
+func (itor UserInteractor) CheckIfLoggedin()
+
 func GenerateToken() SUUID {
 	return ""
 }
