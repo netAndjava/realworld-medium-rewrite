@@ -382,7 +382,7 @@ todo
 
 ```
   User                  System
-  --------- 1 token-------> CheckIfLogin()()
+  --------- 1 token-------> CheckIfLogin()
   ----------2 isLogin-----
 
 ```
