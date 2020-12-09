@@ -16,6 +16,8 @@ type SUUID string
 
 type TokenRepository interface {
 	Save(t Token) error
+	Get(tokenID SUUID) (Token, error)
+	Delete(tokenID SUUID) error
 }
 
 type TokenInteractor struct {
@@ -33,15 +35,19 @@ func (itor TokenInteractor) Login(userID domain.NUUID, generate func() SUUID) (S
 //CheckIfLoggedin 校验用户是否登录
 func (itor TokenInteractor) CheckIfLoggedin(tokenID SUUID) (Token, error) {
 	if len(tokenID) == 0 {
-		return errors.New("token不能为空")
+		return Token{}, errors.New("token不能为空")
 	}
 	token, err := itor.TokenRepos.Get(tokenID)
 	return token, err
 }
 
 //Logout 用户退出登录
-//// TODO: 放在token中实现 <15-11-20, nqq> //
-func (itor TokenInteractor) Logout()
+func (itor TokenInteractor) Logout(tokenID SUUID) error {
+	if len(tokenID) == 0 {
+		return errors.New("token不能为空")
+	}
+	return itor.TokenRepos.Delete(tokenID)
+}
 
 func GenerateToken() SUUID {
 	return ""

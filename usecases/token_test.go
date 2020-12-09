@@ -18,10 +18,20 @@ func TestLogin(t *testing.T) {
 
 func TestCheckIfLoggedin(t *testing.T) {
 	a := assert.New(t)
-	tokenID = ""
-	_, err := tokenItor.CheckIfLoggedin(tokenID)
+	tokenID := ""
+	_, err := tokenItor.CheckIfLoggedin(SUUID(tokenID))
 	a.NotNil(err)
 	tokenID = "test"
-	_, err := tokenItor.CheckIfLoggedin(tokenID)
+	_, err := tokenItor.CheckIfLoggedin(SUUID(tokenID))
+	a.Nil(err)
+}
+
+func TestLoggout(t *testing.T) {
+	a := assert.New(t)
+	tokenID := ""
+	err := tokenItor.Logout(tokenID)
+	a.NotNil(err)
+	tokenID = "test"
+	err = tokenItor.Logout(tokenID)
 	a.Nil(err)
 }
