@@ -21,14 +21,6 @@ func TestRegister(t *testing.T) {
 	assert.New(t).Nil(err)
 }
 
-func TestLogin(t *testing.T) {
-	//测试登录成功
-	u := domain.User{Email: "1040qq.com", Password: "123456"}
-	token, err := itor.Login(CheckIdentityByEmail, u)
-	a := assert.New(t)
-	a.True(a.Nil(err) && a.True(len(token) > 0))
-}
-
 func TestCheckIdentityByEmail(t *testing.T) {
 	a := assert.New(t)
 	u := domain.User{}

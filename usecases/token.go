@@ -11,6 +11,7 @@ type Token struct {
 type SUUID string
 
 type TokenRepository interface {
+	Save(t Token) error
 }
 
 type TokeInteractor struct {
@@ -18,4 +19,13 @@ type TokeInteractor struct {
 }
 
 //Login 判断用户登录
-func (itor Token) Login()
+func (itor Token) Login(userID domain.NUUID, generate func() SUUID) (SUUID, error) {
+	token := generate()
+	err := itor.TokenRepos.Save(Token{ID: token, UserID: userID})
+	return token, err
+
+}
+
+func GenerateToken() SUUID {
+	return ""
+}

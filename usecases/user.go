@@ -14,8 +14,8 @@ func (itor UserInteractor) Register(GenerateUUID func() domain.NUUID, user domai
 }
 
 //CheckIdentityByEmail 通过email来校验身份
-func (itor UserInteractor) CheckIdentityByEmail(u domain.User) error {
-	return nil
+func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.User, error) {
+	return domain.User{}, nil
 }
 
 //CheckIfLoggedin 校验用户是否登录
