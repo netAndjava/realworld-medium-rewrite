@@ -14,9 +14,15 @@ const (
 )
 
 var (
+	// ErrNotFound article not found? // TODO: <10-12-20, bantana>
 	ErrNotFound = errors.New("没找到")
 )
 
+// TODO: UUID是(universally unique identifier 通用唯一标识,前面再加个number让人更难理解了,
+// 还有在domain里面的命名一般都是terms, 如果这个是domain的terms,应该给个domain的命名,
+// 如果不是domain直接相关的通常是放到common或者base中去) <10-12-20, bantana> //
+
+// NUUID is a Number UUID
 //NUUID 数字类型UUID
 type NUUID int64
 
@@ -29,6 +35,7 @@ type Article struct {
 	Author  User
 }
 
+// Check is valid method
 func (art Article) Check() error {
 	if len(art.Title) == 0 {
 		return errors.New("文章标题为空")
