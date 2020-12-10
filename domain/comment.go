@@ -1,6 +1,8 @@
 // Package domain provides ...
 package domain
 
+import "errors"
+
 //Comment 文章评论
 // 文章在文章下面直接平路是楼主评论
 // 在楼主中回复评论，回复的是楼主评论，需要知道回复哪一楼
@@ -14,9 +16,17 @@ type Comment struct {
 	Creator   User    //评论的创建者
 }
 
+func (c Comment) Check() error {
+	if len(c.Content) {
+		return errors.New("评论内容不能为空")
+	}
+}
+
 //CommentRepository 评论行为
 type CommentRepository interface {
 	Add(c Comment) error
 	GetCommentByPID(PID NUUID) ([]Comment, error)
 	GetCommentsOfOriginalPoster(articleID NUUID) ([]Comment, error)
+	DropByCreator(articleID NUUID) error
+	DropByPID(articleID NUUID) error
 }

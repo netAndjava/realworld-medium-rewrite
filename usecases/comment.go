@@ -1,11 +1,11 @@
 // Package usecases provides ...
 package usecases
 
-import "iohttps.com/live/realworld-medium-rewrite/domain"
+import (
+	"errors"
 
-type CommentInteractor struct {
-	CommentRepos domain.CommentRepository
-}
+	"iohttps.com/live/realworld-medium-rewrite/domain"
+)
 
 //CommentInteractor ......
 type CommentInteractor struct {
@@ -15,7 +15,7 @@ type CommentInteractor struct {
 //Add 添加评论
 func (itor CommentInteractor) Add(generate func() domain.NUUID, c domain.Comment, userID domain.NUUID) (domain.NUUID, error) {
 	if err := c.Check(); err != nil {
-		return domain.NUUID{}, err
+		return domain.NUUID(0), err
 	}
 	c.Creator.ID = userID
 	c.ID = generate()
@@ -35,18 +35,39 @@ func (itor CommentInteractor) GetCommentsOfArticle(articleID domain.NUUID) ([]Co
 		return []Comment{}, err
 	}
 
+	var list []Comment
 	for _, c := range comments {
 		cms, err := itor.CommentRepos.GetCommentByPID(c.ID)
 		if err != nil {
 			continue
 		}
-		comments.Children = cms
+		comment := Comment{Comment: c, Children: cms}
+		list = appen(list, comment)
 	}
-	return comments, nil
+	return list, nil
 }
 
 //DropByCreator 评论文作者删除评论
-func (itor CommentInteractor) DropByCreator()
+func (itor CommentInteractor) DropByCreator(articleID domain.NUUID, userID domain.NUUID) error {
+	comment, err := itor.CommentRepos.Get(articleID)
+	if err != nil {
+		return err
+	}
+	if comment.Article.User.ID != userID {
+		return errors.New("没有删除权限")
+	}
+
+	err = itor.CommentRepos.DropByCreator(articleID)
+	if err != nil {
+		return err
+	}
+
+	err = itor.CommentRepos.DropByPID(articleID)
+	if err != nil {
+		return err
+	}
+
+}
 
 //DropByArticleAuthor 文章作者删除针对文章的评论
 func (itor CommentInteractor) DropByAuthorOfArticle()

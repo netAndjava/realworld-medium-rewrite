@@ -30,3 +30,13 @@ func TestGetCommentsOfArticle(t *testing.T) {
 	_, err := commentItor.GetCommentsOfArticle(1)
 	a.Nil(err)
 }
+
+func TestDropByCreator(t *testing.T) {
+	a := assert.New(t)
+	//测试删除不成功
+	//没有删除权限
+	err := commentItor.DropByCreator(10, 0)
+	a.NotNil(err)
+	err = commentItor.DropByCreator(10, 1)
+	a.Nil(err)
+}
