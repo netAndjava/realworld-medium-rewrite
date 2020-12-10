@@ -32,9 +32,8 @@ func (itor TokenInteractor) Login(userID domain.NUUID, generate func() SUUID) (S
 	return token, err
 }
 
-// TODO:因为token来校验用户是否登录，放在token中实现  <15-11-20, nqq> //
-//CheckIfLoggedin 校验用户是否登录
-func (itor TokenInteractor) CheckIfLoggedin(tokenID SUUID) (Token, error) {
+//IsLoggedin 检查用户是否登录
+func (itor TokenInteractor) IsLoggedin(tokenID SUUID) (Token, error) {
 	if len(tokenID) == 0 {
 		return Token{}, errors.New("token不能为空")
 	}
