@@ -26,13 +26,13 @@ func TestCheckIdentityByEmail(t *testing.T) {
 	u := domain.User{}
 	//test faild
 	// 用户名、密码为空
-	err := userItor.CheckIdentityByEmail(u)
+	err := userItor.CheckIdentityByEmail(u.Name, u.Password)
 	a.NotNil(err)
 	//用户名不存在
 	//用户名密码不正确
 	//test success
 	u.Email = "1040@qq.com"
 	u.Password = "123456"
-	err = userItor.CheckIdentityByEmail(u)
+	err = userItor.CheckIdentityByEmail(u.Name, u.Password)
 	a.Nil(err)
 }

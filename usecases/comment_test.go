@@ -24,3 +24,9 @@ func TestAdd(t *testing.T) {
 	_, err = commentItor.Add(GenerateUUID, c, 1)
 	a.Nil(err)
 }
+
+func TestGetCommentsOfArticle(t *testing.T) {
+	a := assert.New(t)
+	_, err := commentItor.GetCommentsOfArticle(1)
+	a.Nil(err)
+}
