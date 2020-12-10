@@ -19,6 +19,8 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 }
 
 func (itor UserInteractor) GetUserByPhone(phone domain.PhoneNumber) (domain.User, error) {
+	// TODO:  <10-12-20, bantana> //
+	return domain.User{}, nil
 }
 
 //GenerateVericationCode 生成验证码
