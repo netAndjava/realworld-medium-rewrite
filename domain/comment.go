@@ -16,6 +16,6 @@ type Comment struct {
 
 //CommentRepository 评论行为
 type CommentRepository interface {
-	Create()
+	Add(c Comment) error
 	Delete()
 }
