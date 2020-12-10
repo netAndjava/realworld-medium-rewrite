@@ -2,6 +2,9 @@
 package domain
 
 //Comment 文章评论
+// 文章在文章下面直接平路是楼主评论
+// 在楼主中回复评论，回复的是楼主评论，需要知道回复哪一楼
+// 如果有@评论作者,则需要知道回复的评论人
 type Comment struct {
 	ID        NUUID
 	PID       NUUID  //父ID，用来知道回复的评论
