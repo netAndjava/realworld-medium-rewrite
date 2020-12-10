@@ -10,6 +10,8 @@ type User struct {
 	Phone    PhoneNumber
 }
 
+// PhoneNumber 类型
+// Derived: PhoneNumber, TelPhoneNumber, MobilePhoneNumber
 type PhoneNumber string
 
 //UserRepository ....
