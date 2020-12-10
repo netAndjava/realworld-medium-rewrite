@@ -12,6 +12,7 @@ type Token struct {
 	UserID domain.NUUID
 }
 
+// TODO: SUUID 这种难以理解的id请加上注释,要么就语义可理解的命名. <10-12-20, bantana> //
 type SUUID string
 
 type TokenRepository interface {
