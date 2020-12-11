@@ -17,14 +17,16 @@ type Comment struct {
 }
 
 func (c Comment) Check() error {
-	if len(c.Content) {
+	if len(c.Content) == 0 {
 		return errors.New("评论内容不能为空")
 	}
+	return nil
 }
 
 //CommentRepository 评论行为
 type CommentRepository interface {
 	Add(c Comment) error
+	Get(ID NUUID) error
 	GetCommentByPID(PID NUUID) ([]Comment, error)
 	GetCommentsOfOriginalPoster(articleID NUUID) ([]Comment, error)
 	DropByCreator(articleID NUUID) error
