@@ -26,9 +26,10 @@ func (c Comment) Check() error {
 //CommentRepository 评论行为
 type CommentRepository interface {
 	Add(c Comment) error
-	Get(ID NUUID) error
+	Get(ID NUUID) (Comment, error)
 	GetCommentByPID(PID NUUID) ([]Comment, error)
 	GetCommentsOfOriginalPoster(articleID NUUID) ([]Comment, error)
-	DropByCreator(articleID NUUID) error
-	DropByPID(articleID NUUID) error
+	DropByCreator(ID NUUID) error
+	DropByAuthorOfArticle(ID NUUID) error
+	DropByPID(PID NUUID) error
 }
