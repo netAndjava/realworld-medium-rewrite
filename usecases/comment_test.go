@@ -35,12 +35,18 @@ func TestDropByAuthorOfArticle(t *testing.T) {
 	a := assert.New(t)
 	//测试删除不成功
 	//没有删除权限
+	err := commentItor.DropByAuthorOfArticle(10, 0)
+	a.NotNil(err)
+	err = commentItor.DropByAuthorOfArticle(10, 1)
+	a.Nil(err)
+}
+
+func TestDropByCreator(t *testing.T) {
+	a := assert.New(t)
+	//测试删除不成功
+	//没有删除权限
 	err := commentItor.DropByCreator(10, 0)
 	a.NotNil(err)
 	err = commentItor.DropByCreator(10, 1)
 	a.Nil(err)
-}
-
-func TestDropByAuthorOf(t *testing.T) {
-
 }
