@@ -94,9 +94,15 @@ func (repo *ArticleRepo) Get(ID domain.NUUID) (domain.Article, error) {
 }
 
 func (repo *ArticleRepo) GetDraftOfPublicArticle(ID domain.NUUID) (domain.Article, error) {
-	row := repo.Handler.QueryRow(`select title,content,status,userId from t_draft where id=?`, ID)
+	row := repo.Handler.QueryRow(`select title,content from t_draft where id=?`, ID)
 
 	var art domain.Article
-	err := row.Scan(&art.Title, &art.Content, &art.Status, &art.AuthorID)
+	art.ID = ID
+	err := row.Scan(&art.Title, &art.Content)
 	return art, err
+}
+
+func (repo *ArticleRepo) CreateDraftOfPublicArticle(a domain.Article) error {
+	_, err := repo.Handler.Execute(`insert into t_draft (id,title,content) values(?,?,?)`, a.ID, a.Title, a.Content)
+	return err
 }
