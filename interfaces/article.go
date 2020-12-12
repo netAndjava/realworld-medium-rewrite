@@ -111,3 +111,7 @@ func (repo *ArticleRepo) UpdateDraftOfPublicArticle(a domain.Article) error {
 	_, err := repo.Handler.Execute(`update t_draft set title=?,content=? where id=?`, a.Title, a.Content, a.ID)
 	return err
 }
+
+func (repo *ArticleRepo)PublishPublicArticleDraft(ID domain.NUUID)error{
+	repo.Handler.Execute(, args ...interface{})
+}

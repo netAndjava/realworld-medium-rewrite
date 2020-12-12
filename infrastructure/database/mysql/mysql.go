@@ -37,6 +37,11 @@ func (handler *mysqlHandler) Execute(query string, args ...interface{}) (databas
 	return &mysqlResult{result}, nil
 }
 
+func (handler *mysqlHandler) Begin() (database.Tx, error) {
+	tx, err := handler.Conn.Begin()
+	return &mysqlTx{tx}, err
+}
+
 //Query .....
 func (handler *mysqlHandler) Query(query string, args ...interface{}) (database.Rows, error) {
 	rows, err := handler.Conn.Query(query, args...)
@@ -100,4 +105,23 @@ type mysqlRow struct {
 //Scan ...
 func (row *mysqlRow) Scan(dest ...interface{}) error {
 	return row.Row.Scan(dest...)
+}
+
+type mysqlTx struct {
+	Tx *sql.Tx
+}
+
+func (tx *mysqlTx) Execute(query string, args ...interface{}) (database.Result, error) {
+	result, err := tx.Tx.Exec(query, args...)
+	return &mysqlResult{result}, err
+}
+
+func (tx *mysqlTx) Query(query string, args ...interface{}) (database.Rows, error) {
+	rows, err := tx.Tx.Query(query, args)
+	return &mysqlRows{rows}, err
+}
+
+func (tx *mysqlTx) QueryRow(query string, args ...interface{}) database.Row {
+	row := tx.Tx.QueryRow(query, args...)
+	return &mysqlRow{row}
 }

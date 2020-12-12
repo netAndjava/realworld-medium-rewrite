@@ -10,6 +10,7 @@ type DbHandler interface {
 	QueryRow(query string, args ...interface{}) Row
 	Ping() error
 	PingContext(ctx context.Context) error
+	Begin() (Tx, error)
 }
 
 //Result ....
@@ -27,6 +28,9 @@ type Rows interface {
 //Row ....
 type Row interface {
 	Scan(dest ...interface{}) error
+}
+
+type Tx interface {
 }
 
 //DbRepo ....
