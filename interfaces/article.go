@@ -106,3 +106,8 @@ func (repo *ArticleRepo) CreateDraftOfPublicArticle(a domain.Article) error {
 	_, err := repo.Handler.Execute(`insert into t_draft (id,title,content) values(?,?,?)`, a.ID, a.Title, a.Content)
 	return err
 }
+
+func (repo *ArticleRepo) UpdateDraftOfPublicArticle(a domain.Article) error {
+	_, err := repo.Handler.Execute(`update t_draft set title=?,content=? where id=?`, a.Title, a.Content, a.ID)
+	return err
+}
