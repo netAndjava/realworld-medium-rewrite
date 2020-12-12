@@ -125,3 +125,11 @@ func (tx *mysqlTx) QueryRow(query string, args ...interface{}) database.Row {
 	row := tx.Tx.QueryRow(query, args...)
 	return &mysqlRow{row}
 }
+
+func (tx *mysqlTx) Commit() error {
+	return tx.Tx.Commit()
+}
+
+func (tx *mysqlTx) Rollback() error {
+	return tx.Tx.Rollback()
+}
