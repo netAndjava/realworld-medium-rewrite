@@ -62,3 +62,24 @@ func (repo *ArticleRepo) GetAuthorArticleByStatus(userID domain.NUUID, status do
 
 	return articles, nil
 }
+
+func (repo *ArticleRepo) GetAllPublicArticles() ([]domain.Article, error) {
+
+	var articles []domain.Article
+	rows, err := repo.Handler.Query(`select id,title,content,status,userId from t_article`)
+	if err != nil {
+		return []domain.Article{}, err
+	}
+
+	for rows.Next() {
+		var article domain.Article
+		err := rows.Scan(&article.ID, &article.Title, &article.Content, &article.Status, &article.AuthorID)
+		if err != nil {
+			return []domain.Article{}, err
+		}
+		articles = append(articles, article)
+
+	}
+	return articles, nil
+
+}
