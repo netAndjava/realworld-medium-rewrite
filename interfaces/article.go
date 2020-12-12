@@ -34,8 +34,17 @@ func (repo *ArticleRepo) Publish(ID domain.NUUID) error {
 
 //GGetAuthorDrafts .....
 func (repo *ArticleRepo) GetAuthorDrafts(userID domain.NUUID) ([]domain.Article, error) {
+	return repo.GetAuthorArticleByStatus(userID, domain.Draft)
+}
+
+//GetAuthorPublicArticles .......
+func (repo *ArticleRepo) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
+	return repo.GetAuthorArticleByStatus(userID, domain.Public)
+}
+
+func (repo *ArticleRepo) GetAuthorArticleByStatus(userID domain.NUUID, status domain.PublicStatus) ([]domain.Article, error) {
 	var articles []domain.Article
-	rows, err := repo.Handler.Query(`select id,title,content where status=?,userId=?`, domain.Draft, userID)
+	rows, err := repo.Handler.Query(`select id,title,content where status=?,userId=?`, status, userID)
 	if err != nil {
 		return []domain.Article{}, err
 	}
