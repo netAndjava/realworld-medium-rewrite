@@ -25,3 +25,9 @@ func (repo *ArticleRepo) Save(a domain.Article) error {
 	_, err := repo.Handler.Execute(`update t_article set title=?,content=?`, a.Title, a.Content)
 	return err
 }
+
+//Publish ......
+func (repo *ArticleRepo) Publish(ID domain.NUUID) error {
+	_, err := repo.Handler.Execute(`update t_article set status=? where ID=?`, domain.Draft, ID)
+	return err
+}
