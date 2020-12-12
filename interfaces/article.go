@@ -28,6 +28,28 @@ func (repo *ArticleRepo) Save(a domain.Article) error {
 
 //Publish ......
 func (repo *ArticleRepo) Publish(ID domain.NUUID) error {
-	_, err := repo.Handler.Execute(`update t_article set status=? where ID=?`, domain.Draft, ID)
+	_, err := repo.Handler.Execute(`update t_article set status=? where id=?`, domain.Draft, ID)
 	return err
+}
+
+//GGetAuthorDrafts .....
+func (repo *ArticleRepo) GetAuthorDrafts(userID domain.NUUID) ([]domain.Article, error) {
+	var articles []domain.Article
+	rows, err := repo.Handler.Query(`select id,title,content where status=?,userId=?`, domain.Draft, userID)
+	if err != nil {
+		return []domain.Article{}, err
+	}
+
+	for rows.Next() {
+		var article domain.Article
+		err = rows.Scan(&article.ID, &article.Title, &article.Content)
+		if err != nil {
+			return []domain.Article{}, err
+		}
+		article.Status = domain.Draft
+		article.AuthorID = userID
+		articles = append(articles, article)
+	}
+
+	return articles, nil
 }
