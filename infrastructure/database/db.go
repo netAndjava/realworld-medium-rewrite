@@ -31,6 +31,5 @@ type Row interface {
 
 //DbRepo ....
 type DbRepo struct {
-	dbHandlers map[string]DbHandler
-	dbHandler  DbHandler
+	Handler DbHandler
 }

@@ -22,8 +22,6 @@ func NewMysqlHandler(dataSourceName string) (database.DbHandler, error) {
 		return nil, err
 	}
 	err = db.Ping()
-	// TODO:理解为什么最大连接数设置为1时想要链接数据库获取数据时会获取不到任何结果  <21-10-20, nqq> //
-	// TODO:当道配置文件中配置  <21-10-20, nqq> //
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(5)
 	db.SetConnMaxLifetime(time.Duration(4 * time.Hour))
