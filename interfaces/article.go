@@ -83,3 +83,12 @@ func (repo *ArticleRepo) GetAllPublicArticles() ([]domain.Article, error) {
 	return articles, nil
 
 }
+
+//Get ......
+func (repo *ArticleRepo) Get(ID domain.NUUID) (domain.Article, error) {
+	row := repo.Handler.QueryRow(`select title,content,status,userId from t_article where id=?`, ID)
+	var a domain.Article
+	err = row.Scan(&a.Title, &a.Content, &a.Status, &a.AuthorID)
+	a.ID = ID
+	return a, err
+}
