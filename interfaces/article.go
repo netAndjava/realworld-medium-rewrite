@@ -112,6 +112,20 @@ func (repo *ArticleRepo) UpdateDraftOfPublicArticle(a domain.Article) error {
 	return err
 }
 
-func (repo *ArticleRepo)PublishPublicArticleDraft(ID domain.NUUID)error{
-	repo.Handler.Execute(, args ...interface{})
+func (repo *ArticleRepo) PublishPublicArticleDraft(a domain.Article) error {
+	tx, err := repo.Handler.Begin()
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+	_, err = tx.Execute(`update t_article set title=?,content=?`, a.Title, a.Content)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Execute(`delete from t_draft where id=?`, a.ID)
+	return err
 }

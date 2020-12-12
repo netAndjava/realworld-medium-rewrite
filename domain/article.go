@@ -58,5 +58,5 @@ type ArticleRepository interface {
 	GetDraftOfPublicArticle(ID NUUID) (Article, error)
 	CreateDraftOfPublicArticle(a Article) error
 	UpdateDraftOfPublicArticle(a Article) error
-	PublishPublicArticleDraft(ID NUUID) error
+	PublishPublicArticleDraft(a Article) error
 }

@@ -31,6 +31,11 @@ type Row interface {
 }
 
 type Tx interface {
+	Execute(query string, args ...interface{}) (Result, error)
+	Query(query string, args ...interface{}) (Rows, error)
+	QueryRow(query string, args ...interface{}) Row
+	Commit() error
+	Rollback() error
 }
 
 //DbRepo ....
