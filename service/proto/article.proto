@@ -14,7 +14,6 @@ service article{
     rpc ViewAllArticles(ViewAllArticlesReq)returns(ViewAllArticlesRep);//查看所有已发布文章
 }
 
-
 message Article{
     int64 id = 1;
     string title = 2;
@@ -23,12 +22,16 @@ message Article{
     int64 authorID = 5;
 }
 
-message SaveDraftRep {
+message SaveArticleRep{
     int64 id = 1;
 }
 
 message ViewDraftedArticlesOfAuthorReq{
     int64 userID = 1;
+}
+
+message ViewDraftedArticlesOfAuthorRep{
+    repeated Article articles = 1;
 }
 
 message ViewPublishedArticlesOfAuthorRep{
@@ -44,15 +47,14 @@ message PublishArticleReq{
     int64 userID = 2;
 }
 
+message PublishArticleRep{
+}
+
 message PublishDraftRep{
 }
 
 message ViewPublishedArticlesOfAuthorReq{
     int64 userID = 1;
-}
-
-message ViewPublishedArticlesOfAuthorRep{
-    repeated Article articles = 1;
 }
 
 message ViewDraftReq{
@@ -63,13 +65,9 @@ message SaveDraftRep{
     
 }
 
-message PublishDraftRep {
-     
-}
-
 message ViewAllArticlesReq{
 }
 
 message ViewAllArticlesRep{
-    repeated Article articles
+    repeated Article articles = 1;
 }
