@@ -67,7 +67,7 @@ func (itor CommentInteractor) DropByAuthorOfArticle(commentID domain.NUUID, user
 }
 
 //DropByArticleAuthor 文章作者删除针对文章的评论
-func (itor CommentInteractor) DropByCreator(commentID NUUID, userID NUUID) error {
+func (itor CommentInteractor) DropByCreator(commentID domain.NUUID, userID NUUID) error {
 	comment, err := itor.CommentRepos.Get(commentID)
 	if err != nil {
 		return err

@@ -18,7 +18,7 @@ func (itor ArticleInteractor) SaveDraft(a domain.Article, userID domain.NUUID) e
 	if err != nil {
 		return err
 	}
-	if art.Author.ID != userID {
+	if art.AuthorID != userID {
 		return errors.New("用户没有修改文章权限")
 	}
 	return itor.ArticleRepo.Save(art)
@@ -30,8 +30,7 @@ func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain
 		return domain.NUUID(0), errors.New("用户内容为空")
 	}
 	a.ID = generate()
-	a.Author.ID = authorID
-
+	a.AuthorID = authorID
 	err := itor.ArticleRepo.Create(a)
 
 	return a.ID, err
@@ -46,7 +45,7 @@ func (itor ArticleInteractor) Publish(articleID, userID domain.NUUID) error {
 	if err := article.Check(); err != nil {
 		return err
 	}
-	if article.Author.ID != userID {
+	if article.AuthorID != userID {
 		return errors.New("用户没有发布文章权限")
 	}
 	return itor.ArticleRepo.Publish(articleID)
@@ -91,7 +90,7 @@ func (itor ArticleInteractor) SavePublicArticleDraft(a domain.Article, userID do
 		return err
 	}
 
-	if art.Author.ID != userID {
+	if art.AuthorID != userID {
 		return errors.New("用户没有创建已发布文章草稿权限")
 	}
 	return itor.ArticleRepo.UpdateDraftOfPublicArticle(a)
@@ -103,25 +102,25 @@ func (itor ArticleInteractor) CreatePublicArticleDraft(a domain.Article, userID 
 	if err != nil {
 		return err
 	}
-	if art.Author.ID != userID {
+	if art.AuthorID != userID {
 		return errors.New("用户没有创建已发布文章草稿权限")
 	}
 	return itor.ArticleRepo.CreateDraftOfPublicArticle(a)
 }
 
 // PublishPublicArticleDraft 发布对已发布文章的修改草稿
-func (itor ArticleInteractor) PublishPublicArticleDraft(ID domain.NUUID, userID domain.NUUID) error {
-	art, err := itor.GetPublicArticleDraft(ID)
+func (itor ArticleInteractor) PublishPublicArticleDraft(a domain.Article, userID domain.NUUID) error {
+	art, err := itor.GetPublicArticleDraft(a.ID)
 	if err != nil {
 		return err
 	}
-	if art.Author.ID != userID {
+	if art.AuthorID != userID {
 		return errors.New("用户没有发布权限")
 	}
 	if err := art.Check(); err != nil {
 		return err
 	}
-	return itor.ArticleRepo.PublishPublicArticleDraft(ID)
+	return itor.ArticleRepo.PublishPublicArticleDraft(art)
 }
 
 // GenerateUUID 生成树枝类型的id
