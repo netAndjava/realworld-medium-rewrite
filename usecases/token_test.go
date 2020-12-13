@@ -33,7 +33,7 @@ func TestCheckIfLoggedin(t *testing.T) {
 	_, err := tokenItor.IsLoggedin(SUUID(tokenID))
 	a.NotNil(err)
 	tokenID = "test"
-	_, err := tokenItor.IsLoggedin(SUUID(tokenID))
+	_, err = tokenItor.IsLoggedin(SUUID(tokenID))
 	a.Nil(err)
 }
 

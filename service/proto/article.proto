@@ -1,0 +1,75 @@
+syntax = "proto3";
+package api;
+option go_package=".;api";
+
+service article{
+    rpc SaveArticle(Article) returns(SaveArticleRep); //保存文章
+    rpc ViewDraftedArticlesOfAuthor(ViewDraftedArticlesOfAuthorReq)returns(ViewDraftedArticlesOfAuthorRep);//获取草稿态文章
+    rpc ViewArticle(ViewArticleReq)returns(Article);//获取文章详情
+    rpc PublishArticle(PublishArticleReq)returns(PublishArticleRep);//发布文章
+    rpc ViewPublishedArticlesOfAuthor(ViewPublishedArticlesOfAuthorReq)returns(ViewPublishedArticlesOfAuthorRep);//获取作者已发布文章
+    rpc ViewDraft(ViewDraftReq)returns(Article);//获取文章草稿
+    rpc SaveDraft(Article)returns(SaveDraftRep);//保存草稿
+    rpc PublishDraft(Article)returns(PublishDraftRep);//发布草稿
+    rpc ViewAllArticles(ViewAllArticlesReq)returns(ViewAllArticlesRep);//查看所有已发布文章
+}
+
+
+message Article{
+    int64 id = 1;
+    string title = 2;
+    string content = 3;
+    int32 status = 4;
+    int64 authorID = 5;
+}
+
+message SaveDraftRep {
+    int64 id = 1;
+}
+
+message ViewDraftedArticlesOfAuthorReq{
+    int64 userID = 1;
+}
+
+message ViewPublishedArticlesOfAuthorRep{
+    repeated Article articles = 1;
+}
+
+message ViewArticleReq{
+    int64 id = 1;
+}
+
+message PublishArticleReq{
+    int64 id = 1;
+    int64 userID = 2;
+}
+
+message PublishDraftRep{
+}
+
+message ViewPublishedArticlesOfAuthorReq{
+    int64 userID = 1;
+}
+
+message ViewPublishedArticlesOfAuthorRep{
+    repeated Article articles = 1;
+}
+
+message ViewDraftReq{
+   int64 id = 1; 
+}
+
+message SaveDraftRep{
+    
+}
+
+message PublishDraftRep {
+     
+}
+
+message ViewAllArticlesReq{
+}
+
+message ViewAllArticlesRep{
+    repeated Article articles
+}

@@ -42,7 +42,7 @@ func (itor CommentInteractor) GetCommentsOfArticle(articleID domain.NUUID) ([]Co
 			continue
 		}
 		comment := Comment{Comment: c, Children: cms}
-		list = appen(list, comment)
+		list = append(list, comment)
 	}
 	return list, nil
 }
@@ -53,7 +53,7 @@ func (itor CommentInteractor) DropByAuthorOfArticle(commentID domain.NUUID, user
 	if err != nil {
 		return err
 	}
-	if comment.Article.Author.ID != userID {
+	if comment.Article.AuthorID != userID {
 		return errors.New("没有删除权限")
 	}
 
@@ -67,7 +67,7 @@ func (itor CommentInteractor) DropByAuthorOfArticle(commentID domain.NUUID, user
 }
 
 //DropByArticleAuthor 文章作者删除针对文章的评论
-func (itor CommentInteractor) DropByCreator(commentID domain.NUUID, userID NUUID) error {
+func (itor CommentInteractor) DropByCreator(commentID domain.NUUID, userID domain.NUUID) error {
 	comment, err := itor.CommentRepos.Get(commentID)
 	if err != nil {
 		return err
