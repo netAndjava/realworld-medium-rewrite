@@ -57,11 +57,7 @@ func (server *articleServer) ViewDraftedArticlesOfAuthor(ctxt context.Context, r
 		return nil, err
 	}
 
-	articles := make([]pb.Article, len(arts))
-	for i, art := range arts {
-		articles[i] = &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}
-	}
-	return &pb.ViewDraftedArticlesOfAuthor{Articles: articles}, err
+	return ConvertArticles(arts), err
 }
 
 func (server *articleServer) ViewArticle(ctxt context.Context, req *pb.ViewArticleReq) (*pb.Article, error) {
@@ -76,4 +72,24 @@ func (server *articleServer) ViewArticle(ctxt context.Context, req *pb.ViewArtic
 func (server *articleServer) PublishArticle(ctxt context.Context, req *pb.PublishArticleReq) (*pb.PublishDraftRep, error) {
 	err := server.artInteractor.Publish(req.Id, req.UserID)
 	return nil, err
+}
+
+func (server *articleServer) ViewPublishedArticlesOfAuthor(ctx context.Context, req *pb.ViewPublishedArticlesOfAuthorReq) (*pb.ViewDraftedArticlesOfAuthorRep, error) {
+	arts, err := server.artInteractor.GetAuthorPublicArticles(req.UserID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.ViewDraftedArticlesOfAuthorRep{Articles: ConvertArticles(arts)}, nil
+
+}
+
+func ConvertArticles(arts []domain.Article) []*pb.Article {
+
+	articles := make([]pb.Article, len(arts))
+	for i, art := range arts {
+		articles[i] = &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}
+	}
+	return articles
 }
