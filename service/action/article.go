@@ -57,7 +57,7 @@ func (server *articleServer) ViewDraftedArticlesOfAuthor(ctxt context.Context, r
 		return nil, err
 	}
 
-	return ConvertArticles(arts), err
+	return &pb.ViewDraftedArticlesOfAuthorRep{ConvertArticles(arts)}, err
 }
 
 func (server *articleServer) ViewArticle(ctxt context.Context, req *pb.ViewArticleReq) (*pb.Article, error) {
@@ -81,7 +81,16 @@ func (server *articleServer) ViewPublishedArticlesOfAuthor(ctx context.Context, 
 		return nil, err
 	}
 
-	return &pb.ViewDraftedArticlesOfAuthorRep{Articles: ConvertArticles(arts)}, nil
+	return &pb.ViewDraftedArticlesOfAuthorRep{Articles: ConvertArticles(arts)}, err
+
+}
+
+func (server *articleServer) ViewDraft(ctx context.Context, req *pb.ViewDraftReq) (*Article, error) {
+	art, err := server.artInteractor.GetPublicArticleDraft(req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}, err
 
 }
 
