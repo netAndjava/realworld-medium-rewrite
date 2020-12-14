@@ -52,3 +52,12 @@ func (server *articleServer) ViewDraftedArticlesOfAuthor(ctxt context.Context, r
 	}
 	return &pb.ViewDraftedArticlesOfAuthor{Articles: articles}, err
 }
+
+func (server *articleServer) ViewArticle(ctxt context.Context, req *pb.ViewArticleReq) (*pb.Article, error) {
+	art, err := server.artInteractor.GetArticle(req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}, err
+
+}
