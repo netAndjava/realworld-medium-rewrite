@@ -85,12 +85,31 @@ func (server *articleServer) ViewPublishedArticlesOfAuthor(ctx context.Context, 
 
 }
 
-func (server *articleServer) ViewDraft(ctx context.Context, req *pb.ViewDraftReq) (*Article, error) {
+func (server *articleServer) ViewDraft(ctx context.Context, req *pb.ViewDraftReq) (*pb.Article, error) {
 	art, err := server.artInteractor.GetPublicArticleDraft(req.Id)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}, err
+
+}
+
+func (server *articleServer) SaveDraft(ctx context.Context, art *pb.Article) (*pb.PublishDraftRep, error) {
+	err := server.artInteractor.SaveDraft(domain.Article{ID: art.Id, Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: art.AuthorID}, art.UserID)
+	return nil, err
+}
+
+func (server articleServer) PublishDraft(ctx context.Context, art *pb.Article) (*pb.PublishDraftRep, error) {
+	err := server.artInteractor.PublishPublicArticleDraft(domain.Article{ID: art.Id, Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: art.AuthorID}, art.UserID)
+	return nil, err
+}
+
+func (server articleServer) ViewAllArticles(ctx context.Context, req *pb.ViewAllArticlesReq) (*pb.ViewAllArticlesRep, error) {
+	arts, err := server.artInteractor.GetAllPublicArticles()
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ViewAllArticlesRep{ConvertArticles(arts)}, err
 
 }
 
