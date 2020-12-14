@@ -41,5 +41,14 @@ func (server *articleServer) SaveArticle(ctxt context.Context, art *pb.Article) 
 
 	err := server.artInteractor.SaveDraft(domain.Article{ID: art.Id, Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: art.AuthorID}, art.AuthorID)
 
-	return pb.SaveArticle{Id: art.Id}, err
+	return &pb.SaveArticle{Id: art.Id}, err
+}
+
+func (server *articleServer) ViewDraftedArticlesOfAuthor(ctxt context.Context, req *pb.ViewDraftedArticlesOfAuthorReq) (*pb.ViewDraftedArticlesOfAuthorRep, error) {
+	arts, err := server.artInteractor.GetAuthorDrafts(req.UserID)
+	articles := make([]pb.Article, len(arts))
+	for i, art := range arts {
+		articles[i] = &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}
+	}
+	return &pb.ViewDraftedArticlesOfAuthor{Articles: articles}, err
 }
