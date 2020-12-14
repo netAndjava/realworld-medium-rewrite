@@ -8,8 +8,8 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
-	pb "iohttps.com/live/realworld-medium-go/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/domain"
+	pb "iohttps.com/live/realworld-medium-rewrite/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/usecases"
 )
 
@@ -30,25 +30,26 @@ func Start() {
 	// TODO:  <14-12-20, nqq> //
 	var artItor usecases.ArticleInteractor
 
-	pb.RegisterArticleServer(s, &articleServer{ArtInteractor: artItor})
+	pb.RegisterArticleServer(s, &articleServer{artInteractor: artItor})
+	s.Serve(lis)
 }
 
-func (server *articleServer) SaveArticle(ctxt context.Context, art *pb.Article) (*pb.SaveArticle, error) {
+func (server *articleServer) SaveArticle(ctxt context.Context, art *pb.Article) (*pb.SaveArticleRep, error) {
 	if art.Id == 0 {
-		ID, err := server.artInteractor.CreateDraft(usecases.GenerateUUID, domain.Article{ID: art.Id, Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: art.AuthorID}, art.AuthorID)
+		ID, err := server.artInteractor.CreateDraft(usecases.GenerateUUID, domain.Article{ID: domain.NUUID(art.Id), Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: domain.NUUID(art.AuthorID)}, domain.NUUID(art.AuthorID))
 		if err != nil {
 			return nil, err
 		}
 
-		return &pb.SaveArticle{Id: ID}, err
+		return &pb.SaveArticleRep{Id: int64(ID)}, err
 	}
 
-	err := server.artInteractor.SaveDraft(domain.Article{ID: art.Id, Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: art.AuthorID}, art.AuthorID)
+	err := server.artInteractor.SaveDraft(domain.Article{ID: domain.NUUID(art.Id), Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: domain.NUUID(art.AuthorID)}, domain.NUUID(art.AuthorID))
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.SaveArticle{Id: art.Id}, err
+	return &pb.SaveArticleRep{Id: art.Id}, err
 }
 
 func (server *articleServer) ViewDraftedArticlesOfAuthor(ctxt context.Context, req *pb.ViewDraftedArticlesOfAuthorReq) (*pb.ViewDraftedArticlesOfAuthorRep, error) {
@@ -115,9 +116,9 @@ func (server articleServer) ViewAllArticles(ctx context.Context, req *pb.ViewAll
 
 func ConvertArticles(arts []domain.Article) []*pb.Article {
 
-	articles := make([]pb.Article, len(arts))
+	articles := make([]*pb.Article, len(arts))
 	for i, art := range arts {
-		articles[i] = &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}
+		articles[i] = &pb.Article{Id: int64(art.ID), Title: art.Title, Content: art.Content, Status: int32(art.Status), AuthorID: int64(art.AuthorID)}
 	}
 	return articles
 }
