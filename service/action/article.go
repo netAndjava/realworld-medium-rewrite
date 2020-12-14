@@ -72,3 +72,8 @@ func (server *articleServer) ViewArticle(ctxt context.Context, req *pb.ViewArtic
 	return &pb.Article{ID: art.ID, Title: art.Title, Content: art.Content, Status: art.Status, AuthorID: art.AuthorID}, err
 
 }
+
+func (server *articleServer) PublishArticle(ctxt context.Context, req *pb.PublishArticleReq) (*pb.PublishDraftRep, error) {
+	err := server.artInteractor.Publish(req.Id, req.UserID)
+	return nil, err
+}
