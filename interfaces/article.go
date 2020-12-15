@@ -81,7 +81,6 @@ func (repo *ArticleRepo) GetAllPublicArticles() ([]domain.Article, error) {
 
 	}
 	return articles, nil
-
 }
 
 //Get ......

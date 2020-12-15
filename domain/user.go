@@ -5,7 +5,7 @@ package domain
 type User struct {
 	ID       NUUID
 	Name     string
-	Email    string
+	Email    Email
 	Password string
 	Phone    PhoneNumber
 }
@@ -13,6 +13,9 @@ type User struct {
 // PhoneNumber 类型
 // Derived: PhoneNumber, TelPhoneNumber, MobilePhoneNumber
 type PhoneNumber string
+
+//Email
+type Email string
 
 //UserRepository ....
 type UserRepository interface {

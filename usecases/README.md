@@ -153,7 +153,7 @@
 
    3. 当系统启动时同步一次内容到远程
 
-## 用户注册、登录用例、退出登录
+## 用户注册、登录、退出登录
 
 用户注册---》用户登录系统-----》用户退出登录
 
@@ -238,13 +238,13 @@ User                                         系统
    /\                                  高阶函数在哪一层组合????
 User                            系统
 -------1 mobile number-------> getMobileVerifyCodeForLogin(){
+        GetUserByPhone();
         GenerateMobileVerifyCode();
         SaveVerifyCode();
         return verifyCode}  GenerateMobileVerifyCode()
 <------2 verify code(gsm)----- sendVerifyCode
 -------3 verify code---------> login(){
                                   if(verify()) {
-                                    GetUserByPhone()
                                     tokenSuccess, err := getTokenSuccess();   // token sub domain (session sub
                                     domain)
                                     return tokenSuccess;
@@ -289,7 +289,7 @@ login()  ---> login() --> base functions { sub domain }
 
       ```
         type SendMessagService interface {
-          Send()
+          Send(message MessageInfo)
         }
       ```
 
