@@ -54,3 +54,12 @@ func (server *userServer) CheckIdentityByEmail(ctx context.Context, req *pb.Chec
 	return &pb.User{Id: int64(user.ID)}, nil
 
 }
+
+func (server *userServer) GetUserByPhone(ctx context.Context, req *pb.GetUserByPhoneReq) (*pb.User, error) {
+	user, err := server.userItor.GetUserByPhone(domain.PhoneNumber(req.Phone))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.User{Id: int64(user.ID), Phone: string(user.Phone)}, nil
+
+}
