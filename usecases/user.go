@@ -20,18 +20,18 @@ func (itor UserInteractor) Register(generate func() domain.NUUID, user domain.Us
 	}
 	u, err := itor.UserRepo.GetByEmail(user.Email)
 	if u.Email == user.Email {
-		return nil, errors.New("该邮箱已注册过")
+		return domain.NUUID(0), errors.New("该邮箱已注册过")
 	}
 
 	user.ID = generate()
-	err := itor.UserRepo.Create(u)
+	err = itor.UserRepo.Create(u)
 
-	return user, err
+	return user.ID, err
 }
 
 //CheckIdentityByEmail 通过email来校验身份
-func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.User, error) {
-	if len(strings.TrimSpace(name)) == 0 {
+func (itor UserInteractor) CheckIdentityByEmail(name domain.Email, password string) (domain.User, error) {
+	if len(strings.TrimSpace(string(name))) == 0 {
 		return domain.User{}, errors.New("请输入用户名")
 	}
 	if err := name.Check(); err != nil {
@@ -56,11 +56,11 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 	return user, nil
 }
 
-func (itor UserInteractor) GetUserByPhone(phone domain.PhoneNumber) (domain.User, error) {
+func (itor UserInteractor) GetUserByPhone(iphone domain.PhoneNumber) (domain.User, error) {
 	if err := iphone.Check(); err != nil {
 		return domain.User{}, err
 	}
-	user, err := itor.UserRepo.FindByPhone(phone)
+	user, err := itor.UserRepo.FindByPhone(iphone)
 	if err != nil && err == domain.ErrNotFound {
 		return domain.User{}, errors.New("改用户还未注册")
 	}

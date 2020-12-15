@@ -27,7 +27,7 @@ func (repo *UserRepo) FindByPhone(phone domain.PhoneNumber) (domain.User, error)
 	return user, err
 }
 
-func (repo *UserRepo) GetByEmail(e Email) (domain.User, error) {
+func (repo *UserRepo) GetByEmail(e domain.Email) (domain.User, error) {
 	row := repo.Handler.QueryRow(`select id,password where email=?`, string(e))
 	var user domain.User
 	user.Email = e
