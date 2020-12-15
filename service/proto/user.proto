@@ -10,9 +10,10 @@ service user{
 
 message User{
     int64 id = 1;
-    string password = 2;
-    string email = 3;
-    string phone = 4;
+    string name = 2;
+    string password = 3;
+    string email = 4;
+    string phone = 5;
 }
 
 message RegisterRep{
