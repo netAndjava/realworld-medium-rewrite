@@ -25,6 +25,13 @@ func (u User) Check() error {
 	return u.Phone.Check()
 }
 
+func (e Email) Check() error {
+	if len(e) == 0 {
+		return errors.New("请输入邮箱")
+	}
+	return nil
+}
+
 // PhoneNumber 类型
 // Derived: PhoneNumber, TelPhoneNumber, MobilePhoneNumber
 type PhoneNumber string
