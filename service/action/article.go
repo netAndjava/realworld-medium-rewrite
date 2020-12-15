@@ -1,9 +1,9 @@
-// Package article provides ...
-package article
+// Package action provides ...
+package action
 
 import (
 	"context"
-	"fmt"
+	"flag"
 	"log"
 	"net"
 
@@ -20,20 +20,23 @@ type articleServer struct {
 	artInteractor usecases.ArticleInteractor
 }
 
-func Start(port int) {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+func Start() {
+	port := flag.String("port", ":8080", "please input port")
+	flag.Parse()
+	lis, err := net.Listen("tcp", *port)
 	if err != nil {
 		log.Fatalf("listen port:%d err:%v\n", port, err)
 	}
-	log.Println("start server on port:", port)
 	s := grpc.NewServer()
+
+	// TODO:  <14-12-20, nqq> //
+	var artItor usecases.ArticleInteractor
 
 	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
 	if err != nil {
 		log.Fatalln("connect db err:", err)
 	}
-	artRepo := interfaces.NewArticleRepo(handler)
-	artItor := usecases.ArticleInteractor{ArticleRepo: artRepo}
+	interfaces.NewArticleRepo(handler)
 
 	pb.RegisterArticleServer(s, &articleServer{artInteractor: artItor})
 	s.Serve(lis)
