@@ -40,9 +40,9 @@ func TestCheckIfLoggedin(t *testing.T) {
 func TestLoggout(t *testing.T) {
 	a := assert.New(t)
 	tokenID := ""
-	err := tokenItor.Logout(tokenID)
+	err := tokenItor.Logout(SUUID(tokenID))
 	a.NotNil(err)
 	tokenID = "test"
-	err = tokenItor.Logout(tokenID)
+	err = tokenItor.Logout(SUUID(tokenID))
 	a.Nil(err)
 }

@@ -24,7 +24,9 @@ func (itor UserInteractor) GetUserByPhone(phone domain.PhoneNumber) (domain.User
 }
 
 //GenerateVericationCode 生成验证码
-func (itor UserInteractor) GenerateVericationCode()
+func (itor UserInteractor) GenerateVericationCode() {
+}
 
 //CheckIfVerCodeIsCorrect 判断用户验证码是否正确
-func (itor UserInteractor) CheckIfVerCodeIsCorrect()
+func (itor UserInteractor) CheckIfVerCodeIsCorrect() {
+}

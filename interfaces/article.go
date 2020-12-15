@@ -11,7 +11,7 @@ type ArticleRepo database.DbRepo
 
 //NewArticleRepo ......
 func NewArticleRepo(helper database.DbHandler) domain.ArticleRepository {
-	return &ArticleRepo{DbHandler}
+	return &ArticleRepo{helper}
 }
 
 //Create .....
