@@ -41,7 +41,7 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 		return domain.User{}, errors.New("请输入密码")
 	}
 	user, err := itor.UserRepo.GetByEmail(name)
-	if err != nil && err == domain.ErrNotFoundj {
+	if err != nil && err == domain.ErrNotFound {
 		return domain.User{}, errors.New("该邮箱还未注册")
 	}
 
@@ -49,7 +49,7 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 		return domain.User{}, err
 	}
 
-	if user.Name == name && user.Password != password {
+	if user.Email == name && user.Password != password {
 		return domain.User{}, errors.New("用户名密码不匹配")
 	}
 

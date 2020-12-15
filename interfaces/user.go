@@ -23,5 +23,15 @@ func (repo *UserRepo) FindByPhone(phone domain.PhoneNumber) (domain.User, error)
 	user.Phone = phone
 	row := repo.Handler.QueryRow(`select id from t_user where phone=?`, string(phone))
 	err := row.Scan(&user.ID)
+	// TODO: 从err中判断是否是不存在数据错误 <15-12-20, nqq> //
+	return user, err
+}
+
+func (repo *UserRepo) GetByEmail(e Email) (domain.User, error) {
+	row := repo.Handler.QueryRow(`select id,password where email=?`, string(e))
+	var user domain.User
+	user.Email = e
+	err := row.Scan(&user.ID, &user.Password)
+	// TODO: 从err中判断是否是不存在数据错误 <15-12-20, nqq> //
 	return user, err
 }
