@@ -34,6 +34,9 @@ func (itor UserInteractor) CheckIdentityByEmail(name, password string) (domain.U
 	if len(strings.TrimSpace(name)) == 0 {
 		return domain.User{}, errors.New("请输入用户名")
 	}
+	if err := name.Check(); err != nil {
+		return domain.User{}, err
+	}
 	if len(strings.TrimSpace(password)) == 0 {
 		return domain.User{}, errors.New("请输入密码")
 	}

@@ -1,6 +1,8 @@
 // Package domain provides ...
 package domain
 
+import "errors"
+
 //User ....
 type User struct {
 	ID       NUUID
@@ -8,6 +10,19 @@ type User struct {
 	Email    Email
 	Password string
 	Phone    PhoneNumber
+}
+
+func (u User) Check() error {
+	if len(u.Name) == 0 {
+		return errors.New("请输入用户名")
+	}
+	if len(u.Password) == 0 {
+		return errors.New("请输入密码")
+	}
+	if err := u.Email.Check(); err != nil {
+		return err
+	}
+	return u.Phone.Check()
 }
 
 // PhoneNumber 类型
@@ -19,7 +34,7 @@ type Email string
 
 //UserRepository ....
 type UserRepository interface {
-	FindByEmail(e string) (User, error)
+	FindByPhone(phone PhoneNumber) (User, error)
 	Create(u User) error
 	GetByID(ID NUUID) (User, error)
 	GetByEmail(e Email) (User, error)
