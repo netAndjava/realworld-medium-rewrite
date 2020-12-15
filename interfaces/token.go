@@ -16,3 +16,11 @@ func (repo *TokenRepo) Save(t usecases.Token) error {
 	_, err := repo.Handler.Execute(`insert into t_token (id,userID,expiredAt) values(?,?,?)`, t.ID, t.UserID, t.ExpiredAt)
 	return err
 }
+
+func (repo *TokenRepo) Get(tokenID usecases.SUUID) (usecases.Token, error) {
+	row := repo.Handler.QueryRow(`select userID,expiredAt from t_token where ID=?`, tokenID)
+	var token usecases.Token
+	token.ID = tokenID
+	err := row.Scan(&token.UserID, &token.ExpiredAt)
+	return token, err
+}
