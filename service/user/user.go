@@ -21,17 +21,18 @@ type userServer struct {
 }
 
 func Start(port int) {
+	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
+	if err != nil {
+		log.Fatal("connect db err:", err)
+	}
+
+	userItor := usecases.UserInteractor{UserRepo: interfaces.NewUserRepo(handler)}
+
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("listen to port:%d err:%v\n", port, err)
 	}
-
-	handler, err := mysql.NewMysqlHandler("root@real_world_medium?charset=utf8")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	userItor := usecases.UserInteractor{UserRepo: interfaces.NewUserRepo(handler)}
+	log.Println("start server on port:", port)
 
 	s := grpc.NewServer()
 	pb.RegisterUserServer(s, &userServer{userItor: userItor})
