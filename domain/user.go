@@ -22,13 +22,6 @@ func (u User) Check() error {
 	if err := u.Email.Check(); err != nil {
 		return err
 	}
-	return u.Phone.Check()
-}
-
-func (e Email) Check() error {
-	if len(e) == 0 {
-		return errors.New("请输入邮箱")
-	}
 	return nil
 }
 
@@ -36,8 +29,22 @@ func (e Email) Check() error {
 // Derived: PhoneNumber, TelPhoneNumber, MobilePhoneNumber
 type PhoneNumber string
 
+func (phone PhoneNumber) Check() error {
+	if len(phone) == 0 {
+		return errors.New("请输入电话号码")
+	}
+	return nil
+}
+
 //Email
 type Email string
+
+func (e Email) Check() error {
+	if len(e) == 0 {
+		return errors.New("请输入邮箱")
+	}
+	return nil
+}
 
 //UserRepository ....
 type UserRepository interface {
