@@ -1,7 +1,11 @@
 // Package usecases provides ...
 package usecases
 
-import "iohttps.com/live/realworld-medium-rewrite/domain"
+import (
+	"errors"
+
+	"iohttps.com/live/realworld-medium-rewrite/domain"
+)
 
 //UserInteractor ....
 type UserInteractor struct {
@@ -9,8 +13,19 @@ type UserInteractor struct {
 }
 
 //Register 用户注册
-func (itor UserInteractor) Register(GenerateUUID func() domain.NUUID, user domain.User) (domain.NUUID, error) {
-	return domain.NUUID(0), nil
+func (itor UserInteractor) Register(generate func() domain.NUUID, user domain.User) (domain.NUUID, error) {
+	if err := user.Check(); err != nil {
+		return domain.NUUID(0), err
+	}
+	u, err := itor.UserRepo.GetByEmail(user.Email)
+	if u.Email == user.Email {
+		return nil, errors.New("该邮箱已注册过")
+	}
+
+	user.ID = generate()
+	err := itor.UserRepo.Create(u)
+
+	return user, err
 }
 
 //CheckIdentityByEmail 通过email来校验身份
