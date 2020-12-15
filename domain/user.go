@@ -50,6 +50,5 @@ func (e Email) Check() error {
 type UserRepository interface {
 	FindByPhone(phone PhoneNumber) (User, error)
 	Create(u User) error
-	GetByID(ID NUUID) (User, error)
 	GetByEmail(e Email) (User, error)
 }
