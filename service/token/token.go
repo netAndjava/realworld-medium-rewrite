@@ -55,3 +55,11 @@ func (server *tokenServer) IsLoggedin(ctx context.Context, req *pb.IsLoggedinReq
 	return &pb.Token{TokenID: string(token.ID), UserID: int64(token.UserID)}
 
 }
+
+func (server *tokenServer) Logout(ctx context.Context, req *pb.LogoutReq) (*pb.LoginRep, error) {
+	err := server.tokenItor.Logout(usecases.SUUID(req.TokenID))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.LogoutRep{}, nil
+}
