@@ -46,3 +46,12 @@ func (server *tokenServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.Log
 	}
 	return &pb.LoginRep{TokenID: string(tokenID)}, nil
 }
+
+func (server *tokenServer) IsLoggedin(ctx context.Context, req *pb.IsLoggedinReq) (*pb.Token, error) {
+	token, err := server.tokenItor.IsLoggedin(req.TokenID)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.Token{TokenID: string(token.ID), UserID: int64(token.UserID)}
+
+}
