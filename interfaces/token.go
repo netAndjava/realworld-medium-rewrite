@@ -18,9 +18,14 @@ func (repo *TokenRepo) Save(t usecases.Token) error {
 }
 
 func (repo *TokenRepo) Get(tokenID usecases.SUUID) (usecases.Token, error) {
-	row := repo.Handler.QueryRow(`select userID,expiredAt from t_token where ID=?`, tokenID)
+	row := repo.Handler.QueryRow(`select userID,expiredAt from t_token where id=?`, tokenID)
 	var token usecases.Token
 	token.ID = tokenID
 	err := row.Scan(&token.UserID, &token.ExpiredAt)
 	return token, err
+}
+
+func (repo *TokenRepo) Delete(tokenID usecases.SUUID) error {
+	_, err := repo.Handler.Execute(`delete from t_token where id=?`, tokenID)
+	return err
 }
