@@ -43,3 +43,22 @@ func (repo *CommentRepo) GetCommentByPID(PID domain.NUUID) ([]domain.Comment, er
 	}
 	return comments, nil
 }
+
+func (repo *CommentRepo) GetCommentsByArticleID(articleID domain.NUUID) ([]domain.Comment, error) {
+	rows, err := repo.Handler.Query(`select id,pid,content,userID from t_comment where articleID=?`, articleID)
+	if err != nil {
+		return []domain.Comment{}, err
+	}
+	var comments []domain.Comment
+	for rows.Next() {
+		var c domain.Comment
+		err := rows.Scan(&c.ID, &c.ArticleID, &c.Content, &c.Creator)
+		if err != nil {
+			// TODO:记录错误日志  <16-12-20, nqq> //
+			continue
+		}
+		c.PID = PID
+		comments = append(comments, c)
+	}
+	return comments, nil
+}
