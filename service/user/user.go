@@ -20,8 +20,8 @@ type userServer struct {
 	userItor usecases.UserInteractor
 }
 
-func Start(port int) {
-	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8") // TODO: dataSourceName 作为一个value在在代码里面到处都是,变更一下,你要到处去改吗?  <17-12-20, bantana> //
+func Start(port int, dataSourceName string) {
+	handler, err := mysql.NewMysqlHandler(dataSourceName) // TODO: dataSourceName 作为一个value在在代码里面到处都是,变更一下,你要到处去改吗?  <17-12-20, bantana> //
 	if err != nil {
 		log.Fatal("connect db err:", err)
 	}
