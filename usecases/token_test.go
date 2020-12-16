@@ -26,12 +26,19 @@ func TestLogin(t *testing.T) {
 // 2. register, login, logout
 // 3. register, sign in, sign out (best)
 
-// TestCheckIfLoggedin tokenItor.CheckIfLogged 改为tokenItor.IsLoggedIn or tokenItor.IsOnline ?
-func TestCheckIfLoggedin(t *testing.T) {
+// TestIsLoggedin
+func TestIsLoggedin(t *testing.T) {
 	a := assert.New(t)
+	// 测试用户没有登录
 	tokenID := ""
 	_, err := tokenItor.IsLoggedin(SUUID(tokenID))
 	a.NotNil(err)
+	// 测试用户登录过期
+	tokenID = "token"
+	_, err = tokenItor.IsLoggedin(SUUID(tokenID))
+	a.NotNil(err)
+
+	// 测试已登录
 	tokenID = "test"
 	_, err = tokenItor.IsLoggedin(SUUID(tokenID))
 	a.Nil(err)

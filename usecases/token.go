@@ -3,13 +3,15 @@ package usecases
 
 import (
 	"errors"
+	"time"
 
 	"iohttps.com/live/realworld-medium-rewrite/domain"
 )
 
 type Token struct {
-	ID     SUUID
-	UserID domain.NUUID
+	ID        SUUID
+	UserID    domain.NUUID
+	ExpiredAt int64 //过期时间
 }
 
 // TODO: SUUID 这种难以理解的id请加上注释,要么就语义可理解的命名. <10-12-20, bantana> //
@@ -38,6 +40,9 @@ func (itor TokenInteractor) IsLoggedin(tokenID SUUID) (Token, error) {
 		return Token{}, errors.New("token不能为空")
 	}
 	token, err := itor.TokenRepos.Get(tokenID)
+	if token.ExpiredAt < time.Now().Unix() {
+		return Token{}, errors.New("登录已过期，请重新登录")
+	}
 	return token, err
 }
 
