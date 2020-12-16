@@ -441,4 +441,19 @@ todo
 
 3. 用例设计
 
-   4. 删除评论
+   1. 删除评论
+
+```
+User                        system
+
+-------1 articleID,commentID --------> DropComment(){
+                                          err := DropByCreate()
+                                          if errNoPermisssion{
+                                             art := article.ViewArticle(article)
+                                              if IsAuthor(){
+                                                DropComment(articleID)
+                                              }
+                                          }
+                                      }
+<-------2 success---------------------
+```

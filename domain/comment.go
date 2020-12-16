@@ -28,7 +28,6 @@ type CommentRepository interface {
 	Get(ID NUUID) (Comment, error)
 	GetCommentByPID(PID NUUID) ([]Comment, error)
 	GetCommentsByArticleID(articleID NUUID) ([]Comment, error)
-	DropByCreator(ID NUUID) error
-	DropByAuthorOfArticle(ID NUUID) error
+	Drop(ID NUUID) error
 	DropByPID(PID NUUID) error
 }
