@@ -2,11 +2,13 @@
 package token
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
+	"iohttps.com/live/realworld-medium-rewrite/domain"
 	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
 	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 	pb "iohttps.com/live/realworld-medium-rewrite/service/api"
@@ -30,8 +32,17 @@ func Start(port int) {
 	if err != nil {
 		log.Fatalf("listen port:%d err:%v", port, err)
 	}
+	log.Println("listen to port:", port)
 
 	s := grpc.NewServer()
 	pb.RegisterTokenServer(s, &tokenServer{tokenItor: tokenItor})
 	s.Serve(lis)
+}
+
+func (server *tokenServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRep, error) {
+	tokenID, err := server.tokenItor.Login(domain.NUUID(req.UserID), usecases.GenerateToken)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.LoginRep{TokenID: string(tokenID)}, nil
 }
