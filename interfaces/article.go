@@ -128,13 +128,3 @@ func (repo *ArticleRepo) PublishPublicArticleDraft(a domain.Article) error {
 	_, err = tx.Execute(`delete from t_draft where id=?`, a.ID)
 	return err
 }
-
-func (repo *CommentRepo) Drop(ID domain.NUUID) error {
-	_, err := repo.Handler.Execute(`delete from t_comment where id=?`, ID)
-	return err
-}
-
-func (repo *CommentRepo) DropByPID(PID domain.NUUID) error {
-	_, err := repo.Handler.Execute(`delete from t_comment where pid=?`, PID)
-	return err
-}
