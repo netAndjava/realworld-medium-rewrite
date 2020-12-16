@@ -30,7 +30,7 @@ type Comment struct {
 
 //GetCommentsOfArticle 获取文章的评论列表
 func (itor CommentInteractor) GetCommentsOfArticle(articleID domain.NUUID) ([]Comment, error) {
-	comments, err := itor.CommentRepos.GetCommentsOfOriginalPoster(articleID)
+	comments, err := itor.CommentRepos.GetCommentsByArticleID(articleID)
 	if err != nil {
 		return []Comment{}, err
 	}
@@ -47,17 +47,10 @@ func (itor CommentInteractor) GetCommentsOfArticle(articleID domain.NUUID) ([]Co
 	return list, nil
 }
 
-//DropByCreator 评论文作者删除评论
-func (itor CommentInteractor) DropByAuthorOfArticle(commentID domain.NUUID, userID domain.NUUID) error {
-	comment, err := itor.CommentRepos.Get(commentID)
-	if err != nil {
-		return err
-	}
-	if comment.Article.AuthorID != userID {
-		return errors.New("没有删除权限")
-	}
+//DropByCreator 评论作者删除评论
+func (itor CommentInteractor) DropArticle(commentID domain.NUUID) error {
 
-	err = itor.CommentRepos.DropByAuthorOfArticle(commentID)
+	err := itor.CommentRepos.Drop(commentID)
 	if err != nil {
 		return err
 	}
@@ -75,7 +68,7 @@ func (itor CommentInteractor) DropByCreator(commentID domain.NUUID, userID domai
 	if comment.Creator.ID != userID {
 		return errors.New("用户没有删除权限")
 	}
-	err = itor.CommentRepos.DropByCreator(commentID)
+	err = itor.DropArticle(commentID)
 	if err != nil {
 		return err
 	}
