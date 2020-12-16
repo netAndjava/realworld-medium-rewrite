@@ -17,6 +17,10 @@ func (repo *CommentRepo) Add(c domain.Comment) error {
 	return err
 }
 
-// func (repo *CommentRepo)Get(ID domain.NUUID)(domain.Comment,error){
-// 	repo.Handler.QueryRow(`select pid,articleID,content,userID from t_comment where id=?`, id)
-// }
+func (repo *CommentRepo) Get(ID domain.NUUID) (domain.Comment, error) {
+	row := repo.Handler.QueryRow(`select pid,articleID,content,userID from t_comment where id=?`, id)
+	var c domain.Comment
+	c.ID = id
+	err := row.Scan(&c.PID, &c.ArticleID, &c.Content, &c.Creator)
+	return c, err
+}
