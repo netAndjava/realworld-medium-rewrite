@@ -3,13 +3,12 @@ package user
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
 	"iohttps.com/live/realworld-medium-rewrite/domain"
-	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 	pb "iohttps.com/live/realworld-medium-rewrite/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/usecases"
@@ -21,23 +20,20 @@ type userServer struct {
 }
 
 //Start ....
-func Start(port int) {
-	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
+func Start(address string, handler database.DbHandler) {
+	repo := interfaces.NewUserRepo(handler)
+
+	userItor := usecases.UserInteractor{UserRepo: repo}
+
+	conn, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Fatal("connect db err:", err)
+		log.Fatalf("listen to address:%s err:%v\n", address, err)
 	}
+	log.Println("start server on address:", address)
 
-	userItor := usecases.UserInteractor{UserRepo: interfaces.NewUserRepo(handler)}
-
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		log.Fatalf("listen to port:%d err:%v\n", port, err)
-	}
-	log.Println("start server on port:", port)
-
-	s := grpc.NewServer()
-	pb.RegisterUserServer(s, &userServer{userItor: userItor})
-	s.Serve(lis)
+	server := grpc.NewServer()
+	pb.RegisterUserServer(server, &userServer{userItor: userItor})
+	server.Serve(conn)
 }
 
 func (server *userServer) Register(ctx context.Context, user *pb.User) (*pb.RegisterRep, error) {
