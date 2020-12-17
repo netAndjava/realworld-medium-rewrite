@@ -51,7 +51,7 @@ func Start(port int) {
 		log.Fatalf("listen to port:%d err:%v\n", port, err)
 	}
 	server := grpc.NewServer()
-	pb.RegisterService(server, &commentServer{usecases.CommentInteractor{repo}})
+	pb.RegisterCommentServer(server, &commentServer{commentItor: usecases.CommentInteractor{CommentRepos: repo}})
 	server.Serve(conn)
 }
 

@@ -20,6 +20,7 @@ type tokenServer struct {
 	tokenItor usecases.TokenInteractor
 }
 
+//Start .....
 func Start(port int) {
 	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
 	if err != nil {
@@ -48,15 +49,15 @@ func (server *tokenServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.Log
 }
 
 func (server *tokenServer) IsLoggedin(ctx context.Context, req *pb.IsLoggedinReq) (*pb.Token, error) {
-	token, err := server.tokenItor.IsLoggedin(req.TokenID)
+	token, err := server.tokenItor.IsLoggedin(usecases.SUUID(req.TokenID))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.Token{TokenID: string(token.ID), UserID: int64(token.UserID)}
+	return &pb.Token{TokenID: string(token.ID), UserID: int64(token.UserID)}, nil
 
 }
 
-func (server *tokenServer) Logout(ctx context.Context, req *pb.LogoutReq) (*pb.LoginRep, error) {
+func (server *tokenServer) Logout(ctx context.Context, req *pb.LogoutReq) (*pb.LogoutRep, error) {
 	err := server.tokenItor.Logout(usecases.SUUID(req.TokenID))
 	if err != nil {
 		return nil, err

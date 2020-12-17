@@ -20,6 +20,7 @@ type userServer struct {
 	userItor usecases.UserInteractor
 }
 
+//Start ....
 func Start(port int) {
 	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
 	if err != nil {
