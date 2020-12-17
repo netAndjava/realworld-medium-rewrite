@@ -123,7 +123,7 @@ func (itor ArticleInteractor) PublishPublicArticleDraft(a domain.Article, userID
 	return itor.ArticleRepo.PublishPublicArticleDraft(art)
 }
 
-// GenerateUUID 生成树枝类型的id
+// GenerateUUID 生成Number类型的id
 func GenerateUUID() domain.NUUID {
 	return domain.NUUID(0)
 }

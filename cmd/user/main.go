@@ -3,8 +3,8 @@ package main
 
 import "iohttps.com/live/realworld-medium-rewrite/service/user"
 
-var ConfigUserListen = 3001
+var configUserListen = 3001
 
 func main() {
-	user.Start(ConfigUserListen)
+	user.Start(configUserListen)
 }

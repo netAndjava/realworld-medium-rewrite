@@ -15,6 +15,7 @@ type Comment struct {
 	Creator   NUUID  //评论的创建者
 }
 
+//Check 校验评论
 func (c Comment) Check() error {
 	if len(c.Content) == 0 {
 		return errors.New("评论内容不能为空")

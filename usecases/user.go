@@ -56,6 +56,7 @@ func (itor UserInteractor) CheckIdentityByEmail(name domain.Email, password stri
 	return user, nil
 }
 
+//GetUserByPhone 通过电话号码查找用户
 func (itor UserInteractor) GetUserByPhone(iphone domain.PhoneNumber) (domain.User, error) {
 	if err := iphone.Check(); err != nil {
 		return domain.User{}, err

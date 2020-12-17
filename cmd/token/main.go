@@ -3,8 +3,8 @@ package main
 
 import "iohttps.com/live/realworld-medium-rewrite/service/token"
 
-var ConfigTokenListen = 30002
+var configTokenListen = 30002
 
 func main() {
-	token.Start(ConfigTokenListen)
+	token.Start(configTokenListen)
 }

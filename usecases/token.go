@@ -8,21 +8,25 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/domain"
 )
 
+//Token .....
 type Token struct {
 	ID        SUUID
 	UserID    domain.NUUID
 	ExpiredAt int64 //过期时间
 }
 
+//SUUID ....
 // TODO: SUUID 这种难以理解的id请加上注释,要么就语义可理解的命名. <10-12-20, bantana> //
 type SUUID string
 
+//TokenRepository token存储器
 type TokenRepository interface {
 	Save(t Token) error
 	Get(tokenID SUUID) (Token, error)
 	Delete(tokenID SUUID) error
 }
 
+//TokenInteractor token交互器
 type TokenInteractor struct {
 	TokenRepos TokenRepository
 }
@@ -54,6 +58,7 @@ func (itor TokenInteractor) Logout(tokenID SUUID) error {
 	return itor.TokenRepos.Delete(tokenID)
 }
 
+//GenerateToken 生成token id
 func GenerateToken() SUUID {
 	return ""
 }

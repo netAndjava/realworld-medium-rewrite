@@ -111,25 +111,30 @@ type mysqlTx struct {
 	Tx *sql.Tx
 }
 
+//Execute ....
 func (tx *mysqlTx) Execute(query string, args ...interface{}) (database.Result, error) {
 	result, err := tx.Tx.Exec(query, args...)
 	return &mysqlResult{result}, err
 }
 
+//Query .....
 func (tx *mysqlTx) Query(query string, args ...interface{}) (database.Rows, error) {
 	rows, err := tx.Tx.Query(query, args)
 	return &mysqlRows{rows}, err
 }
 
+//QueryRow ....
 func (tx *mysqlTx) QueryRow(query string, args ...interface{}) database.Row {
 	row := tx.Tx.QueryRow(query, args...)
 	return &mysqlRow{row}
 }
 
+//Commit .....
 func (tx *mysqlTx) Commit() error {
 	return tx.Tx.Commit()
 }
 
+//Rollback ....
 func (tx *mysqlTx) Rollback() error {
 	return tx.Tx.Rollback()
 }

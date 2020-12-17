@@ -30,6 +30,7 @@ type Row interface {
 	Scan(dest ...interface{}) error
 }
 
+//Tx ....
 type Tx interface {
 	Execute(query string, args ...interface{}) (Result, error)
 	Query(query string, args ...interface{}) (Rows, error)

@@ -12,6 +12,7 @@ type User struct {
 	Phone    PhoneNumber
 }
 
+//Check 校验用户数据是否合法
 func (u User) Check() error {
 	if len(u.Name) == 0 {
 		return errors.New("请输入用户名")
@@ -29,6 +30,7 @@ func (u User) Check() error {
 // Derived: PhoneNumber, TelPhoneNumber, MobilePhoneNumber
 type PhoneNumber string
 
+//Check 校验电话号码是否合法
 func (phone PhoneNumber) Check() error {
 	if len(phone) == 0 {
 		return errors.New("请输入电话号码")
@@ -36,9 +38,10 @@ func (phone PhoneNumber) Check() error {
 	return nil
 }
 
-//Email
+//Email ....
 type Email string
 
+//Check 校验邮箱是否合法
 func (e Email) Check() error {
 	if len(e) == 0 {
 		return errors.New("请输入邮箱")
