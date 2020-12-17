@@ -17,12 +17,13 @@ func (itor CommentInteractor) Add(generate func() domain.NUUID, c domain.Comment
 	if err := c.Check(); err != nil {
 		return domain.NUUID(0), err
 	}
-	c.Creator.ID = userID
+	c.Creator = userID
 	c.ID = generate()
 	err := itor.CommentRepos.Add(c)
 	return c.ID, err
 }
 
+//Comment 评论
 type Comment struct {
 	domain.Comment
 	Children []domain.Comment
@@ -47,7 +48,7 @@ func (itor CommentInteractor) GetCommentsOfArticle(articleID domain.NUUID) ([]Co
 	return list, nil
 }
 
-//DropByCreator 评论作者删除评论
+//Drop 删除评论
 func (itor CommentInteractor) Drop(commentID domain.NUUID) error {
 
 	err := itor.CommentRepos.Drop(commentID)
@@ -59,16 +60,16 @@ func (itor CommentInteractor) Drop(commentID domain.NUUID) error {
 	return err
 }
 
-//DropByArticleAuthor 文章作者删除针对文章的评论
+//DropByCreator 文章作者删除针对文章的评论
 func (itor CommentInteractor) DropByCreator(commentID domain.NUUID, userID domain.NUUID) error {
 	comment, err := itor.CommentRepos.Get(commentID)
 	if err != nil {
 		return err
 	}
-	if comment.Creator.ID != userID {
+	if comment.Creator != userID {
 		return errors.New("用户没有删除权限")
 	}
-	err = itor.DropArticle(commentID)
+	err = itor.Drop(commentID)
 	if err != nil {
 		return err
 	}

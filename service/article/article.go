@@ -20,6 +20,7 @@ type articleServer struct {
 	artInteractor usecases.ArticleInteractor
 }
 
+//Start ....
 func Start(port int) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
@@ -119,6 +120,7 @@ func (server articleServer) ViewAllArticles(ctx context.Context, req *pb.ViewAll
 
 }
 
+//ConvertArticles .....
 func ConvertArticles(arts []domain.Article) []*pb.Article {
 
 	articles := make([]*pb.Article, len(arts))
