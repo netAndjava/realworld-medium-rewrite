@@ -9,15 +9,18 @@ import (
 //UserRepo .....
 type UserRepo database.DbRepo
 
+//NewUserRepo .........
 func NewUserRepo(helper database.DbHandler) domain.UserRepository {
 	return &UserRepo{Handler: helper}
 }
 
+//Create .........
 func (repo *UserRepo) Create(u domain.User) error {
 	_, err := repo.Handler.Execute(`insert into t_user (id,name,password,email,phone) values(?,?,?,?,?)`, u.ID, u.Name, u.Password, u.Email, u.Phone)
 	return err
 }
 
+//FindByPhone .........
 func (repo *UserRepo) FindByPhone(phone domain.PhoneNumber) (domain.User, error) {
 	var user domain.User
 	user.Phone = phone
@@ -27,6 +30,7 @@ func (repo *UserRepo) FindByPhone(phone domain.PhoneNumber) (domain.User, error)
 	return user, err
 }
 
+//GetByEmail ..........
 func (repo *UserRepo) GetByEmail(e domain.Email) (domain.User, error) {
 	row := repo.Handler.QueryRow(`select id,password where email=?`, string(e))
 	var user domain.User

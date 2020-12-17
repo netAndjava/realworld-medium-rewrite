@@ -32,7 +32,7 @@ func (repo *ArticleRepo) Publish(ID domain.NUUID) error {
 	return err
 }
 
-//GGetAuthorDrafts .....
+//GetAuthorDrafts .....
 func (repo *ArticleRepo) GetAuthorDrafts(userID domain.NUUID) ([]domain.Article, error) {
 	return repo.GetAuthorArticleByStatus(userID, domain.Draft)
 }
@@ -42,6 +42,7 @@ func (repo *ArticleRepo) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.
 	return repo.GetAuthorArticleByStatus(userID, domain.Public)
 }
 
+//GetAuthorArticleByStatus ........
 func (repo *ArticleRepo) GetAuthorArticleByStatus(userID domain.NUUID, status domain.PublicStatus) ([]domain.Article, error) {
 	var articles []domain.Article
 	rows, err := repo.Handler.Query(`select id,title,content where status=?,userId=?`, status, userID)
@@ -63,6 +64,7 @@ func (repo *ArticleRepo) GetAuthorArticleByStatus(userID domain.NUUID, status do
 	return articles, nil
 }
 
+//GetAllPublicArticles .........
 func (repo *ArticleRepo) GetAllPublicArticles() ([]domain.Article, error) {
 
 	var articles []domain.Article
@@ -92,6 +94,7 @@ func (repo *ArticleRepo) Get(ID domain.NUUID) (domain.Article, error) {
 	return a, err
 }
 
+//GetDraftOfPublicArticle .......
 func (repo *ArticleRepo) GetDraftOfPublicArticle(ID domain.NUUID) (domain.Article, error) {
 	row := repo.Handler.QueryRow(`select title,content from t_draft where id=?`, ID)
 
@@ -101,16 +104,19 @@ func (repo *ArticleRepo) GetDraftOfPublicArticle(ID domain.NUUID) (domain.Articl
 	return art, err
 }
 
+//CreateDraftOfPublicArticle .......
 func (repo *ArticleRepo) CreateDraftOfPublicArticle(a domain.Article) error {
 	_, err := repo.Handler.Execute(`insert into t_draft (id,title,content) values(?,?,?)`, a.ID, a.Title, a.Content)
 	return err
 }
 
+//UpdateDraftOfPublicArticle .......
 func (repo *ArticleRepo) UpdateDraftOfPublicArticle(a domain.Article) error {
 	_, err := repo.Handler.Execute(`update t_draft set title=?,content=? where id=?`, a.Title, a.Content, a.ID)
 	return err
 }
 
+//PublishPublicArticleDraft .....
 func (repo *ArticleRepo) PublishPublicArticleDraft(a domain.Article) error {
 	tx, err := repo.Handler.Begin()
 	defer func() {
