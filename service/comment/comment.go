@@ -76,3 +76,11 @@ func (server commentServer) GetCommentsOfArticle(ctx context.Context, req *pb.Ge
 	}
 	return &pb.GetCommentsOfArticleRep{Comments: cms}, nil
 }
+
+func (server commentServer) Drop(ctx context.Context, req *pb.DropReq) (*pb.DropRep, error) {
+	err := server.commentItor.Drop(domain.NUUID(req.Id))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DropRep{}, nil
+}
