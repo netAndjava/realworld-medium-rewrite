@@ -12,7 +12,7 @@ type Comment struct {
 	PID       NUUID  //父ID，用来知道回复的评论
 	ArticleID NUUID  //评论的文章
 	Content   string //Content 评论的内容
-	Creator   UserID //评论的创建者
+	Creator   NUUID  //评论的创建者
 }
 
 func (c Comment) Check() error {

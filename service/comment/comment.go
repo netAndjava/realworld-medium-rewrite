@@ -57,10 +57,22 @@ func Start(port int) {
 
 //Add 添加评论
 func (server commentServer) Add(ctx context.Context, c *pb.Comment) (*pb.AddRep, error) {
-	ID, err := server.commentItor.Add(usecases.GenerateUUID, domain.Comment{PID: domain.NUUID(c.Pid, ArticleID), ArticleID: domain.NUUID(c.ArticleID), Content: c.Content, Creator: domain.NUUID(c.UserID)}, domain.NUUID(c.UserID))
+	ID, err := server.commentItor.Add(usecases.GenerateUUID, domain.Comment{PID: domain.NUUID(c.Pid), ArticleID: domain.NUUID(c.ArticleID), Content: c.Content, Creator: domain.NUUID(c.UserID)}, domain.NUUID(c.UserID))
 	if err != nil {
 		return nil, err
 	}
 	return &pb.AddRep{Id: int64(ID)}, nil
+}
 
+func (server commentServer) GetCommentsOfArticle(ctx context.Context, req *pb.GetCommentsOfArticleReq) (*pb.GetCommentsOfArticleRep, error) {
+	comments, err := server.commentItor.GetCommentsOfArticle(domain.NUUID(req.ArticleID))
+	if err != nil {
+		return nil, err
+	}
+
+	cms := make([]*pb.Comment, len(comments))
+	for i, c := range comments {
+		cms[i] = &pb.Comment{Id: int64(c.ID), Pid: int64(c.PID), ArticleID: int64(c.ArticleID), UserID: int64(c.Creator), Content: c.Content}
+	}
+	return &pb.GetCommentsOfArticleRep{Comments: cms}, nil
 }
