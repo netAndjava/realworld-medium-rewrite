@@ -3,13 +3,12 @@ package comment
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
 	"iohttps.com/live/realworld-medium-rewrite/domain"
-	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 	pb "iohttps.com/live/realworld-medium-rewrite/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/usecases"
@@ -38,20 +37,20 @@ type commentServer struct {
 // }
 
 //Start ....
-func Start(port int) {
+func Start(address string, handler database.DbHandler) {
 
-	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
-	if err != nil {
-		log.Fatal("connect database err:", err)
-	}
 	repo := interfaces.NewCommentRepo(handler)
 
-	conn, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	itor := usecases.CommentInteractor{CommentRepos: repo}
+
+	conn, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Fatalf("listen to port:%d err:%v\n", port, err)
+		log.Fatalf("listen to address:%s err:%v\n", address, err)
 	}
+	log.Println("start server on address:", address)
+
 	server := grpc.NewServer()
-	pb.RegisterCommentServer(server, &commentServer{commentItor: usecases.CommentInteractor{CommentRepos: repo}})
+	pb.RegisterCommentServer(server, &commentServer{commentItor: itor})
 	server.Serve(conn)
 }
 
