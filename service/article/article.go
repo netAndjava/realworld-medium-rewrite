@@ -3,13 +3,12 @@ package article
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
 	"iohttps.com/live/realworld-medium-rewrite/domain"
-	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 	pb "iohttps.com/live/realworld-medium-rewrite/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/usecases"
@@ -21,23 +20,25 @@ type articleServer struct {
 }
 
 //Start ....
-func Start(port int) {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		log.Fatalf("listen port:%d err:%v\n", port, err)
-	}
-	log.Println("start server on port:", port)
-	s := grpc.NewServer()
-
-	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
-	if err != nil {
-		log.Fatalln("connect db err:", err)
-	}
+func Start(address string, handler database.DbHandler) {
+	//init
+	//1.1 init enviroment
+	//1.2 init db
 	artRepo := interfaces.NewArticleRepo(handler)
+
+	//1.3 create interactor for usecases
 	artItor := usecases.ArticleInteractor{ArticleRepo: artRepo}
 
-	pb.RegisterArticleServer(s, &articleServer{artInteractor: artItor})
-	s.Serve(lis)
+	//1.3 start grpc server
+	conn, err := net.Listen("tcp", address)
+	if err != nil {
+		log.Fatalf("listen adderss:%s err:%v\n", address, err)
+	}
+	log.Println("start server on address:", address)
+	server := grpc.NewServer()
+
+	pb.RegisterArticleServer(server, &articleServer{artInteractor: artItor})
+	server.Serve(conn)
 }
 
 func (server *articleServer) SaveArticle(ctxt context.Context, art *pb.Article) (*pb.SaveArticleRep, error) {
