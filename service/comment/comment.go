@@ -84,3 +84,9 @@ func (server commentServer) Drop(ctx context.Context, req *pb.DropReq) (*pb.Drop
 	}
 	return &pb.DropRep{}, nil
 }
+
+func (server commentServer) DropByCreator(ctx context.Context, req *pb.DropByCreatorReq) (*pb.DropByCreatorRep, error) {
+	err := server.commentItor.DropByCreator(domain.NUUID(req.Id), domain.NUUID(req.UserID))
+	return &pb.DropByCreatorRep{}, err
+
+}
