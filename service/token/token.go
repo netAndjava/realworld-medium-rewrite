@@ -3,13 +3,12 @@ package token
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
 	"iohttps.com/live/realworld-medium-rewrite/domain"
-	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 	pb "iohttps.com/live/realworld-medium-rewrite/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/usecases"
@@ -21,23 +20,20 @@ type tokenServer struct {
 }
 
 //Start .....
-func Start(port int) {
-	handler, err := mysql.NewMysqlHandler("root@/real_world_medium?charset=utf8")
-	if err != nil {
-		log.Fatal("connect db err:", err)
-	}
+func Start(address string, handler database.DbHandler) {
 	tokenRepo := interfaces.NewTokenRepo(handler)
+
 	tokenItor := usecases.TokenInteractor{TokenRepos: tokenRepo}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	conn, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Fatalf("listen port:%d err:%v", port, err)
+		log.Fatalf("listen address:%s err:%v", conn, err)
 	}
-	log.Println("listen to port:", port)
+	log.Println("listen to address:", address)
 
 	s := grpc.NewServer()
 	pb.RegisterTokenServer(s, &tokenServer{tokenItor: tokenItor})
-	s.Serve(lis)
+	s.Serve(conn)
 }
 
 func (server *tokenServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRep, error) {
