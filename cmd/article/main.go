@@ -21,7 +21,7 @@ func main() {
 		log.Fatalf("decode config file:%s of db err:%v", *dbConfig, err)
 	}
 
-	handelr, err := mysql.NewMysql(dbConf)
+	handler, err := mysql.NewMysql(dbConf)
 	if err != nil {
 		log.Fatalln("connect db err:", err)
 	}
@@ -33,5 +33,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("config file:%s err:%v\n", *f, err)
 	}
-	article.Start(fmt.Sprintf("%s:%s", server.IP, server.Port), handelr)
+	article.Start(fmt.Sprintf("%s:%s", server.IP, server.Port), handler)
 }
