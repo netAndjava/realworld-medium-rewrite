@@ -1,0 +1,10 @@
+[database]
+user = "root"
+password = ""
+hostname = "localhost"
+port = "33060"
+dbname = ""
+
+[server]
+port = "3000"
+ip = "0.0.0.0"
