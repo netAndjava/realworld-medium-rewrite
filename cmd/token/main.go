@@ -12,17 +12,25 @@ import (
 )
 
 func main() {
-	c := flag.String("config", "./dev.toml", "please input config file")
+	dbConfig := flag.String("db", "./configs/mysql.toml", "please input config file of db")
 	flag.Parse()
-	conf, err := config.Decode(*c)
+	var dbConf mysql.Config
+	_, err := config.Decode(*dbConfig, &dbConf)
 	if err != nil {
-		log.Fatalf("decode config file:%s err:%v\n", *c, err)
+		log.Fatalf("decode config file:%s of db err:%v\n", *dbConfig, err)
 	}
-
-	handler, err := mysql.NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf-8", conf.DB.User, conf.DB.Password, conf.DB.Network, conf.DB.Host, conf.DB.Port, conf.DB.Name))
+	handler, err := mysql.NewMysql(dbConf)
 	if err != nil {
 		log.Fatalln("init db err:", err)
 	}
 
-	token.Start(fmt.Sprintf("%s:%s", conf.Server.IP, conf.Server.Port), handler)
+	c := flag.String("config", "./dev.toml", "please input config file")
+	flag.Parse()
+	var serverConf config.Server
+	_, err = config.Decode(*c, &serverConf)
+	if err != nil {
+		log.Fatalf("decode config file:%s err:%v\n", *c, err)
+	}
+
+	token.Start(fmt.Sprintf("%s:%s", serverConf.IP, serverConf.Port), handler)
 }
