@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/bufbuild/buf v0.33.0 // indirect
+	github.com/go-delve/delve v1.5.1
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/stretchr/testify v1.6.1

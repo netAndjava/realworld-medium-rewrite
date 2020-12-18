@@ -3,11 +3,11 @@ package config
 
 import (
 	"io/ioutil"
-	"log"
 
 	"github.com/BurntSushi/toml"
 )
 
+//Decode ....
 func Decode(file string) (Config, error) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -16,21 +16,24 @@ func Decode(file string) (Config, error) {
 
 	var config Config
 	if _, err := toml.Decode(string(data), &config); err != nil {
-		log.Fatalln(err)
+		return Config{}, err
 	}
 	return config, nil
 }
 
+//Config ....
 type Config struct {
 	Server Server
 	DB     Database
 }
 
+//Server ......
 type Server struct {
 	IP   string
 	Port string
 }
 
+//Database .....
 type Database struct {
 	User     string
 	Password string
