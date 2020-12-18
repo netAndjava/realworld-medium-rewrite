@@ -18,7 +18,7 @@ func main() {
 	}
 
 	//init db handler
-	handelr, err := mysql.NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%s)?charset=utf-8", conf.DB.User, conf.DB.Password, conf.DB.Host, conf.DB.Port))
+	handelr, err := mysql.NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%s/%s)?charset=utf-8", conf.DB.User, conf.DB.Password, conf.DB.Network, conf.DB.Host, conf.DB.Port, config.Database.Name))
 	if err != nil {
 		log.Fatalln("init db err:", err)
 	}

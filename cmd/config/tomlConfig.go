@@ -37,6 +37,7 @@ type Server struct {
 type Database struct {
 	User     string
 	Password string
+	Network  string
 	Host     string
 	Port     string
 	Name     string

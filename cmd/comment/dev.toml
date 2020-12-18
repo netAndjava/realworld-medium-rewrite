@@ -3,9 +3,7 @@ user = "root"
 password = ""
 hostname = "localhost"
 port = "33060"
-dbname = "real_world_medium"
-network = "tcp"
-
+dbname = ""
 
 [server]
 port = "3000"
