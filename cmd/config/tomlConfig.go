@@ -8,37 +8,18 @@ import (
 )
 
 //Decode ....
-func Decode(file string) (Config, error) {
+func Decode(file string, v interface{}) (toml.MetaData, error) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
-		return Config{}, err
+		return toml.MetaData{}, err
 	}
 
-	var config Config
-	if _, err := toml.Decode(string(data), &config); err != nil {
-		return Config{}, err
-	}
-	return config, nil
-}
-
-//Config ....
-type Config struct {
-	Server Server
-	DB     Database
+	meta, err := toml.Decode(string(data), v)
+	return meta, err
 }
 
 //Server ......
 type Server struct {
 	IP   string
 	Port string
-}
-
-//Database .....
-type Database struct {
-	User     string
-	Password string
-	Network  string
-	Host     string
-	Port     string
-	Name     string
 }

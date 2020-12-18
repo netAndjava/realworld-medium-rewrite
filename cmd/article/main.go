@@ -11,17 +11,27 @@ import (
 )
 
 func main() {
+
+	//init db handler
+	var dbConf mysql.Config
+	dbConfig := flag.String("db", "./configs/mysql.toml", "please input config file of db")
+	flag.Parse()
+	_, err := config.Decode(*dbConfig, &dbConf)
+	if err != nil {
+		log.Fatalf("decode config file:%s of db err:%v", *dbConfig, err)
+	}
+
+	handelr, err := mysql.NewMysql(dbConf)
+	if err != nil {
+		log.Fatalln("connect db err:", err)
+	}
+
 	f := flag.String("config", "./dev.toml", "please input config file")
 	flag.Parse()
-	conf, err := config.Decode(*f)
+	var server config.Server
+	_, err = config.Decode(*f, &server)
 	if err != nil {
 		log.Fatalf("config file:%s err:%v\n", *f, err)
 	}
-
-	//init db handler
-	handelr, err := mysql.NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%s/%s)?charset=utf-8", conf.DB.User, conf.DB.Password, conf.DB.Network, conf.DB.Host, conf.DB.Port, conf.DB.Name))
-	if err != nil {
-		log.Fatalln("init db err:", err)
-	}
-	article.Start(fmt.Sprintf("%s:%s", conf.Server.IP, conf.Server.Port), handelr)
+	article.Start(fmt.Sprintf("%s:%s", server.IP, server.Port), handelr)
 }

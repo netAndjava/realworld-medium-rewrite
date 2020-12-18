@@ -1,12 +1,3 @@
-[database]
-user = "root"
-password = ""
-hostname = "localhost"
-port = "33060"
-dbname = "real_world_medium"
-network = "tcp"
-
-
 [server]
 port = "3000"
 ip = "0.0.0.0"

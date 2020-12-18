@@ -4,6 +4,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	//导入驱动
@@ -11,16 +12,35 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 )
 
+//Config 启动的配置项
+type Config struct {
+	User     string
+	Password string
+	Network  string
+	Host     string
+	Port     int
+	Name     string
+	Charset  string
+}
+
 //MysqlHandler handler of mysql
 type mysqlHandler struct {
 	Conn *sql.DB
+}
+
+//NewMysql new myswl handler with config
+func NewMysql(c Config) (database.DbHandler, error) {
+	if len(c.Charset) == 0 {
+		c.Charset = "utf-8"
+	}
+	return NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=%s", c.User, c.Password, c.Network, c.Host, c.Port, c.Name, c.Charset))
 }
 
 //NewMysqlHandler new mysqlHandler
 func NewMysqlHandler(dataSourceName string) (database.DbHandler, error) {
 	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("connect db:%s err:%v", dataSourceName, err)
 	}
 	err = db.Ping()
 	db.SetMaxOpenConns(10)
