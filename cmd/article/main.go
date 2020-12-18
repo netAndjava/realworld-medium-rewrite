@@ -6,7 +6,8 @@ import (
 	"log"
 
 	"iohttps.com/live/realworld-medium-rewrite/cmd/config"
-	"iohttps.com/live/realworld-medium-rewrite/infrastructure/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/service/article"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 	}
 
 	//init db handler
-	handelr, err := mysql.NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%s/%s)?charset=utf-8", conf.DB.User, conf.DB.Password, conf.DB.Network, conf.DB.Host, conf.DB.Port, config.Database.Name))
+	handelr, err := mysql.NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%s/%s)?charset=utf-8", conf.DB.User, conf.DB.Password, conf.DB.Network, conf.DB.Host, conf.DB.Port, conf.DB.Name))
 	if err != nil {
 		log.Fatalln("init db err:", err)
 	}

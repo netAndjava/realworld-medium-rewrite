@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"time"
 
+	//导入驱动
 	_ "github.com/go-sql-driver/mysql"
 	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 )
