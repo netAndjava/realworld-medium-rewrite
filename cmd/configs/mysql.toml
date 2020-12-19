@@ -1,6 +1,12 @@
-[database]
+# install mariadb on mac
+# $ brew install mariadb 
+# $ mysql.server start|stop
+# init root password at first start: 
+# sql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'mypassword';
+# sql> flush privileges;
 user = "root"
-password = ""
-hostname = "localhost"
-port = "33060"
-dbname = ""
+password = "mypassword"
+host = "localhost"
+port = 3306
+network = "tcp"
+dbname = "real_world_medium"

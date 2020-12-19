@@ -23,7 +23,7 @@ func main() {
 
 	handler, err := mysql.NewMysql(dbConf)
 	if err != nil {
-		log.Fatalln("connect db err:", err)
+		log.Fatalln(err)
 	}
 
 	f := flag.String("config", "./dev.toml", "please input config file")

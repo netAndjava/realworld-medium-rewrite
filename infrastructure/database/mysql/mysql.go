@@ -31,7 +31,7 @@ type mysqlHandler struct {
 //NewMysql new myswl handler with config
 func NewMysql(c Config) (database.DbHandler, error) {
 	if len(c.Charset) == 0 {
-		c.Charset = "utf-8"
+		c.Charset = "utf8"
 	}
 	return NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=%s", c.User, c.Password, c.Network, c.Host, c.Port, c.Name, c.Charset))
 }
@@ -42,6 +42,7 @@ func NewMysqlHandler(dataSourceName string) (database.DbHandler, error) {
 	if err != nil {
 		return nil, fmt.Errorf("connect db:%s err:%v", dataSourceName, err)
 	}
+	fmt.Println("dataSourceName:", dataSourceName)
 	err = db.Ping()
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(5)
