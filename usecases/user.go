@@ -19,6 +19,10 @@ func (itor UserInteractor) Register(generate func() domain.NUUID, user domain.Us
 		return domain.NUUID(0), err
 	}
 	u, err := itor.UserRepo.GetByEmail(user.Email)
+	if err != nil {
+		return domain.NUUID(0), err
+	}
+
 	if u.Email == user.Email {
 		return domain.NUUID(0), errors.New("该邮箱已注册过")
 	}
