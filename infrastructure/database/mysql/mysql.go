@@ -21,6 +21,7 @@ type Config struct {
 	Port     int
 	Name     string
 	Charset  string
+	Timeout  string
 }
 
 //MysqlHandler handler of mysql
@@ -33,7 +34,7 @@ func NewMysql(c Config) (database.DbHandler, error) {
 	if len(c.Charset) == 0 {
 		c.Charset = "utf8"
 	}
-	return NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=%s", c.User, c.Password, c.Network, c.Host, c.Port, c.Name, c.Charset))
+	return NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=%s&&timeout=%s", c.User, c.Password, c.Network, c.Host, c.Port, c.Name, c.Charset, c.Timeout))
 }
 
 //NewMysqlHandler new mysqlHandler

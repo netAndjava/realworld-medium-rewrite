@@ -6,7 +6,8 @@
 # sql> flush privileges;
 user = "root"
 password = "mypassword"
-host = "localhost"
+host = "www.baidu.com"
 port = 3306
 network = "tcp"
 dbname = "real_world_medium"
+timeout = "10s"
