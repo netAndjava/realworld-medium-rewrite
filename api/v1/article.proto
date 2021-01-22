@@ -1,0 +1,82 @@
+syntax = "proto3";
+package api.v1;
+option go_package=".;api";
+
+service Service{
+    rpc Save(SaveRequest) returns(SaveResponse); //保存文章
+    rpc ViewDraftedArticles(ViewDraftedArticlesRequest)returns(ViewDraftedArticlesResponse);//获取草稿态文章
+    rpc View(ViewRequest)returns(ViewResponse);//获取文章详情
+    rpc Publish(PublishRequest)returns(PublishResponse);//发布文章
+    rpc ViewOwnPublishedArticles(ViewOwnPublishedArticlesRequest)returns(ViewOwnPublishedArticlesResponse);//获取作者已发布文章
+    rpc Draft(DraftRequest)returns(DraftResponse);//获取文章草稿
+    rpc ViewAllArticles(ViewAllArticlesRequest)returns(ViewAllArticlesResponse);//查看所有已发布文章
+}
+
+
+message Article{
+    int64 id = 1;
+    string title = 2;
+    string content = 3;
+    int32 status = 4;
+    int64 author_id = 5;
+}
+
+message SaveRequest{
+    Article article = 1;
+}
+
+message SaveResponse{
+    int64 id = 1;
+}
+
+message ViewDraftedArticlesRequest{
+    int64 user_id = 1;
+}
+
+message ViewDraftedArticlesResponse{
+    repeated Article articles = 1;
+}
+
+message ViewRequest{
+    int64 id = 1;
+}
+
+message ViewResponse{
+    Article article = 1;
+}
+
+
+message PublishRequest{
+    int64 id = 1;
+    int64 user_id = 2;
+}
+
+message PublishResponse{
+}
+
+message ViewOwnPublishedArticlesRequest{
+    int64 user_id = 1;
+}
+
+message ViewOwnPublishedArticlesResponse{
+    repeated Article articles = 1;
+}
+
+message DraftRequest{
+   int64 id = 1; 
+}
+
+message DraftResponse{
+    Article article = 1;
+}
+
+message SaveDraftRep{
+    
+}
+
+message ViewAllArticlesRequest{
+}
+
+message ViewAllArticlesResponse{
+    repeated Article articles = 1;
+}

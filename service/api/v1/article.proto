@@ -1,8 +1,8 @@
 syntax = "proto3";
-package api;
+package api.v1;
 option go_package=".;api";
 
-service article{
+service ServiceArticle{
     rpc SaveArticle(Article) returns(SaveArticleRep); //保存文章
     rpc ViewDraftedArticlesOfAuthor(ViewDraftedArticlesOfAuthorReq)returns(ViewDraftedArticlesOfAuthorRep);//获取草稿态文章
     rpc ViewArticle(ViewArticleReq)returns(Article);//获取文章详情
