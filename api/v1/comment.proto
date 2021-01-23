@@ -1,0 +1,41 @@
+syntax = "proto3";
+package api.v1;
+option go_package=".;api";
+
+service CommentService{
+    rpc Add(AddRequest)returns(AddResponse);
+    rpc ViewComments(ViewCommentsRequest)returns(ViewCommentsResponse);
+    rpc Drop(DropRequest)returns(DropResponse);
+}
+
+message Comment{
+    int64 id=1;
+    int64 pid=2;
+    int64 article_id=3;
+    string content=4;
+    int64 user_id=5;
+}
+
+message AddRequest{
+    Comment comment=1;
+}
+
+message AddResponse{
+    int64 id=1;
+}
+
+message ViewCommentsRequest{
+    int64 article_id=1;
+}
+
+message ViewCommentsResponse{
+    repeated Comment comments=1;
+}
+
+message DropRequest{
+    int64 id=1;
+}
+
+message DropResponse{
+}
+
