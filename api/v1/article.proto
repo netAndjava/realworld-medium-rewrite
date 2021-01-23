@@ -2,7 +2,7 @@ syntax = "proto3";
 package api.v1;
 option go_package=".;api";
 
-service Service{
+service ArticleService{
     rpc Save(SaveRequest) returns(SaveResponse); //保存文章
     rpc ViewDraftedArticles(ViewDraftedArticlesRequest)returns(ViewDraftedArticlesResponse);//获取草稿态文章
     rpc View(ViewRequest)returns(ViewResponse);//获取文章详情
