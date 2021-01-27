@@ -15,7 +15,7 @@ import (
 )
 
 type articleServer struct {
-	pb.UnimplementedArticleServer
+	pb.UnimplementedArticleServiceServer
 	artInteractor usecases.ArticleInteractor
 }
 
@@ -41,7 +41,7 @@ func Start(address string, handler database.DbHandler) {
 	server.Serve(conn)
 }
 
-func (server *articleServer) SaveArticle(ctxt context.Context, art *pb.Article) (*pb.SaveArticleRep, error) {
+func (server *articleServer) Save(ctxt context.Context, in *pb.SaveRequest) (*pb.SaveResponse, error) {
 	if art.Id == 0 {
 		ID, err := server.artInteractor.CreateDraft(usecases.GenerateUUID, domain.Article{ID: domain.NUUID(art.Id), Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: domain.NUUID(art.AuthorID)}, domain.NUUID(art.AuthorID))
 		if err != nil {

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "$# arguments"
-protoPath="./"
-out="../api"
+protoPath="source_relative"
+out="../../service/api/"
 
 if [ -n "$1" ]; then
     echo "input proto $1"
@@ -20,5 +20,5 @@ if [ -n "$3" ]; then
    protoPath=$3
 fi
 
-echo "protoc --proto_path=$protoPath --go_out=plugins=grpc:$out $1"
-protoc --proto_path=$protoPath --go_out=plugins=grpc:$out $1
+echo "protoc --go-grpc_opt=paths=$protoPath --go-grpc_out=$out $1"
+protoc --proto_path=./ --go-grpc_opt=paths=$protoPath --go-grpc_out=$out $1
