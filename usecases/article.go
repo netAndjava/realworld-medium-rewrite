@@ -13,24 +13,23 @@ type ArticleInteractor struct {
 }
 
 // SaveDraft 保存草稿
-func (itor ArticleInteractor) SaveDraft(a domain.Article, userID domain.NUUID) error {
+func (itor ArticleInteractor) SaveDraft(a domain.Article) error {
 	art, err := itor.ArticleRepo.Get(a.ID)
 	if err != nil {
 		return err
 	}
-	if art.AuthorID != userID {
+	if art.AuthorID != a.AuthorID {
 		return errors.New("用户没有修改文章权限")
 	}
 	return itor.ArticleRepo.Save(art)
 }
 
 // CreateDraft 创建草稿
-func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain.Article, authorID domain.NUUID) (domain.NUUID, error) {
+func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
 	if len(a.Title) == 0 || len(a.Content) == 0 {
 		return domain.NUUID(0), errors.New("用户内容为空")
 	}
 	a.ID = generate()
-	a.AuthorID = authorID
 	err := itor.ArticleRepo.Create(a)
 
 	return a.ID, err
