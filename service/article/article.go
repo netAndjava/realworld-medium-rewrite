@@ -55,7 +55,7 @@ func (server *articleServer) Save(ctxt context.Context, in *pb.SaveRequest) (*pb
 
 	if in.Article.Id != 0 && in.Article.Status == domain.Draft {
 		//2.保存编辑的文章
-		err := server.artInteractor.SaveDraft(domain.Article{ID: domain.NUUID(art.Id), Title: art.Title, Content: art.Content, Status: domain.Draft, AuthorID: domain.NUUID(art.AuthorID)}, domain.NUUID(art.AuthorID))
+		err := server.artInteractor.SaveDraft(article)
 		if err != nil {
 			return nil, err
 		}
@@ -63,9 +63,13 @@ func (server *articleServer) Save(ctxt context.Context, in *pb.SaveRequest) (*pb
 
 	//3.保存草稿文章
 	if in.Article.Id != 0 && in.Article.Status == domain.Public {
-
+		err := server.artInteractor.SaveDraft(article)
+		if err != nil {
+			return nil, err
+		}
 	}
 
+	return &pb.SaveResponse{in.Article.Id}, err
 }
 
 func (server *articleServer) ViewDraftedArticles(ctxt context.Context, req *pb.ViewDraftedArticlesRequest) (*pb.ViewDraftedArticlesResponse, error) {
@@ -74,11 +78,11 @@ func (server *articleServer) ViewDraftedArticles(ctxt context.Context, req *pb.V
 		return nil, err
 	}
 
-	return &pb.ViewDraftedArticlesOfAuthorRep{Articles: ConvertArticles(arts)}, err
+	return &pb.ViewDraftedArticlesResponse{Articles: ConvertArticles(arts)}, err
 }
 
-func (server *articleServer) View(ctxt context.Context, req *pb.ViewRequest) (*pb.ViewResponse, error) {
-	art, err := server.artInteractor.GetArticle(domain.NUUID(req.Id))
+func (server *articleServer) View(ctxt context.Context, in *pb.ViewRequest) (*pb.ViewResponse, error) {
+	art, err := server.artInteractor.GetArticle(domain.NUUID(in.Id))
 	if err != nil {
 		return nil, err
 	}

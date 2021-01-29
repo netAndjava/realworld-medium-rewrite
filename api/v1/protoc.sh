@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "$# arguments"
-protoPath="source_relative"
+protoPath="./"
 out="../../service/api/"
 
 if [ -n "$1" ]; then
@@ -20,5 +20,6 @@ if [ -n "$3" ]; then
    protoPath=$3
 fi
 
-echo "protoc --go-grpc_opt=paths=$protoPath --go-grpc_out=$out $1"
-protoc --proto_path=./ --go-grpc_opt=paths=$protoPath --go-grpc_out=$out $1
+echo "protoc --proto_path=$protoPath --go_out=$out --go-grpc_out=$out $1"
+
+protoc --proto_path=$protoPath --go_out=$out --go-grpc_out=$out $1
