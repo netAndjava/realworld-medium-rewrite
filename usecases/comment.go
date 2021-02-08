@@ -13,11 +13,10 @@ type CommentInteractor struct {
 }
 
 //Add 添加评论
-func (itor CommentInteractor) Add(generate func() domain.NUUID, c domain.Comment, userID domain.NUUID) (domain.NUUID, error) {
+func (itor CommentInteractor) Add(generate func() domain.NUUID, c domain.Comment) (domain.NUUID, error) {
 	if err := c.Check(); err != nil {
 		return domain.NUUID(0), err
 	}
-	c.Creator = userID
 	c.ID = generate()
 	err := itor.CommentRepos.Add(c)
 	return c.ID, err

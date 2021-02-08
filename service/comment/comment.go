@@ -15,7 +15,7 @@ import (
 )
 
 type commentServer struct {
-	pb.UnimplementedCommentServer
+	pb.UnimplementedArticleServiceServer
 	commentItor usecases.CommentInteractor
 }
 
@@ -50,17 +50,17 @@ func Start(address string, handler database.DbHandler) {
 	log.Println("start server on address:", address)
 
 	server := grpc.NewServer()
-	pb.RegisterCommentServer(server, &commentServer{commentItor: itor})
+	pb.RegisterArticleServiceServer(server, &commentServer{commentItor: itor})
 	server.Serve(conn)
 }
 
 //Add 添加评论
-func (server commentServer) Add(ctx context.Context, c *pb.Comment) (*pb.AddRep, error) {
-	ID, err := server.commentItor.Add(usecases.GenerateUUID, domain.Comment{PID: domain.NUUID(c.Pid), ArticleID: domain.NUUID(c.ArticleID), Content: c.Content, Creator: domain.NUUID(c.UserID)}, domain.NUUID(c.UserID))
+func (server commentServer) Add(ctx context.Context, in *pb.AddRequest) (*pb.AddResponse, error) {
+	ID, err := server.commentItor.Add(usecases.GenerateUUID, domain.Comment{PID: domain.NUUID(in.Comment.PID), ArticleID: domain.NUUID(in.Comment.ArticleID), Content: in.Comment.Content, Creator: domain.NUUID(in.Comment.UserID)})
 	if err != nil {
 		return nil, err
 	}
-	return &pb.AddRep{Id: int64(ID)}, nil
+	return &pb.AddResponse{Id: int64(ID)}, nil
 }
 
 func (server commentServer) GetCommentsOfArticle(ctx context.Context, req *pb.GetCommentsOfArticleReq) (*pb.GetCommentsOfArticleRep, error) {
