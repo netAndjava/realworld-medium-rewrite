@@ -15,7 +15,7 @@ import (
 )
 
 type commentServer struct {
-	pb.UnimplementedArticleServiceServer
+	pb.UnimplementedCommentServiceServer
 	commentItor usecases.CommentInteractor
 }
 
@@ -56,36 +56,30 @@ func Start(address string, handler database.DbHandler) {
 
 //Add 添加评论
 func (server commentServer) Add(ctx context.Context, in *pb.AddRequest) (*pb.AddResponse, error) {
-	ID, err := server.commentItor.Add(usecases.GenerateUUID, domain.Comment{PID: domain.NUUID(in.Comment.PID), ArticleID: domain.NUUID(in.Comment.ArticleID), Content: in.Comment.Content, Creator: domain.NUUID(in.Comment.UserID)})
+	ID, err := server.commentItor.Add(usecases.GenerateUUID, domain.Comment{PID: domain.NUUID(in.Comment.Pid), ArticleID: domain.NUUID(in.Comment.ArticleId), Content: in.Comment.Content, Creator: domain.NUUID(in.Comment.UserId)})
 	if err != nil {
 		return nil, err
 	}
 	return &pb.AddResponse{Id: int64(ID)}, nil
 }
 
-func (server commentServer) GetCommentsOfArticle(ctx context.Context, req *pb.GetCommentsOfArticleReq) (*pb.GetCommentsOfArticleRep, error) {
-	comments, err := server.commentItor.GetCommentsOfArticle(domain.NUUID(req.ArticleID))
+func (server commentServer) ViewComments(ctx context.Context, req *pb.ViewCommentsRequest) (*pb.ViewCommentsResponse, error) {
+	comments, err := server.commentItor.GetCommentsOfArticle(domain.NUUID(req.ArticleId))
 	if err != nil {
 		return nil, err
 	}
 
 	cms := make([]*pb.Comment, len(comments))
 	for i, c := range comments {
-		cms[i] = &pb.Comment{Id: int64(c.ID), Pid: int64(c.PID), ArticleID: int64(c.ArticleID), UserID: int64(c.Creator), Content: c.Content}
+		cms[i] = &pb.Comment{Id: int64(c.ID), Pid: int64(c.PID), ArticleId: int64(c.ArticleID), UserId: int64(c.Creator), Content: c.Content}
 	}
-	return &pb.GetCommentsOfArticleRep{Comments: cms}, nil
+	return &pb.ViewCommentsResponse{Comments: cms}, nil
 }
 
-func (server commentServer) Drop(ctx context.Context, req *pb.DropReq) (*pb.DropRep, error) {
+func (server commentServer) Drop(ctx context.Context, req *pb.DropRequest) (*pb.DropResponse, error) {
 	err := server.commentItor.Drop(domain.NUUID(req.Id))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.DropRep{}, nil
-}
-
-func (server commentServer) DropByCreator(ctx context.Context, req *pb.DropByCreatorReq) (*pb.DropByCreatorRep, error) {
-	err := server.commentItor.DropByCreator(domain.NUUID(req.Id), domain.NUUID(req.UserID))
-	return &pb.DropByCreatorRep{}, err
-
+	return &pb.DropResponse{}, nil
 }
