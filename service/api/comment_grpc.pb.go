@@ -4,6 +4,7 @@ package api
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,6 +22,7 @@ type CommentServiceClient interface {
 	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error)
 	ViewComments(ctx context.Context, in *ViewCommentsRequest, opts ...grpc.CallOption) (*ViewCommentsResponse, error)
 	Drop(ctx context.Context, in *DropRequest, opts ...grpc.CallOption) (*DropResponse, error)
+	DropByCreator(ctx context.Context, in *DropByCreatorRequest, opts ...grpc.CallOption) (*DropByCreatorResponse, error)
 }
 
 type commentServiceClient struct {
@@ -58,6 +60,15 @@ func (c *commentServiceClient) Drop(ctx context.Context, in *DropRequest, opts .
 	return out, nil
 }
 
+func (c *commentServiceClient) DropByCreator(ctx context.Context, in *DropByCreatorRequest, opts ...grpc.CallOption) (*DropByCreatorResponse, error) {
+	out := new(DropByCreatorResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.CommentService/DropByCreator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommentServiceServer is the server API for CommentService service.
 // All implementations must embed UnimplementedCommentServiceServer
 // for forward compatibility
@@ -65,6 +76,7 @@ type CommentServiceServer interface {
 	Add(context.Context, *AddRequest) (*AddResponse, error)
 	ViewComments(context.Context, *ViewCommentsRequest) (*ViewCommentsResponse, error)
 	Drop(context.Context, *DropRequest) (*DropResponse, error)
+	DropByCreator(context.Context, *DropByCreatorRequest) (*DropByCreatorResponse, error)
 	mustEmbedUnimplementedCommentServiceServer()
 }
 
@@ -80,6 +92,9 @@ func (UnimplementedCommentServiceServer) ViewComments(context.Context, *ViewComm
 }
 func (UnimplementedCommentServiceServer) Drop(context.Context, *DropRequest) (*DropResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Drop not implemented")
+}
+func (UnimplementedCommentServiceServer) DropByCreator(context.Context, *DropByCreatorRequest) (*DropByCreatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropByCreator not implemented")
 }
 func (UnimplementedCommentServiceServer) mustEmbedUnimplementedCommentServiceServer() {}
 
@@ -148,6 +163,24 @@ func _CommentService_Drop_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CommentService_DropByCreator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropByCreatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).DropByCreator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.CommentService/DropByCreator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).DropByCreator(ctx, req.(*DropByCreatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CommentService_ServiceDesc is the grpc.ServiceDesc for CommentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,6 +199,10 @@ var CommentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Drop",
 			Handler:    _CommentService_Drop_Handler,
+		},
+		{
+			MethodName: "DropByCreator",
+			Handler:    _CommentService_DropByCreator_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

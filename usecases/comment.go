@@ -69,10 +69,5 @@ func (itor CommentInteractor) DropByCreator(commentID domain.NUUID, userID domai
 		return errors.New("用户没有删除权限")
 	}
 	err = itor.Drop(commentID)
-	if err != nil {
-		return err
-	}
-
-	err = itor.CommentRepos.DropByPID(commentID)
 	return err
 }

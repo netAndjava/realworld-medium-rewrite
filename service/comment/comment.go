@@ -50,7 +50,7 @@ func Start(address string, handler database.DbHandler) {
 	log.Println("start server on address:", address)
 
 	server := grpc.NewServer()
-	pb.RegisterArticleServiceServer(server, &commentServer{commentItor: itor})
+	pb.RegisterCommentServiceServer(server, &commentServer{commentItor: itor})
 	server.Serve(conn)
 }
 
@@ -82,4 +82,9 @@ func (server commentServer) Drop(ctx context.Context, req *pb.DropRequest) (*pb.
 		return nil, err
 	}
 	return &pb.DropResponse{}, nil
+}
+
+func (server commentServer) DropByCreator(ctx context.Context, req *pb.DropByCreatorRequest) (*pb.DropByCreatorResponse, error) {
+	err := server.commentItor.DropByCreator(domain.NUUID(req.Id), domain.NUUID(req.UserId))
+	return &pb.DropByCreatorResponse{}, err
 }

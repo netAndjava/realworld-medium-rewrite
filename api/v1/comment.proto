@@ -6,6 +6,7 @@ service CommentService{
     rpc Add(AddRequest)returns(AddResponse);
     rpc ViewComments(ViewCommentsRequest)returns(ViewCommentsResponse);
     rpc Drop(DropRequest)returns(DropResponse);
+    rpc DropByCreator(DropByCreatorRequest)returns(DropByCreatorResponse);
 }
 
 message Comment{
@@ -39,3 +40,12 @@ message DropRequest{
 message DropResponse{
 }
 
+
+message DropByCreatorRequest{
+    int64 id=1;
+    int64 user_id=2;
+}
+
+message DropByCreatorResponse{
+
+}
