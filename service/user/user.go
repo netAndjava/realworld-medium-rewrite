@@ -15,7 +15,7 @@ import (
 )
 
 type userServer struct {
-	pb.UserServer
+	pb.UnimplementedUserServiceServer
 	userItor usecases.UserInteractor
 }
 
@@ -32,32 +32,26 @@ func Start(address string, handler database.DbHandler) {
 	log.Println("start server on address:", address)
 
 	server := grpc.NewServer()
-	pb.RegisterUserServer(server, &userServer{userItor: userItor})
+	pb.RegisterUserServiceServer(server, &userServer{userItor: userItor})
 	server.Serve(conn)
 }
 
-func (server *userServer) Register(ctx context.Context, user *pb.User) (*pb.RegisterRep, error) {
-	ID, err := server.userItor.Register(usecases.GenerateUUID, domain.User{Name: user.Name, Email: domain.Email(user.Email), Password: user.Password})
-	if err != nil {
-		return nil, err
-	}
-	return &pb.RegisterRep{Id: int64(ID)}, nil
+func (server *userServer) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	ID, err := server.userItor.Register(usecases.GenerateUUID, domain.User{Name: in.User.Name, Email: domain.Email(in.User.Email), Password: in.User.Password})
+	return &pb.RegisterResponse{Id: int64(ID)}, err
 }
 
-func (server *userServer) CheckIdentityByEmail(ctx context.Context, req *pb.CheckIdentityByEmailReq) (*pb.User, error) {
+func (server *userServer) LoginCheckByEmail(ctx context.Context, req *pb.LoginCheckByEmailRequest) (*pb.LoginCheckByEmailResponse, error) {
 	user, err := server.userItor.CheckIdentityByEmail(domain.Email(req.Email), req.Password)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.User{Id: int64(user.ID)}, nil
+	return &pb.LoginCheckByEmailResponse{User: &pb.User{Id: int64(user.ID)}}, err
 
 }
 
-func (server *userServer) GetUserByPhone(ctx context.Context, req *pb.GetUserByPhoneReq) (*pb.User, error) {
+func (server *userServer) GetUserByPhone(ctx context.Context, req *pb.GetUserByPhoneRequest) (*pb.GetUserByPhoneResponse, error) {
 	user, err := server.userItor.GetUserByPhone(domain.PhoneNumber(req.Phone))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.User{Id: int64(user.ID), Phone: string(user.Phone)}, nil
+	return &pb.GetUserByPhoneResponse{User: &pb.User{Id: int64(user.ID), Phone: string(user.Phone)}}, err
 
 }
