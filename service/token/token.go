@@ -15,7 +15,7 @@ import (
 )
 
 type tokenServer struct {
-	pb.UnimplementedTokenServer
+	pb.UnimplementedTokenServiceServer
 	tokenItor usecases.TokenInteractor
 }
 
@@ -36,27 +36,24 @@ func Start(address string, handler database.DbHandler) {
 	s.Serve(conn)
 }
 
-func (server *tokenServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRep, error) {
-	tokenID, err := server.tokenItor.Login(domain.NUUID(req.UserID), usecases.GenerateToken)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.LoginRep{TokenID: string(tokenID)}, nil
+func (server *tokenServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	tokenID, err := server.tokenItor.Login(domain.NUUID(req.UserId), usecases.GenerateToken)
+	return &pb.LoginResponse{TokenId: string(tokenID)}, err
 }
 
-func (server *tokenServer) IsLoggedin(ctx context.Context, req *pb.IsLoggedinReq) (*pb.Token, error) {
-	token, err := server.tokenItor.IsLoggedin(usecases.SUUID(req.TokenID))
+func (server *tokenServer) IsLoggedin(ctx context.Context, req *pb.IsLoggedinRequest) (*pb.IsLoggedinResponse, error) {
+	token, err := server.tokenItor.IsLoggedin(usecases.SUUID(req.TokenId))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.Token{TokenID: string(token.ID), UserID: int64(token.UserID)}, nil
+	return &pb.IsLoggedinResponse{Token: &pb.Token{TokenId: string(token.ID), UserId: int64(token.UserID)}}, nil
 
 }
 
-func (server *tokenServer) Logout(ctx context.Context, req *pb.LogoutReq) (*pb.LogoutRep, error) {
-	err := server.tokenItor.Logout(usecases.SUUID(req.TokenID))
+func (server *tokenServer) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	err := server.tokenItor.Logout(usecases.SUUID(req.TokenId))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.LogoutRep{}, nil
+	return &pb.LogoutResponse{}, nil
 }
