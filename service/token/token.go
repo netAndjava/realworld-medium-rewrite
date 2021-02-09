@@ -32,7 +32,7 @@ func Start(address string, handler database.DbHandler) {
 	log.Println("listen to address:", address)
 
 	s := grpc.NewServer()
-	pb.RegisterTokenServer(s, &tokenServer{tokenItor: tokenItor})
+	pb.RegisterTokenServiceServer(s, &tokenServer{tokenItor: tokenItor})
 	s.Serve(conn)
 }
 
