@@ -9,7 +9,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/stretchr/testify v1.6.1
-	golang.org/dl v0.0.0-20201203213101-c6ce50f27f15 // indirect
+	golang.org/dl v0.0.0-20210220033039-562909534da3 // indirect
 	golang.org/x/net v0.0.0-20201216054612-986b41b23924 // indirect
 	golang.org/x/sys v0.0.0-20201218084310-7d0127a74742 // indirect
 	golang.org/x/text v0.3.4 // indirect
