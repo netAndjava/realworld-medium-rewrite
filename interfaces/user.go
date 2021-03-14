@@ -39,3 +39,11 @@ func (repo *UserRepo) GetByEmail(e domain.Email) (domain.User, error) {
 	// TODO: 从err中判断是否是不存在数据错误 <15-12-20, nqq> //
 	return user, err
 }
+
+func (repo *UserRepo) GetUserByID(ID domain.NUUID) (domain.User, error) {
+	var user domain.User
+	user.ID = ID
+	row := repo.Handler.QueryRow(`select name,Email,Phone from t_user where id=?`, ID)
+	err := row.Scan(&user.Name, &user.ID, &user.Phone)
+	return user, err
+}

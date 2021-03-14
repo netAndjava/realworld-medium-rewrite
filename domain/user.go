@@ -54,5 +54,5 @@ type UserRepository interface {
 	FindByPhone(phone PhoneNumber) (User, error)
 	Create(u User) error
 	GetByEmail(e Email) (User, error)
-	GetUserByID(ID int64) (User, error)
+	GetUserByID(ID NUUID) (User, error)
 }

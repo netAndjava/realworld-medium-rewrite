@@ -73,7 +73,7 @@ func (itor UserInteractor) GetUserByPhone(iphone domain.PhoneNumber) (domain.Use
 	return user, err
 }
 
-func (itor UserInteractor) GetUserByID(ID int64) (domain.User, error) {
+func (itor UserInteractor) GetUserByID(ID domain.NUUID) (domain.User, error) {
 	return itor.UserRepo.GetUserByID(ID)
 }
 
