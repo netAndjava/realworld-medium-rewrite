@@ -55,3 +55,9 @@ func (server *userServer) GetUserByPhone(ctx context.Context, req *pb.GetUserByP
 	return &pb.GetUserByPhoneResponse{User: &pb.User{Id: int64(user.ID), Phone: string(user.Phone)}}, err
 
 }
+
+func (server *userServer) GetUserById(ctx context.Context, req *pb.GetUserByIdRequest) (*pb.GetUserByIdResponse, error) {
+
+	user, err := server.userItor.GetUserByID(domain.NUUID(req.Id))
+	return &pb.GetUserByIdResponse{User: &pb.User{Id: int64(user.ID), Name: user.Name, Email: string(user.Email), Phone: string(user.Phone)}}, err
+}

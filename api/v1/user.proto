@@ -6,6 +6,7 @@ service UserService{
     rpc Register(RegisterRequest)returns(RegisterResponse);//注册
     rpc LoginCheckByEmail(LoginCheckByEmailRequest)returns(LoginCheckByEmailResponse);
     rpc GetUserByPhone(GetUserByPhoneRequest)returns(GetUserByPhoneResponse);
+    rpc GetUserById(GetUserByIdRequest)returns(GetUserByIdResponse);
 }
 
 message User{
@@ -38,5 +39,13 @@ message GetUserByPhoneRequest{
 }
 
 message GetUserByPhoneResponse{
+    User user=1;
+}
+
+message GetUserByIdRequest{
+    int64 id=1;
+}
+
+message GetUserByIdResponse{
     User user=1;
 }
