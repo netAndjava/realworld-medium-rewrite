@@ -14,6 +14,11 @@ func NewArticleRepo(helper database.DbHandler) domain.ArticleRepository {
 	return &ArticleRepo{helper}
 }
 
+func (repo *ArticleRepo) Drop(ID domain.NUUID) error {
+	_, err := repo.Handler.Execute(`delete from t_article where id=?`, ID)
+	return err
+}
+
 //Create .....
 func (repo *ArticleRepo) Create(a domain.Article) error {
 	_, err := repo.Handler.Execute(`insert into t_article (id,title,content,status,userID) values(?,?,?,?,?)`, a.ID, a.Title, a.Status, a.AuthorID)

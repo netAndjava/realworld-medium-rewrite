@@ -122,6 +122,11 @@ func (itor ArticleInteractor) PublishPublicArticleDraft(a domain.Article, userID
 	return itor.ArticleRepo.PublishPublicArticleDraft(art)
 }
 
+//Drop 删除文章
+func (itor ArticleInteractor) Drop(ID domain.NUUID) error {
+	return itor.ArticleRepo.Drop(ID)
+}
+
 // GenerateUUID 生成Number类型的id
 func GenerateUUID() domain.NUUID {
 	return domain.NUUID(0)
