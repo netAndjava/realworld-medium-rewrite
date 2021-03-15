@@ -124,6 +124,10 @@ func (server articleServer) ViewAllArticles(ctx context.Context, req *pb.ViewAll
 
 }
 
+func (server articleServer) Drop(ctx context.Context, req *pb.DropArticleRequest) (*pb.DropArticleResponse, error) {
+	return &pb.DropArticleResponse{}, server.artInteractor.Drop(domain.NUUID(req.GetArticleId()), domain.NUUID(req.UserId))
+}
+
 //ConvertArticles .....
 func ConvertArticles(arts []domain.Article) []*pb.Article {
 

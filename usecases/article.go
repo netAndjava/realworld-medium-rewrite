@@ -123,7 +123,15 @@ func (itor ArticleInteractor) PublishPublicArticleDraft(a domain.Article, userID
 }
 
 //Drop 删除文章
-func (itor ArticleInteractor) Drop(ID domain.NUUID) error {
+func (itor ArticleInteractor) Drop(ID, userID domain.NUUID) error {
+	art, err := itor.GetArticle(ID)
+	if err != nil {
+		// TODO:分开处理not found和连接错误  <15-03-21, nqq> //
+		return errors.New("已删除")
+	}
+	if art.AuthorID != userID {
+		return errors.New("用户没有删除权限")
+	}
 	return itor.ArticleRepo.Drop(ID)
 }
 
