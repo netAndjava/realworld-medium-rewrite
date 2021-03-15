@@ -25,6 +25,7 @@ type ArticleServiceClient interface {
 	ViewOwnPublishedArticles(ctx context.Context, in *ViewOwnPublishedArticlesRequest, opts ...grpc.CallOption) (*ViewOwnPublishedArticlesResponse, error)
 	Draft(ctx context.Context, in *DraftRequest, opts ...grpc.CallOption) (*DraftResponse, error)
 	ViewAllArticles(ctx context.Context, in *ViewAllArticlesRequest, opts ...grpc.CallOption) (*ViewAllArticlesResponse, error)
+	Drop(ctx context.Context, in *DropArticleRequest, opts ...grpc.CallOption) (*DropArticleResponse, error)
 }
 
 type articleServiceClient struct {
@@ -98,6 +99,15 @@ func (c *articleServiceClient) ViewAllArticles(ctx context.Context, in *ViewAllA
 	return out, nil
 }
 
+func (c *articleServiceClient) Drop(ctx context.Context, in *DropArticleRequest, opts ...grpc.CallOption) (*DropArticleResponse, error) {
+	out := new(DropArticleResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/Drop", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleServiceServer is the server API for ArticleService service.
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility
@@ -109,6 +119,7 @@ type ArticleServiceServer interface {
 	ViewOwnPublishedArticles(context.Context, *ViewOwnPublishedArticlesRequest) (*ViewOwnPublishedArticlesResponse, error)
 	Draft(context.Context, *DraftRequest) (*DraftResponse, error)
 	ViewAllArticles(context.Context, *ViewAllArticlesRequest) (*ViewAllArticlesResponse, error)
+	Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error)
 	mustEmbedUnimplementedArticleServiceServer()
 }
 
@@ -136,6 +147,9 @@ func (UnimplementedArticleServiceServer) Draft(context.Context, *DraftRequest) (
 }
 func (UnimplementedArticleServiceServer) ViewAllArticles(context.Context, *ViewAllArticlesRequest) (*ViewAllArticlesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ViewAllArticles not implemented")
+}
+func (UnimplementedArticleServiceServer) Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Drop not implemented")
 }
 func (UnimplementedArticleServiceServer) mustEmbedUnimplementedArticleServiceServer() {}
 
@@ -276,6 +290,24 @@ func _ArticleService_ViewAllArticles_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleService_Drop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).Drop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.ArticleService/Drop",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).Drop(ctx, req.(*DropArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleService_ServiceDesc is the grpc.ServiceDesc for ArticleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -310,6 +342,10 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ViewAllArticles",
 			Handler:    _ArticleService_ViewAllArticles_Handler,
+		},
+		{
+			MethodName: "Drop",
+			Handler:    _ArticleService_Drop_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
