@@ -7,6 +7,10 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/domain"
 )
 
+type ArticleService interface {
+	SaveDraft(a domain.Article) error
+}
+
 // ArticleInteractor article interactor
 type ArticleInteractor struct {
 	ArticleRepo domain.ArticleRepository
