@@ -6,7 +6,9 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-kit/kit v0.8.0
+	github.com/go-logfmt/logfmt v0.5.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/kr/pretty v0.1.0 // indirect

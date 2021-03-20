@@ -8,27 +8,18 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/usecases"
 )
 
-type SaveDraftReq struct {
+type SaveReq struct {
 	Article domain.Article
 }
 
-type SaveDraftResp struct {
+type SaveResp struct {
+	ID domain.NUUID
 }
 
-type Endpoints struct {
-	Add endpoint.Endpoint
-}
-
-func MakeEndpoints(s usecases.ArticleService) Endpoints {
-	return Endpoints{
-		Add: makeAddEndpoints(s),
-	}
-}
-
-func makeAddEndpoints(s usecases.ArticleService) endpoint.Endpoint {
+func makeSaveDraftEndpoints(s usecases.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(SaveDraftReq)
+		req := request.(SaveReq)
 		err := s.SaveDraft(req.Article)
-		return SaveDraftResp{}, err
+		return SaveResp{}, err
 	}
 }
