@@ -1,0 +1,83 @@
+* domain-drive-develop
+
+Tags: ddd, clean architeture, usecases design,test drive develop
+
+12:45 30 May 2021
+
+abbynie
+
+* adenga
+
+- 领域驱动开发的作用
+
+- 如何使用领域开发
+
+- 领域建模
+
+- 用例场景设计
+
+- 测试驱动开发
+
+- 子域的拆分
+
+- value object
+
+.link https://iohttps.com/bantana/clean-architecture clean-architecture
+
+* 领域开发的作用
+
+- 快速理解领域的商业逻辑
+
+- 合理的拆分子域及微服务的拆分
+
+- 设计出符合用户真是应用场景的领域模型，从而合理的设计数据库
+
+- 设计出可移植性和扩展性高、耦合性小的架构
+
+* 如何使用领域开发
+
+1. 领域商业逻辑分析
+
+例子一：https://medium.com博客发布共享就留平台
+
+   用户注册登录
+
+   作者打草稿
+
+   作者发布草稿
+
+   读者阅读博客
+
+2. 从领域逻辑中分析出领域的词条、参与者
+
+3. 拆分子域
+
+子域分类：
+  
+  1. 核心子领域(Core subDomains)
+  
+  2. 支持子领域(Supporting subDomains)
+
+  3. 一般子领域(Generic subDomains)
+
+medium 博客子域
+   
+   支持子域：
+
+   1. 用户子域
+
+   核心子域：
+
+   1. 文章子域
+
+   2. 评论子域
+
+   一般子域
+
+   1. 通知系统子域
+
+4. 用例场景设计
+
+5. 根据用例场景设计测试用例
+
+

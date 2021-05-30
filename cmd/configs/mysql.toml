@@ -5,8 +5,8 @@
 # sql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'mypassword';
 # sql> flush privileges;
 user = "root"
-password = "mypassword"
-host = "www.baidu.com"
+password = "nqq123"
+host = "172.31.74.249"
 port = 3306
 network = "tcp"
 dbname = "real_world_medium"
