@@ -22,6 +22,8 @@ abbynie
 
 - value object
 
+- ddd架构设计
+
 .link https://iohttps.com/bantana/clean-architecture clean-architecture
 
 * 领域开发的作用
@@ -32,7 +34,7 @@ abbynie
 
 - 设计出符合用户真是应用场景的领域模型，从而合理的设计数据库
 
-- 设计出可移植性和扩展性高、耦合性小的架构
+- 采用分层的结构，设计出可移植性和扩展性高、耦合性小的架构
 
 * 如何使用领域开发
 
@@ -79,5 +81,24 @@ medium 博客子域
 4. 用例场景设计
 
 5. 根据用例场景设计测试用例
+
+* ddd 结构设计
+
+1. Domain:
+
+  i. Entities
+  ii. UseCases
+2. Application:
+  
+3. Infrastructure:
+  i. Web
+  ii. Devices
+  iii. DB
+  iv. UI
+  v. External Interfaces
+
+4. Adapter:
+
+适配器. Adapter 是 microServices 的边界.
 
 
