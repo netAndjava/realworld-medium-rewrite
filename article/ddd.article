@@ -22,8 +22,6 @@ abbynie
 
 - value object
 
-- ddd架构设计
-
 .link https://iohttps.com/bantana/clean-architecture clean-architecture
 
 * 领域开发的作用
@@ -34,7 +32,7 @@ abbynie
 
 - 设计出符合用户真是应用场景的领域模型，从而合理的设计数据库
 
-- 采用分层的结构，设计出可移植性和扩展性高、耦合性小的架构
+- 设计出可移植性和扩展性高、耦合性小的架构
 
 * 如何使用领域开发
 
@@ -48,57 +46,52 @@ abbynie
 
    作者发布草稿
 
-   读者阅读博客
+   读者阅读文章
+
+   读者评论文章
+
+./go_real_world_design.md
 
 2. 从领域逻辑中分析出领域的词条、参与者
+    
+   作者、读者--------》用户
+
+   文章（草稿态、已发布）
+
+   评论
 
 3. 拆分子域
 
-子域分类：
-  
-  1. 核心子领域(Core subDomains)
-  
-  2. 支持子领域(Supporting subDomains)
+子域的分类
 
-  3. 一般子领域(Generic subDomains)
+   1. 核心子领域(Core subDomains)
 
-medium 博客子域
+   2. 支持子领域(Supporting subDomains)
+
+   3. 一般子领域(Generic subDomains)
    
-   支持子域：
+medium网站的子域拆分
+   
+    支持子域：
+     
+    1. 用户子域
+    
+    核心子域
 
-   1. 用户子域
+    1. 评论
 
-   核心子域：
+    2. 文章子
 
-   1. 文章子域
+    一般子域
 
-   2. 评论子域
-
-   一般子域
-
-   1. 通知系统子域
+    1. 消息通知
 
 4. 用例场景设计
 
-5. 根据用例场景设计测试用例
+5. 根据用例场景分析出用例接口、分析出领域实体的属性和功能，也有可能在这个过程中重构领域实体，适用真实的用例场景
 
-* ddd 结构设计
+6. 根据用例场景设计出测试用例
 
-1. Domain:
-
-  i. Entities
-  ii. UseCases
-2. Application:
-  
-3. Infrastructure:
-  i. Web
-  ii. Devices
-  iii. DB
-  iv. UI
-  v. External Interfaces
-
-4. Adapter:
-
-适配器. Adapter 是 microServices 的边界.
+7. 适用TDD测试用例的适用分析出用例的输入输出、成功情况和失败情况
 
 
