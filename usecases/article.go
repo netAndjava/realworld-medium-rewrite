@@ -12,8 +12,8 @@ type ArticleInteractor struct {
 	ArticleRepo domain.ArticleRepository
 }
 
-// SaveDraft 保存草稿
-func (itor ArticleInteractor) SaveDraft(a domain.Article) error {
+// EditDraftArticle the user edits a draft article
+func (itor ArticleInteractor) EditDraftArticle(a domain.Article) error {
 	art, err := itor.ArticleRepo.Get(a.ID)
 	if err != nil {
 		return err
@@ -24,8 +24,8 @@ func (itor ArticleInteractor) SaveDraft(a domain.Article) error {
 	return itor.ArticleRepo.Save(art)
 }
 
-// CreateDraft 创建草稿
-func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
+// Write the user writes an article
+func (itor ArticleInteractor) Wrtie(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
 	if len(a.Title) == 0 || len(a.Content) == 0 {
 		return domain.NUUID(0), errors.New("用户内容为空")
 	}
@@ -35,7 +35,7 @@ func (itor ArticleInteractor) CreateDraft(generate func() domain.NUUID, a domain
 	return a.ID, err
 }
 
-//Publish 发布文章
+//Publish the user publishes a draft article
 func (itor ArticleInteractor) Publish(articleID, userID domain.NUUID) error {
 	article, err := itor.ArticleRepo.Get(articleID)
 	if err != nil {
@@ -50,19 +50,19 @@ func (itor ArticleInteractor) Publish(articleID, userID domain.NUUID) error {
 	return itor.ArticleRepo.Publish(articleID)
 }
 
-// GetAuthorDrafts 获取作者的草稿列表
-func (itor ArticleInteractor) GetAuthorDrafts(userID domain.NUUID) ([]domain.Article, error) {
+// ViewDraftArticles the author views draft articles
+func (itor ArticleInteractor) ViewDraftArticles(userID domain.NUUID) ([]domain.Article, error) {
 	return itor.ArticleRepo.GetAuthorDrafts(userID)
+}
+
+//View the user views an article
+func (itor ArticleInteractor) View(ID domain.NUUID) (domain.Article, error) {
+	return itor.ArticleRepo.Get(ID)
 }
 
 // GetAuthorPublicArticles 获取作者的已发布文章
 func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
 	return itor.ArticleRepo.GetAuthorPublicArticles(userID)
-}
-
-//GetArticle 获取文章详情
-func (itor ArticleInteractor) GetArticle(ID domain.NUUID) (domain.Article, error) {
-	return itor.ArticleRepo.Get(ID)
 }
 
 // GetAllPublicArticles 获取所有已发布文章
