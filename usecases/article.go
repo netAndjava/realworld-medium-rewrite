@@ -77,7 +77,7 @@ func (itor ArticleInteractor) GetPublicArticleDraft(ID domain.NUUID) (domain.Art
 		return domain.Article{}, err
 	}
 	if err == domain.ErrNotFound {
-		return itor.GetArticle(ID)
+		return itor.View(ID)
 	}
 	return art, nil
 }
