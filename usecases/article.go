@@ -60,13 +60,13 @@ func (itor ArticleInteractor) View(ID domain.NUUID) (domain.Article, error) {
 	return itor.ArticleRepo.Get(ID)
 }
 
-// GetAuthorPublicArticles 获取作者的已发布文章
-func (itor ArticleInteractor) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
+// ViewPublicArticle 获取作者的已发布文章
+func (itor ArticleInteractor) ViewPublicArticle(userID domain.NUUID) ([]domain.Article, error) {
 	return itor.ArticleRepo.GetAuthorPublicArticles(userID)
 }
 
-// GetAllPublicArticles 获取所有已发布文章
-func (itor ArticleInteractor) GetAllPublicArticles() ([]domain.Article, error) {
+// ViewRecentArticles 读者查看最近发布的文章
+func (itor ArticleInteractor) ViewRecentArticles() ([]domain.Article, error) {
 	return itor.ArticleRepo.GetAllPublicArticles()
 }
 

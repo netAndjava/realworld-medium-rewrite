@@ -10,9 +10,11 @@ Deploy And Release
 
 * practice
 
-1. mysql数据库的部署
+** mysql数据库的部署
    
-   1.使用容器部署mysql数据库
+1. 将部署mysql的容器单独加入一个pod中，使用etcd注册mysql服务的配置
+
+   1.使用容器部署mysql数据库服务
    
    2.将mysql的配置自动注册到etcd服务中
 
