@@ -51,13 +51,16 @@ type ArticleRepository interface {
 	Create(a Article) error
 	Save(a Article) error
 	Publish(ID NUUID) error
-	GetAuthorDrafts(userID NUUID) ([]Article, error)
-	GetAuthorPublicArticles(userID NUUID) ([]Article, error)
-	GetAllPublicArticles() ([]Article, error)
+
+	ViewDraftArticles(userID NUUID) ([]Article, error)
 	Get(ID NUUID) (Article, error)
-	GetDraftOfPublicArticle(ID NUUID) (Article, error)
+	ViewPublicArticles(userID NUUID) ([]Article, error)
+
+	GetAllPublicArticles() ([]Article, error)
+	ViewDraftOfPublicArticle(ID NUUID) (Article, error)
 	CreateDraftOfPublicArticle(a Article) error
 	UpdateDraftOfPublicArticle(a Article) error
-	PublishPublicArticleDraft(a Article) error
+
+	Republish(a Article) error
 	Drop(ID NUUID) error
 }

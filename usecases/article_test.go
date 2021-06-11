@@ -10,8 +10,8 @@ import (
 
 var itor ArticleInteractor
 
-//TestSaveDraft 测试保存草稿
-func TestSaveDraft(t *testing.T) {
+//TestEditDraftArticle 测试保存草稿
+func TestEditDraftArticle(t *testing.T) {
 	a := assert.New(t)
 
 	//2. 更新草稿文章
@@ -20,22 +20,22 @@ func TestSaveDraft(t *testing.T) {
 	article := domain.Article{}
 	article.Title = "testja"
 	article.Content = "test"
-	err := itor.SaveDraft(article, 10)
+	err := itor.EditDraftArticle(article)
 	a.Nil(err)
 
 }
 
-func TestCreateDraft(t *testing.T) {
+func TestWrite(t *testing.T) {
 	a := assert.New(t)
 	//1. 创建草稿态文章
 	//1.1 创建的内容为空的文章，创建失败
 	article := domain.Article{}
-	_, err := itor.CreateDraft(GenerateUUID, article, 1)
+	_, err := itor.Wrtie(GenerateUUID, article)
 	a.NotNil(err)
 
 	//创建成功
 	article.Title = "time"
-	ID, err := itor.CreateDraft(GenerateUUID, article, 1)
+	ID, err := itor.Wrtie(GenerateUUID, article)
 	a.True(a.Nil(err) && a.IsType(new(domain.NUUID), &ID, nil))
 }
 
@@ -52,70 +52,64 @@ func TestPublish(t *testing.T) {
 
 }
 
-func TestGetAuthorDrafts(t *testing.T) {
+func TestViewDraftArticles(t *testing.T) {
 	a := assert.New(t)
 	//测试成功
-	arts, err := itor.GetAuthorDrafts(domain.NUUID(1))
+	arts, err := itor.ViewDraftArticles(domain.NUUID(1))
 	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
 }
 
-//TestGetAuthorPublicArticles 获取作者已发布文章
-func TestGetAuthorPublicArticles(t *testing.T) {
+//ViewPublicArticles 获取作者已发布文章
+func ViewPublicArticles(t *testing.T) {
 	a := assert.New(t)
 	//测试成功
-	arts, err := itor.GetAuthorPublicArticles(domain.NUUID(1))
+	arts, err := itor.ViewPublicArticles(domain.NUUID(1))
 	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
 }
 
-//TestGetArticle 获取文章详情
-func TestGetArticle(t *testing.T) {
+//TestView 获取文章详情
+func TestView(t *testing.T) {
 	a := assert.New(t)
 	//测试失败
 	//1.1获取的文章不存在
-	_, err := itor.GetArticle(domain.NUUID(0))
+	_, err := itor.View(domain.NUUID(0))
 	a.NotNil(err)
-	_, err = itor.GetArticle(domain.NUUID(1))
+	_, err = itor.View(domain.NUUID(1))
 	a.Nil(err)
 }
 
-func TestGetAllPublicArticles(t *testing.T) {
+func TestViewRecentArticles(t *testing.T) {
 	a := assert.New(t)
-	arts, err := itor.GetAllPublicArticles()
+	arts, err := itor.ViewRecentArticles()
 	a.True(a.Nil(err) && a.IsType(arts, []domain.Article{}, nil))
 }
 
-func TestGetPublicArticleDraft(t *testing.T) {
+func TestViewDraftOfPublicArticle(t *testing.T) {
 	a := assert.New(t)
 	//测试失败
 	//查找的文章不存在
-	_, err := itor.GetPublicArticleDraft(0)
+	_, err := itor.ViewDraftOfPublicArticle(0)
 	a.NotNil(err)
-	_, err = itor.GetPublicArticleDraft(1)
+	_, err = itor.ViewDraftOfPublicArticle(1)
 	a.Nil(err)
 }
 
-//TestSavePublicArticleDraft 测试保存已发布文章草稿
-func TestSavePublicArticleDraft(t *testing.T) {
+//TestEditPublicArticle 测试保存已发布文章草稿
+func TestEditPublicArticle(t *testing.T) {
 	a := assert.New(t)
 
 	//1.测试失败
-	//1.1草稿不存
+	//1.1草稿不存在
 	//1.2用户没有权限
 
 	art := domain.Article{}
-	err := itor.SavePublicArticleDraft(art, domain.NUUID(1))
+	err := itor.EditPublicArticle(art)
 	a.NotNil(err)
 
 	art.ID = 1
-	err = itor.SavePublicArticleDraft(art, domain.NUUID(1))
+	err = itor.EditPublicArticle(art)
 	a.Nil(err)
 
-}
-
-func TestCreatePublicArticleDraft(t *testing.T) {
-	//测试失败
-	//1.1已发布文章不存在
-	//1.2 没有修改已发布文章权限
 }
 
 func TestPublishPublicArticleDraft(t *testing.T) {
