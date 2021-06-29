@@ -112,18 +112,18 @@ func TestEditPublicArticle(t *testing.T) {
 
 }
 
-func TestPublishPublicArticleDraft(t *testing.T) {
+func TestRepublish(t *testing.T) {
 	a := assert.New(t)
 	//测试发布失败
 	// 1. 发布为文章不存在
 	art := domain.Article{}
-	err := itor.PublishPublicArticleDraft(art, 1)
+	err := itor.Republish(art)
 	a.NotNil(err)
 	//2.发布的人不是文章作者
-	itor.PublishPublicArticleDraft(art, 1)
+	itor.Republish(art)
 	a.NotNil(err)
 
 	//测试发布成功
-	err = itor.PublishPublicArticleDraft(art, 3)
+	err = itor.Republish(art)
 	a.Nil(err)
 }
