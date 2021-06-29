@@ -1,0 +1,23 @@
+Deploy And Release 
+
+* agenda
+
+- 构建程序镜像，使用容器部署
+
+- 使用pod管理容器
+
+- 使用服务注册与发现管理服务配置
+
+* practice
+
+** mysql数据库的部署
+   
+1. 将部署mysql的容器单独加入一个pod中，使用etcd注册mysql服务的配置
+
+   1.使用容器部署mysql数据库服务
+   
+   2.将mysql的配置自动注册到etcd服务中
+
+   3.修改程序从etcd中获取mysql数据库的配置
+
+
