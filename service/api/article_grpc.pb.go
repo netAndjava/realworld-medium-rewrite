@@ -25,7 +25,6 @@ type ArticleServiceClient interface {
 	ViewPublicArticles(ctx context.Context, in *ViewPublicArticlesRequest, opts ...grpc.CallOption) (*ViewPublicArticlesResponse, error)
 	ViewRecentArticles(ctx context.Context, in *ViewRecentArticlesRequest, opts ...grpc.CallOption) (*ViewRecentArticlesResponse, error)
 	ViewDraftOfPublicArticle(ctx context.Context, in *ViewDraftOfPublicArticleRequest, opts ...grpc.CallOption) (*ViewDraftOfPublicArticleResponse, error)
-	EditDraftArticle(ctx context.Context, in *EditDraftArticleRequest, opts ...grpc.CallOption) (*EditDraftArticleResponse, error)
 	Republish(ctx context.Context, in *RepublishRequest, opts ...grpc.CallOption) (*RepublishResponse, error)
 	Drop(ctx context.Context, in *DropArticleRequest, opts ...grpc.CallOption) (*DropArticleResponse, error)
 }
@@ -101,15 +100,6 @@ func (c *articleServiceClient) ViewDraftOfPublicArticle(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *articleServiceClient) EditDraftArticle(ctx context.Context, in *EditDraftArticleRequest, opts ...grpc.CallOption) (*EditDraftArticleResponse, error) {
-	out := new(EditDraftArticleResponse)
-	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/EditDraftArticle", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *articleServiceClient) Republish(ctx context.Context, in *RepublishRequest, opts ...grpc.CallOption) (*RepublishResponse, error) {
 	out := new(RepublishResponse)
 	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/Republish", in, out, opts...)
@@ -139,7 +129,6 @@ type ArticleServiceServer interface {
 	ViewPublicArticles(context.Context, *ViewPublicArticlesRequest) (*ViewPublicArticlesResponse, error)
 	ViewRecentArticles(context.Context, *ViewRecentArticlesRequest) (*ViewRecentArticlesResponse, error)
 	ViewDraftOfPublicArticle(context.Context, *ViewDraftOfPublicArticleRequest) (*ViewDraftOfPublicArticleResponse, error)
-	EditDraftArticle(context.Context, *EditDraftArticleRequest) (*EditDraftArticleResponse, error)
 	Republish(context.Context, *RepublishRequest) (*RepublishResponse, error)
 	Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error)
 	mustEmbedUnimplementedArticleServiceServer()
@@ -169,9 +158,6 @@ func (UnimplementedArticleServiceServer) ViewRecentArticles(context.Context, *Vi
 }
 func (UnimplementedArticleServiceServer) ViewDraftOfPublicArticle(context.Context, *ViewDraftOfPublicArticleRequest) (*ViewDraftOfPublicArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ViewDraftOfPublicArticle not implemented")
-}
-func (UnimplementedArticleServiceServer) EditDraftArticle(context.Context, *EditDraftArticleRequest) (*EditDraftArticleResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EditDraftArticle not implemented")
 }
 func (UnimplementedArticleServiceServer) Republish(context.Context, *RepublishRequest) (*RepublishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Republish not implemented")
@@ -318,24 +304,6 @@ func _ArticleService_ViewDraftOfPublicArticle_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ArticleService_EditDraftArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EditDraftArticleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ArticleServiceServer).EditDraftArticle(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.v1.ArticleService/EditDraftArticle",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).EditDraftArticle(ctx, req.(*EditDraftArticleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ArticleService_Republish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RepublishRequest)
 	if err := dec(in); err != nil {
@@ -406,10 +374,6 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ViewDraftOfPublicArticle",
 			Handler:    _ArticleService_ViewDraftOfPublicArticle_Handler,
-		},
-		{
-			MethodName: "EditDraftArticle",
-			Handler:    _ArticleService_EditDraftArticle_Handler,
 		},
 		{
 			MethodName: "Republish",

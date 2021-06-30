@@ -14,8 +14,6 @@ service ArticleService {
         returns (ViewRecentArticlesResponse);  //读者查看最近发布的文章
     rpc ViewDraftOfPublicArticle(ViewDraftOfPublicArticleRequest)
         returns (ViewDraftOfPublicArticleResponse);  //获取文章草稿
-    rpc EditDraftArticle(EditDraftArticleRequest)
-        returns (EditDraftArticleResponse);  //编辑已发布文章
     rpc Republish(RepublishRequest) returns (RepublishResponse);  //重新发布文章
     rpc Drop(DropArticleRequest) returns (DropArticleResponse);
 }
@@ -79,12 +77,6 @@ message ViewDraftOfPublicArticleRequest {
 message ViewDraftOfPublicArticleResponse {
     Article article = 1;
 }
-
-message EditDraftArticleRequest {
-    Article article = 1;
-}
-
-message EditDraftArticleResponse {}
 
 message RepublishRequest {
     Article article = 1;

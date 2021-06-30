@@ -41,21 +41,21 @@ func Start(address string, handler database.DbHandler) {
 	server.Serve(conn)
 }
 
-func (server *articleServer) Save(ctxt context.Context, in *pb.SaveRequest) (*pb.SaveResponse, error) {
+func (server *articleServer) Write(ctxt context.Context, in *pb.WriteRequest) (*pb.WriteResponse, error) {
 	article := domain.Article{ID: domain.NUUID(in.Article.Id), Title: in.Article.Title, Content: in.Article.Content, Status: domain.Draft, AuthorID: domain.NUUID(in.Article.AuthorId)}
 	//1.创建文章
 	if in.Article.Id == 0 {
-		ID, err := server.artInteractor.CreateDraft(usecases.GenerateUUID, article)
+		ID, err := server.artInteractor.Wrtie(usecases.GenerateUUID, article)
 		if err != nil {
 			return nil, err
 		}
 
-		return &pb.SaveResponse{Id: int64(ID)}, err
+		return &pb.WriteResponse{Id: int64(ID)}, err
 	}
 
 	if in.Article.Id != 0 && domain.PublicStatus(in.Article.Status) == domain.Draft {
 		//2.保存编辑的文章
-		err := server.artInteractor.SaveDraft(article)
+		err := server.artInteractor.EditDraftArticle(article)
 		if err != nil {
 			return nil, err
 		}
@@ -63,17 +63,18 @@ func (server *articleServer) Save(ctxt context.Context, in *pb.SaveRequest) (*pb
 
 	//3.保存草稿文章
 	if in.Article.Id != 0 && domain.PublicStatus(in.Article.Status) == domain.Public {
-		err := server.artInteractor.SaveDraft(article)
+		err := server.artInteractor.EditPublicArticle(article)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return &pb.SaveResponse{Id: in.Article.Id}, nil
+	// go on,按理你应该在接口修改的地方直接使用重构,原先定义丢失后就不能使用重构了,你只能search and replace
+	return &pb.WriteResponse{Id: in.Article.Id}, nil
 }
 
 func (server *articleServer) ViewDraftedArticles(ctxt context.Context, req *pb.ViewDraftedArticlesRequest) (*pb.ViewDraftedArticlesResponse, error) {
-	arts, err := server.artInteractor.GetAuthorDrafts(domain.NUUID(req.UserId))
+	arts, err := server.artInteractor.ViewDraftArticles(domain.NUUID(req.UserId))
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +83,7 @@ func (server *articleServer) ViewDraftedArticles(ctxt context.Context, req *pb.V
 }
 
 func (server *articleServer) View(ctxt context.Context, in *pb.ViewRequest) (*pb.ViewResponse, error) {
-	art, err := server.artInteractor.GetArticle(domain.NUUID(in.Id))
+	art, err := server.artInteractor.View(domain.NUUID(in.Id))
 	if err != nil {
 		return nil, err
 	}
@@ -91,37 +92,34 @@ func (server *articleServer) View(ctxt context.Context, in *pb.ViewRequest) (*pb
 }
 
 func (server *articleServer) Publish(ctxt context.Context, req *pb.PublishRequest) (*pb.PublishResponse, error) {
-	err := server.artInteractor.Publish(domain.NUUID(req.Id), domain.NUUID(req.UserId))
+	server.Write(ctxt, &pb.WriteRequest{Article: req.Article})
+	err := server.artInteractor.Publish(domain.NUUID(req.Article.Id), domain.NUUID(req.Article.AuthorId))
 	return nil, err
 }
 
-func (server *articleServer) ViewOwnPublishedArticles(ctx context.Context, req *pb.ViewOwnPublishedArticlesRequest) (*pb.ViewOwnPublishedArticlesResponse, error) {
-	arts, err := server.artInteractor.GetAuthorPublicArticles(domain.NUUID(req.UserId))
+func (server *articleServer) ViewPublishedArticles(ctx context.Context, req *pb.ViewPublicArticlesRequest) (*pb.ViewPublicArticlesResponse, error) {
+	arts, err := server.artInteractor.ViewPublicArticles(domain.NUUID(req.UserId))
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.ViewOwnPublishedArticlesResponse{Articles: ConvertArticles(arts)}, err
+	return &pb.ViewPublicArticlesResponse{Articles: ConvertArticles(arts)}, err
 
 }
 
-func (server *articleServer) Draft(ctx context.Context, req *pb.DraftRequest) (*pb.DraftResponse, error) {
-	art, err := server.artInteractor.GetPublicArticleDraft(domain.NUUID(req.Id))
+func (server *articleServer) ViewDraftOfPublicArticle(ctx context.Context, req *pb.ViewDraftOfPublicArticleRequest) (*pb.ViewDraftOfPublicArticleResponse, error) {
+	art, err := server.artInteractor.ViewDraftOfPublicArticle(domain.NUUID(req.Id))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.DraftResponse{Article: &pb.Article{Id: int64(art.ID), Title: art.Title, Content: art.Content, Status: int32(art.Status), AuthorId: int64(art.AuthorID)}}, err
+	return &pb.ViewDraftOfPublicArticleResponse{Article: &pb.Article{Id: int64(art.ID), Title: art.Title, Content: art.Content, Status: int32(art.Status), AuthorId: int64(art.AuthorID)}}, err
 
 }
 
-func (server articleServer) ViewAllArticles(ctx context.Context, req *pb.ViewAllArticlesRequest) (*pb.ViewAllArticlesResponse, error) {
-	arts, err := server.artInteractor.GetAllPublicArticles()
-	if err != nil {
-		return nil, err
-	}
-	return &pb.ViewAllArticlesResponse{Articles: ConvertArticles(arts)}, nil
-
+func (server articleServer) Republish(ctx context.Context, req *pb.RepublishRequest) (*pb.RepublishResponse, error) {
+	err := server.artInteractor.Republish(domain.Article{ID: domain.NUUID(req.Article.Id), Title: req.Article.Title, Content: req.Article.Content, AuthorID: domain.NUUID(req.Article.AuthorId)})
+	return &pb.RepublishResponse{}, err
 }
 
 func (server articleServer) Drop(ctx context.Context, req *pb.DropArticleRequest) (*pb.DropArticleResponse, error) {
