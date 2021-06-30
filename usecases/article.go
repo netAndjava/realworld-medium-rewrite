@@ -7,17 +7,13 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/domain"
 )
 
-type ArticleService interface {
-	SaveDraft(a domain.Article) error
-}
-
 // ArticleInteractor article interactor
 type ArticleInteractor struct {
 	ArticleRepo domain.ArticleRepository
 }
 
 // Write the user writes an article
-func (itor ArticleInteractor) Wrtie(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
+func (itor ArticleInteractor) Write(generate func() domain.NUUID, a domain.Article) (domain.NUUID, error) {
 	if len(a.Title) == 0 || len(a.Content) == 0 {
 		return domain.NUUID(0), errors.New("用户内容为空")
 	}
@@ -104,13 +100,13 @@ func (itor ArticleInteractor) EditPublicArticle(a domain.Article) error {
 	}
 	art, err = itor.ViewDraftOfPublicArticle(a.ID)
 	if err != nil && err == domain.ErrNotFound {
-		return itor.ArticleRepo.UpdateDraftOfPublicArticle(a)
+		return itor.ArticleRepo.CreateDraftOfPublicArticle(a)
 	}
 
 	if err != nil {
 		return err
 	}
-	return itor.ArticleRepo.CreateDraftOfPublicArticle(a)
+	return itor.ArticleRepo.UpdateDraftOfPublicArticle(a)
 }
 
 // Republish 用户重新发布文章

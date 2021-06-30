@@ -45,7 +45,7 @@ func (server *articleServer) Write(ctxt context.Context, in *pb.WriteRequest) (*
 	article := domain.Article{ID: domain.NUUID(in.Article.Id), Title: in.Article.Title, Content: in.Article.Content, Status: domain.Draft, AuthorID: domain.NUUID(in.Article.AuthorId)}
 	//1.创建文章
 	if in.Article.Id == 0 {
-		ID, err := server.artInteractor.Wrtie(usecases.GenerateUUID, article)
+		ID, err := server.artInteractor.Write(usecases.GenerateUUID, article)
 		if err != nil {
 			return nil, err
 		}
