@@ -14,11 +14,6 @@ func NewArticleRepo(helper database.DbHandler) domain.ArticleRepository {
 	return &ArticleRepo{helper}
 }
 
-func (repo *ArticleRepo) Drop(ID domain.NUUID) error {
-	_, err := repo.Handler.Execute(`delete from t_article where id=?`, ID)
-	return err
-}
-
 //Create .....
 func (repo *ArticleRepo) Create(a domain.Article) error {
 	_, err := repo.Handler.Execute(`insert into t_article (id,title,content,status,userID) values(?,?,?,?,?)`, a.ID, a.Title, a.Status, a.AuthorID)
@@ -33,17 +28,26 @@ func (repo *ArticleRepo) Save(a domain.Article) error {
 
 //Publish ......
 func (repo *ArticleRepo) Publish(ID domain.NUUID) error {
-	_, err := repo.Handler.Execute(`update t_article set status=? where id=?`, domain.Draft, ID)
+	_, err := repo.Handler.Execute(`update t_article set status=? where id=?`, domain.Public, ID)
 	return err
 }
 
-//GetAuthorDrafts .....
-func (repo *ArticleRepo) GetAuthorDrafts(userID domain.NUUID) ([]domain.Article, error) {
+//ViewDraftArticles .....
+func (repo *ArticleRepo) ViewDraftArticles(userID domain.NUUID) ([]domain.Article, error) {
 	return repo.GetAuthorArticleByStatus(userID, domain.Draft)
 }
 
-//GetAuthorPublicArticles .......
-func (repo *ArticleRepo) GetAuthorPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
+//Get ......
+func (repo *ArticleRepo) Get(ID domain.NUUID) (domain.Article, error) {
+	row := repo.Handler.QueryRow(`select title,content,status,userId from t_article where id=?`, ID)
+	var a domain.Article
+	err := row.Scan(&a.Title, &a.Content, &a.Status, &a.AuthorID)
+	a.ID = ID
+	return a, err
+}
+
+//ViewPublicArticles .......
+func (repo *ArticleRepo) ViewPublicArticles(userID domain.NUUID) ([]domain.Article, error) {
 	return repo.GetAuthorArticleByStatus(userID, domain.Public)
 }
 
@@ -90,17 +94,8 @@ func (repo *ArticleRepo) GetAllPublicArticles() ([]domain.Article, error) {
 	return articles, nil
 }
 
-//Get ......
-func (repo *ArticleRepo) Get(ID domain.NUUID) (domain.Article, error) {
-	row := repo.Handler.QueryRow(`select title,content,status,userId from t_article where id=?`, ID)
-	var a domain.Article
-	err := row.Scan(&a.Title, &a.Content, &a.Status, &a.AuthorID)
-	a.ID = ID
-	return a, err
-}
-
-//GetDraftOfPublicArticle .......
-func (repo *ArticleRepo) GetDraftOfPublicArticle(ID domain.NUUID) (domain.Article, error) {
+//ViewDraftOfPublicArticle .......
+func (repo *ArticleRepo) ViewDraftOfPublicArticle(ID domain.NUUID) (domain.Article, error) {
 	row := repo.Handler.QueryRow(`select title,content from t_draft where id=?`, ID)
 
 	var art domain.Article
@@ -121,8 +116,8 @@ func (repo *ArticleRepo) UpdateDraftOfPublicArticle(a domain.Article) error {
 	return err
 }
 
-//PublishPublicArticleDraft .....
-func (repo *ArticleRepo) PublishPublicArticleDraft(a domain.Article) error {
+//Republish .....
+func (repo *ArticleRepo) Republish(a domain.Article) error {
 	tx, err := repo.Handler.Begin()
 	defer func() {
 		if err != nil {
@@ -137,5 +132,10 @@ func (repo *ArticleRepo) PublishPublicArticleDraft(a domain.Article) error {
 	}
 
 	_, err = tx.Execute(`delete from t_draft where id=?`, a.ID)
+	return err
+}
+
+func (repo *ArticleRepo) Drop(ID domain.NUUID) error {
+	_, err := repo.Handler.Execute(`delete from t_article where id=?`, ID)
 	return err
 }
