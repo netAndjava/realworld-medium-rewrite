@@ -1,21 +1,26 @@
-syntax = "proto3"; package api.v1;
-option go_package=".;api";
+syntax = "proto3";
+package api.v1;
+option go_package = ".;api";
 
-service ArticleService{
-    rpc Write(WriteRequest) returns(WriteResponse); //写文章
-    rpc ViewDraftedArticles(ViewDraftedArticlesRequest)returns(ViewDraftedArticlesResponse);//获取草稿态文章
-    rpc View(ViewRequest)returns(ViewResponse);//获取文章详情
-    rpc Publish(PublishRequest)returns(PublishResponse);//发布文章
-    rpc ViewPublicArticles(ViewPublicArticlesRequest)returns(ViewPublicArticlesResponse);//获取作者已发布文章
-    rpc ViewRecentArticles(ViewRecentArticlesRequest)returns(ViewRecentArticlesResponse;//读者查看最近发布的文章
-    rpc ViewDraftOfPublicArticle(ViewDraftOfPublicArticleRequest)returns(ViewDraftOfPublicArticleResponse);//获取文章草稿
-    rpc EditDraftArticle(EditDraftArticleRequest)returns(EditDraftArticleResponse);//编辑已发布文章
-    rpc Republish(RepublishRequest)returns(RepublishResponse)//重新发布文章
-    rpc Drop(DropArticleRequest)returns(DropArticleResponse);
+service ArticleService {
+    rpc Write(WriteRequest) returns (WriteResponse);  //写文章
+    rpc ViewDraftedArticles(ViewDraftedArticlesRequest)
+        returns (ViewDraftedArticlesResponse);     //获取草稿态文章
+    rpc View(ViewRequest) returns (ViewResponse);  //获取文章详情
+    rpc Publish(PublishRequest) returns (PublishResponse);  //发布文章
+    rpc ViewPublicArticles(ViewPublicArticlesRequest)
+        returns (ViewPublicArticlesResponse);  //获取作者已发布文章
+    rpc ViewRecentArticles(ViewRecentArticlesRequest)
+        returns (ViewRecentArticlesResponse);  //读者查看最近发布的文章
+    rpc ViewDraftOfPublicArticle(ViewDraftOfPublicArticleRequest)
+        returns (ViewDraftOfPublicArticleResponse);  //获取文章草稿
+    rpc EditDraftArticle(EditDraftArticleRequest)
+        returns (EditDraftArticleResponse);  //编辑已发布文章
+    rpc Republish(RepublishRequest) returns (RepublishResponse);  //重新发布文章
+    rpc Drop(DropArticleRequest) returns (DropArticleResponse);
 }
 
-
-message Article{
+message Article {
     int64 id = 1;
     string title = 2;
     string content = 3;
@@ -23,79 +28,73 @@ message Article{
     int64 author_id = 5;
 }
 
-message WriteRequest{
+message WriteRequest {
     Article article = 1;
 }
 
-message WriteResponse{
+message WriteResponse {
     int64 id = 1;
 }
 
-message ViewDraftedArticlesRequest{
+message ViewDraftedArticlesRequest {
     int64 user_id = 1;
 }
 
-message ViewDraftedArticlesResponse{
+message ViewDraftedArticlesResponse {
     repeated Article articles = 1;
 }
 
-message ViewRequest{
+message ViewRequest {
     int64 id = 1;
 }
 
-message ViewResponse{
+message ViewResponse {
     Article article = 1;
 }
 
-message PublishRequest{
-   Article article = 1;
+message PublishRequest {
+    Article article = 1;
 }
 
-message PublishResponse{
-}
+message PublishResponse {}
 
-message ViewPublicArticles{
+message ViewPublicArticlesRequest {
     int64 user_id = 1;
 }
 
-message ViewPublicArticlesResponse{
+message ViewPublicArticlesResponse {
     repeated Article articles = 1;
 }
 
-message ViewRecentArticlesRequest{
-}
+message ViewRecentArticlesRequest {}
 
-message ViewRecentArticlesResponse{
+message ViewRecentArticlesResponse {
     repeated Article articles = 1;
 }
 
-message ViewDraftOfPublicArticleRequest{
-   int64 id = 1; 
+message ViewDraftOfPublicArticleRequest {
+    int64 id = 1;
 }
 
-message ViewDraftOfPublicArticleResponse{
+message ViewDraftOfPublicArticleResponse {
     Article article = 1;
 }
 
-message EditDraftArticleRequest{
-    Article article = 1;    
+message EditDraftArticleRequest {
+    Article article = 1;
 }
 
-message EditDraftArticleResponse{
+message EditDraftArticleResponse {}
+
+message RepublishRequest {
+    Article article = 1;
 }
 
-message RepublishRequest{
-   Article article = 1;
-    
-}
+message RepublishResponse {}
 
-message RepublishResponse{
-}
-
-message DropArticleRequest{
+message DropArticleRequest {
     int64 article_id = 1;
     int64 user_id = 2;
 }
 
-message DropArticleResponse{
-}
+message DropArticleResponse {}

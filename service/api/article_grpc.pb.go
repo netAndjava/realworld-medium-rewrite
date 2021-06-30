@@ -18,13 +18,15 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleServiceClient interface {
-	Save(ctx context.Context, in *SaveRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	Write(ctx context.Context, in *WriteRequest, opts ...grpc.CallOption) (*WriteResponse, error)
 	ViewDraftedArticles(ctx context.Context, in *ViewDraftedArticlesRequest, opts ...grpc.CallOption) (*ViewDraftedArticlesResponse, error)
 	View(ctx context.Context, in *ViewRequest, opts ...grpc.CallOption) (*ViewResponse, error)
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
-	ViewOwnPublishedArticles(ctx context.Context, in *ViewOwnPublishedArticlesRequest, opts ...grpc.CallOption) (*ViewOwnPublishedArticlesResponse, error)
-	Draft(ctx context.Context, in *DraftRequest, opts ...grpc.CallOption) (*DraftResponse, error)
-	ViewAllArticles(ctx context.Context, in *ViewAllArticlesRequest, opts ...grpc.CallOption) (*ViewAllArticlesResponse, error)
+	ViewPublicArticles(ctx context.Context, in *ViewPublicArticlesRequest, opts ...grpc.CallOption) (*ViewPublicArticlesResponse, error)
+	ViewRecentArticles(ctx context.Context, in *ViewRecentArticlesRequest, opts ...grpc.CallOption) (*ViewRecentArticlesResponse, error)
+	ViewDraftOfPublicArticle(ctx context.Context, in *ViewDraftOfPublicArticleRequest, opts ...grpc.CallOption) (*ViewDraftOfPublicArticleResponse, error)
+	EditDraftArticle(ctx context.Context, in *EditDraftArticleRequest, opts ...grpc.CallOption) (*EditDraftArticleResponse, error)
+	Republish(ctx context.Context, in *RepublishRequest, opts ...grpc.CallOption) (*RepublishResponse, error)
 	Drop(ctx context.Context, in *DropArticleRequest, opts ...grpc.CallOption) (*DropArticleResponse, error)
 }
 
@@ -36,9 +38,9 @@ func NewArticleServiceClient(cc grpc.ClientConnInterface) ArticleServiceClient {
 	return &articleServiceClient{cc}
 }
 
-func (c *articleServiceClient) Save(ctx context.Context, in *SaveRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
-	out := new(SaveResponse)
-	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/Save", in, out, opts...)
+func (c *articleServiceClient) Write(ctx context.Context, in *WriteRequest, opts ...grpc.CallOption) (*WriteResponse, error) {
+	out := new(WriteResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/Write", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,27 +74,45 @@ func (c *articleServiceClient) Publish(ctx context.Context, in *PublishRequest, 
 	return out, nil
 }
 
-func (c *articleServiceClient) ViewOwnPublishedArticles(ctx context.Context, in *ViewOwnPublishedArticlesRequest, opts ...grpc.CallOption) (*ViewOwnPublishedArticlesResponse, error) {
-	out := new(ViewOwnPublishedArticlesResponse)
-	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/ViewOwnPublishedArticles", in, out, opts...)
+func (c *articleServiceClient) ViewPublicArticles(ctx context.Context, in *ViewPublicArticlesRequest, opts ...grpc.CallOption) (*ViewPublicArticlesResponse, error) {
+	out := new(ViewPublicArticlesResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/ViewPublicArticles", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *articleServiceClient) Draft(ctx context.Context, in *DraftRequest, opts ...grpc.CallOption) (*DraftResponse, error) {
-	out := new(DraftResponse)
-	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/Draft", in, out, opts...)
+func (c *articleServiceClient) ViewRecentArticles(ctx context.Context, in *ViewRecentArticlesRequest, opts ...grpc.CallOption) (*ViewRecentArticlesResponse, error) {
+	out := new(ViewRecentArticlesResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/ViewRecentArticles", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *articleServiceClient) ViewAllArticles(ctx context.Context, in *ViewAllArticlesRequest, opts ...grpc.CallOption) (*ViewAllArticlesResponse, error) {
-	out := new(ViewAllArticlesResponse)
-	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/ViewAllArticles", in, out, opts...)
+func (c *articleServiceClient) ViewDraftOfPublicArticle(ctx context.Context, in *ViewDraftOfPublicArticleRequest, opts ...grpc.CallOption) (*ViewDraftOfPublicArticleResponse, error) {
+	out := new(ViewDraftOfPublicArticleResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/ViewDraftOfPublicArticle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleServiceClient) EditDraftArticle(ctx context.Context, in *EditDraftArticleRequest, opts ...grpc.CallOption) (*EditDraftArticleResponse, error) {
+	out := new(EditDraftArticleResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/EditDraftArticle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleServiceClient) Republish(ctx context.Context, in *RepublishRequest, opts ...grpc.CallOption) (*RepublishResponse, error) {
+	out := new(RepublishResponse)
+	err := c.cc.Invoke(ctx, "/api.v1.ArticleService/Republish", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,13 +132,15 @@ func (c *articleServiceClient) Drop(ctx context.Context, in *DropArticleRequest,
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility
 type ArticleServiceServer interface {
-	Save(context.Context, *SaveRequest) (*SaveResponse, error)
+	Write(context.Context, *WriteRequest) (*WriteResponse, error)
 	ViewDraftedArticles(context.Context, *ViewDraftedArticlesRequest) (*ViewDraftedArticlesResponse, error)
 	View(context.Context, *ViewRequest) (*ViewResponse, error)
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
-	ViewOwnPublishedArticles(context.Context, *ViewOwnPublishedArticlesRequest) (*ViewOwnPublishedArticlesResponse, error)
-	Draft(context.Context, *DraftRequest) (*DraftResponse, error)
-	ViewAllArticles(context.Context, *ViewAllArticlesRequest) (*ViewAllArticlesResponse, error)
+	ViewPublicArticles(context.Context, *ViewPublicArticlesRequest) (*ViewPublicArticlesResponse, error)
+	ViewRecentArticles(context.Context, *ViewRecentArticlesRequest) (*ViewRecentArticlesResponse, error)
+	ViewDraftOfPublicArticle(context.Context, *ViewDraftOfPublicArticleRequest) (*ViewDraftOfPublicArticleResponse, error)
+	EditDraftArticle(context.Context, *EditDraftArticleRequest) (*EditDraftArticleResponse, error)
+	Republish(context.Context, *RepublishRequest) (*RepublishResponse, error)
 	Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error)
 	mustEmbedUnimplementedArticleServiceServer()
 }
@@ -127,8 +149,8 @@ type ArticleServiceServer interface {
 type UnimplementedArticleServiceServer struct {
 }
 
-func (UnimplementedArticleServiceServer) Save(context.Context, *SaveRequest) (*SaveResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Save not implemented")
+func (UnimplementedArticleServiceServer) Write(context.Context, *WriteRequest) (*WriteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Write not implemented")
 }
 func (UnimplementedArticleServiceServer) ViewDraftedArticles(context.Context, *ViewDraftedArticlesRequest) (*ViewDraftedArticlesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ViewDraftedArticles not implemented")
@@ -139,14 +161,20 @@ func (UnimplementedArticleServiceServer) View(context.Context, *ViewRequest) (*V
 func (UnimplementedArticleServiceServer) Publish(context.Context, *PublishRequest) (*PublishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Publish not implemented")
 }
-func (UnimplementedArticleServiceServer) ViewOwnPublishedArticles(context.Context, *ViewOwnPublishedArticlesRequest) (*ViewOwnPublishedArticlesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ViewOwnPublishedArticles not implemented")
+func (UnimplementedArticleServiceServer) ViewPublicArticles(context.Context, *ViewPublicArticlesRequest) (*ViewPublicArticlesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ViewPublicArticles not implemented")
 }
-func (UnimplementedArticleServiceServer) Draft(context.Context, *DraftRequest) (*DraftResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Draft not implemented")
+func (UnimplementedArticleServiceServer) ViewRecentArticles(context.Context, *ViewRecentArticlesRequest) (*ViewRecentArticlesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ViewRecentArticles not implemented")
 }
-func (UnimplementedArticleServiceServer) ViewAllArticles(context.Context, *ViewAllArticlesRequest) (*ViewAllArticlesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ViewAllArticles not implemented")
+func (UnimplementedArticleServiceServer) ViewDraftOfPublicArticle(context.Context, *ViewDraftOfPublicArticleRequest) (*ViewDraftOfPublicArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ViewDraftOfPublicArticle not implemented")
+}
+func (UnimplementedArticleServiceServer) EditDraftArticle(context.Context, *EditDraftArticleRequest) (*EditDraftArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditDraftArticle not implemented")
+}
+func (UnimplementedArticleServiceServer) Republish(context.Context, *RepublishRequest) (*RepublishResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Republish not implemented")
 }
 func (UnimplementedArticleServiceServer) Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Drop not implemented")
@@ -164,20 +192,20 @@ func RegisterArticleServiceServer(s grpc.ServiceRegistrar, srv ArticleServiceSer
 	s.RegisterService(&ArticleService_ServiceDesc, srv)
 }
 
-func _ArticleService_Save_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SaveRequest)
+func _ArticleService_Write_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WriteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArticleServiceServer).Save(ctx, in)
+		return srv.(ArticleServiceServer).Write(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.v1.ArticleService/Save",
+		FullMethod: "/api.v1.ArticleService/Write",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).Save(ctx, req.(*SaveRequest))
+		return srv.(ArticleServiceServer).Write(ctx, req.(*WriteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -236,56 +264,92 @@ func _ArticleService_Publish_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ArticleService_ViewOwnPublishedArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ViewOwnPublishedArticlesRequest)
+func _ArticleService_ViewPublicArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ViewPublicArticlesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArticleServiceServer).ViewOwnPublishedArticles(ctx, in)
+		return srv.(ArticleServiceServer).ViewPublicArticles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.v1.ArticleService/ViewOwnPublishedArticles",
+		FullMethod: "/api.v1.ArticleService/ViewPublicArticles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).ViewOwnPublishedArticles(ctx, req.(*ViewOwnPublishedArticlesRequest))
+		return srv.(ArticleServiceServer).ViewPublicArticles(ctx, req.(*ViewPublicArticlesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ArticleService_Draft_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DraftRequest)
+func _ArticleService_ViewRecentArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ViewRecentArticlesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArticleServiceServer).Draft(ctx, in)
+		return srv.(ArticleServiceServer).ViewRecentArticles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.v1.ArticleService/Draft",
+		FullMethod: "/api.v1.ArticleService/ViewRecentArticles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).Draft(ctx, req.(*DraftRequest))
+		return srv.(ArticleServiceServer).ViewRecentArticles(ctx, req.(*ViewRecentArticlesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ArticleService_ViewAllArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ViewAllArticlesRequest)
+func _ArticleService_ViewDraftOfPublicArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ViewDraftOfPublicArticleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArticleServiceServer).ViewAllArticles(ctx, in)
+		return srv.(ArticleServiceServer).ViewDraftOfPublicArticle(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.v1.ArticleService/ViewAllArticles",
+		FullMethod: "/api.v1.ArticleService/ViewDraftOfPublicArticle",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).ViewAllArticles(ctx, req.(*ViewAllArticlesRequest))
+		return srv.(ArticleServiceServer).ViewDraftOfPublicArticle(ctx, req.(*ViewDraftOfPublicArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_EditDraftArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditDraftArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).EditDraftArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.ArticleService/EditDraftArticle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).EditDraftArticle(ctx, req.(*EditDraftArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_Republish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RepublishRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).Republish(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.ArticleService/Republish",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).Republish(ctx, req.(*RepublishRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -316,8 +380,8 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ArticleServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Save",
-			Handler:    _ArticleService_Save_Handler,
+			MethodName: "Write",
+			Handler:    _ArticleService_Write_Handler,
 		},
 		{
 			MethodName: "ViewDraftedArticles",
@@ -332,16 +396,24 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ArticleService_Publish_Handler,
 		},
 		{
-			MethodName: "ViewOwnPublishedArticles",
-			Handler:    _ArticleService_ViewOwnPublishedArticles_Handler,
+			MethodName: "ViewPublicArticles",
+			Handler:    _ArticleService_ViewPublicArticles_Handler,
 		},
 		{
-			MethodName: "Draft",
-			Handler:    _ArticleService_Draft_Handler,
+			MethodName: "ViewRecentArticles",
+			Handler:    _ArticleService_ViewRecentArticles_Handler,
 		},
 		{
-			MethodName: "ViewAllArticles",
-			Handler:    _ArticleService_ViewAllArticles_Handler,
+			MethodName: "ViewDraftOfPublicArticle",
+			Handler:    _ArticleService_ViewDraftOfPublicArticle_Handler,
+		},
+		{
+			MethodName: "EditDraftArticle",
+			Handler:    _ArticleService_EditDraftArticle_Handler,
+		},
+		{
+			MethodName: "Republish",
+			Handler:    _ArticleService_Republish_Handler,
 		},
 		{
 			MethodName: "Drop",
