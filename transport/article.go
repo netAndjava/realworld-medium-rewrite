@@ -24,8 +24,15 @@ type grpcServer struct {
 
 func NewArticleGRPCServer(endpoints endpoints.Endpoints, logger log.Logger) pb.ArticleServiceServer {
 	return &grpcServer{
-		write:             gt.NewServer(endpoints.Write, decodeWriteReq, encodeWriteResp, nil),
-		viewDraftArticles: gt.NewServer(endpoints.ViewDraftArticles, decodeViewDraftArticlesReq, encodeViewDraftArticleResp, nil),
+		write:                    gt.NewServer(endpoints.Write, decodeWriteReq, encodeWriteResp, nil),
+		viewDraftArticles:        gt.NewServer(endpoints.ViewDraftArticles, decodeViewDraftArticlesReq, encodeViewDraftArticleResp, nil),
+		view:                     gt.NewServer(endpoints.View, decodeViewReq, encodeViewResp),
+		publish:                  gt.NewServer(endpoints.Publish, decodePublishReq, encodePublishResp),
+		viewPublicArticles:       gt.NewServer(endpoints.ViewPublicArticles, decodeViewPublicArticleReq, encodeViewPublicArticleResp, nil),
+		viewRecentArticles:       gt.NewServer(endpoints.ViewRecentArticles, nil, encodeViewRecentArticlesResp, nil),
+		viewDraftOfPublicArticle: gt.NewServer(endpoints.ViewDraftOfPublicArticle, decodeViewReq, encodeViewResp, nil),
+		republish:                gt.NewServer(endpoints.Republish, decodePublishReq, encodePublishResp, nil),
+		drop:                     gt.NewServer(endpoints.Drop, decodeDropReq, encodeDropResp, nil),
 	}
 }
 
@@ -74,32 +81,104 @@ func (s *grpcServer) View(ctx context.Context, req *pb.ViewRequest) (*pb.ViewRes
 	return resp.(*pb.ViewResponse), nil
 }
 
-func (s *grpcServer) Publish(_ context.Context, _ *pb.PublishRequest) (*pb.PublishResponse, error) {
-	panic("not implemented") // TODO: Implement
+func decodeViewReq(ctx context.Context, request interface{}) (interface{}, error) {
+	req := request.(*pb.ViewRequest)
+	return endpoints.ViewReq{ID: domain.NUUID(req.Id)}, nil
 }
 
-func (s *grpcServer) ViewPublicArticles(_ context.Context, _ *pb.ViewPublicArticlesRequest) (*pb.ViewPublicArticlesResponse, error) {
-	panic("not implemented") // TODO: Implement
+func encodeViewResp(ctx context.Context, response interface{}) (interface{}, error) {
+	req := response.(endpoints.ViewResp)
+	return &pb.ViewResponse{Article: ConvertArticle(req.Article)}, nil
 }
 
-func (s *grpcServer) ViewRecentArticles(_ context.Context, _ *pb.ViewRecentArticlesRequest) (*pb.ViewRecentArticlesResponse, error) {
-	panic("not implemented") // TODO: Implement
+func (s *grpcServer) Publish(ctx context.Context, req *pb.PublishRequest) (*pb.PublishResponse, error) {
+	_, resp, err := s.publish.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.PublishResponse), nil
 }
 
-func (s *grpcServer) ViewDraftOfPublicArticle(_ context.Context, _ *pb.ViewDraftOfPublicArticleRequest) (*pb.ViewDraftOfPublicArticleResponse, error) {
-	panic("not implemented") // TODO: Implement
+func decodePublishReq(ctx context.Context, request interface{}) (interface{}, error) {
+	req := request.(*pb.PublishRequest)
+	return endpoints.PublishReq{Article: domain.Article{ID: domain.NUUID(req.Article.Id), Content: req.Article.Content, Title: req.Article.Content, AuthorID: domain.NUUID(req.Article.AuthorId)}}, nil
 }
 
-func (s *grpcServer) Republish(_ context.Context, _ *pb.RepublishRequest) (*pb.RepublishResponse, error) {
-	panic("not implemented") // TODO: Implement
+func encodePublishResp(ctx context.Context, response interface{}) (interface{}, error) {
+	return &pb.PublishResponse{}, nil
 }
 
-func (s *grpcServer) Drop(_ context.Context, _ *pb.DropArticleRequest) (*pb.DropArticleResponse, error) {
-	panic("not implemented") // TODO: Implement
+func (s *grpcServer) ViewPublicArticles(ctx context.Context, req *pb.ViewPublicArticlesRequest) (*pb.ViewPublicArticlesResponse, error) {
+	_, resp, err := s.viewPublicArticles.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.ViewPublicArticlesResponse), nil
+}
+
+func decodeViewPublicArticleReq(ctx context.Context, request interface{}) (interface{}, error) {
+	req := request.(*pb.ViewPublicArticlesRequest)
+	return endpoints.ViewPublicArticlesReq{UserID: domain.NUUID(req.UserId)}, nil
+}
+
+func encodeViewPublicArticleResp(ctx context.Context, response interface{}) (interface{}, error) {
+	resp := response.(endpoints.ViewPublicArticlesResp)
+	return &pb.ViewPublicArticlesResponse{Articles: ConvertArticles(resp.Articles)}, nil
+}
+
+func (s *grpcServer) ViewRecentArticles(ctx context.Context, req *pb.ViewRecentArticlesRequest) (*pb.ViewRecentArticlesResponse, error) {
+	_, resp, err := s.viewRecentArticles.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.ViewRecentArticlesResponse), nil
+}
+
+func encodeViewRecentArticlesResp(ctx context.Context, response interface{}) (interface{}, error) {
+	resp := response.(endpoints.ViewRecentArticlesResp)
+	return &pb.ViewRecentArticlesResponse{Articles: ConvertArticles(resp.Articles)}, nil
+}
+
+func (s *grpcServer) ViewDraftOfPublicArticle(ctx context.Context, request *pb.ViewDraftOfPublicArticleRequest) (*pb.ViewDraftOfPublicArticleResponse, error) {
+	_, resp, err := s.viewDraftOfPublicArticle.ServeGRPC(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.ViewDraftOfPublicArticleResponse), nil
+}
+
+func (s *grpcServer) Republish(ctx context.Context, request *pb.RepublishRequest) (*pb.RepublishResponse, error) {
+	_, resp, err := s.republish.ServeGRPC(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.RepublishResponse), nil
+}
+
+func (s *grpcServer) Drop(ctx context.Context, request *pb.DropArticleRequest) (*pb.DropArticleResponse, error) {
+	_, resp, err := s.drop.ServeGRPC(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.DropArticleResponse), nil
+}
+
+func decodeDropReq(ctx context.Context, req interface{}) (interface{}, error) {
+	request := req.(*pb.DropArticleRequest)
+	return endpoints.DropReq{ID: domain.NUUID(request.ArticleId), UserID: domain.NUUID(request.UserId)}, nil
+}
+
+func encodeDropResp(ctx context.Context, resp interface{}) (interface{}, error) {
+	return endpoints.DropResp{}, nil
 }
 
 func (s *grpcServer) mustEmbedUnimplementedArticleServiceServer() {
+	//不知道这个函数什么作用
 	panic("not implemented") // TODO: Implement
+}
+
+func ConvertArticle(art domain.Article) *pb.Article {
+	return &pb.Article{Id: int64(art.ID), Title: art.Title, Content: art.Content, Status: int32(art.Status), AuthorId: int64(art.AuthorID)}
 }
 
 //ConvertArticles .....

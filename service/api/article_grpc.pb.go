@@ -119,7 +119,7 @@ func (c *articleServiceClient) Drop(ctx context.Context, in *DropArticleRequest,
 }
 
 // ArticleServiceServer is the server API for ArticleService service.
-// All implementations must embed UnimplementedArticleServiceServer
+// All implementations should embed UnimplementedArticleServiceServer
 // for forward compatibility
 type ArticleServiceServer interface {
 	Write(context.Context, *WriteRequest) (*WriteResponse, error)
@@ -131,10 +131,9 @@ type ArticleServiceServer interface {
 	ViewDraftOfPublicArticle(context.Context, *ViewDraftOfPublicArticleRequest) (*ViewDraftOfPublicArticleResponse, error)
 	Republish(context.Context, *RepublishRequest) (*RepublishResponse, error)
 	Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error)
-	mustEmbedUnimplementedArticleServiceServer()
 }
 
-// UnimplementedArticleServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedArticleServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedArticleServiceServer struct {
 }
 
@@ -165,7 +164,6 @@ func (UnimplementedArticleServiceServer) Republish(context.Context, *RepublishRe
 func (UnimplementedArticleServiceServer) Drop(context.Context, *DropArticleRequest) (*DropArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Drop not implemented")
 }
-func (UnimplementedArticleServiceServer) mustEmbedUnimplementedArticleServiceServer() {}
 
 // UnsafeArticleServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to ArticleServiceServer will

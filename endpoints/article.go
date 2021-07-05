@@ -20,18 +20,17 @@ type Endpoints struct {
 	Drop                     endpoint.Endpoint
 }
 
-type WriteReq struct {
-	Article domain.Article
-}
-
-type WriteResp struct {
-	ID domain.NUUID
-}
-
 func makeEndpoints(s article.ArticleService) Endpoints {
 	return Endpoints{
-		Write:             makeWriteEndpoint(s),
-		ViewDraftArticles: makeViewDraftArticles(s),
+		Write:                    makeWriteEndpoint(s),
+		ViewDraftArticles:        makeViewDraftArticlesEndpoint(s),
+		View:                     makeViewEndpoint(s),
+		Publish:                  makePublishEndpoint(s),
+		ViewPublicArticles:       makeViewPublicArticlesEndpoint(s),
+		ViewRecentArticles:       makeViewRecentArticlesEndpoint(s),
+		ViewDraftOfPublicArticle: makeViewDraftOfPublicArticleEndpoint(s),
+		Republish:                makePublishEndpoint(s),
+		Drop:                     makeDropEndpoint(s),
 	}
 }
 
@@ -43,6 +42,22 @@ func makeWriteEndpoint(s article.ArticleService) endpoint.Endpoint {
 	}
 }
 
+type WriteReq struct {
+	Article domain.Article
+}
+
+type WriteResp struct {
+	ID domain.NUUID
+}
+
+func makeViewDraftArticlesEndpoint(s article.ArticleService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(ViewDraftArticlesReq)
+		articles, err := s.ViewDraftArticles(ctx, req.UserID)
+		return ViewDraftArticlesResp{Articles: articles}, err
+	}
+}
+
 type ViewDraftArticlesReq struct {
 	UserID domain.NUUID
 }
@@ -51,11 +66,11 @@ type ViewDraftArticlesResp struct {
 	Articles []domain.Article
 }
 
-func makeViewDraftArticles(s article.ArticleService) endpoint.Endpoint {
+func makeViewEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req := request.(ViewDraftArticlesReq)
-		articles, err := s.ViewDraftArticles(ctx, req.UserID)
-		return ViewDraftArticlesResp{Articles: articles}, err
+		req := request.(ViewReq)
+		article, err := s.View(ctx, req.ID)
+		return ViewResp{Article: article}, err
 	}
 }
 
@@ -67,22 +82,7 @@ type ViewResp struct {
 	Article domain.Article
 }
 
-func makeView(s article.ArticleService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req := request.(ViewReq)
-		article, err := s.View(ctx, req.ID)
-		return ViewResp{Article: article}, err
-	}
-}
-
-type PublishReq struct {
-	Article domain.Article
-}
-
-type PunlishResp struct {
-}
-
-func makePublish(s article.ArticleService) endpoint.Endpoint {
+func makePublishEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(PublishReq)
 		err := s.Publish(ctx, req.Article)
@@ -90,15 +90,11 @@ func makePublish(s article.ArticleService) endpoint.Endpoint {
 	}
 }
 
-type ViewPublicArticlesReq struct {
-	UserID domain.NUUID
+type PublishReq struct {
+	Article domain.Article
 }
 
-type ViewPublicArticlesResp struct {
-	Articles []domain.Article
-}
-
-func makeViewPublicArticles(s article.ArticleService) endpoint.Endpoint {
+func makeViewPublicArticlesEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(ViewPublicArticlesReq)
 		articles, err := s.ViewPublicArticles(ctx, req.UserID)
@@ -106,18 +102,29 @@ func makeViewPublicArticles(s article.ArticleService) endpoint.Endpoint {
 	}
 }
 
-type ViewRecentArticlesResp struct {
-	Articles []domain.Article
+type PunlishResp struct {
 }
 
-func makeViewRecentArticles(s article.ArticleService) endpoint.Endpoint {
+type ViewPublicArticlesReq struct {
+	UserID domain.NUUID
+}
+
+func makeViewRecentArticlesEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		articles, err := s.ViewRecentArticles(ctx)
 		return ViewRecentArticlesResp{Articles: articles}, err
 	}
 }
 
-func makeViewDraftOfPublicArticle(s article.ArticleService) endpoint.Endpoint {
+type ViewPublicArticlesResp struct {
+	Articles []domain.Article
+}
+
+type ViewRecentArticlesResp struct {
+	Articles []domain.Article
+}
+
+func makeViewDraftOfPublicArticleEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(ViewReq)
 		article, err := s.ViewDraftOfPublicArticle(ctx, req.ID)
@@ -125,11 +132,19 @@ func makeViewDraftOfPublicArticle(s article.ArticleService) endpoint.Endpoint {
 	}
 }
 
-func Republish(s article.ArticleService) endpoint.Endpoint {
+func makeRepublishEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(PublishReq)
 		err := s.Republish(ctx, req.Article)
 		return PunlishResp{}, err
+	}
+}
+
+func makeDropEndpoint(s article.ArticleService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(DropReq)
+		err := s.Drop(ctx, req.ID, req.UserID)
+		return DropResp{}, err
 	}
 }
 
@@ -139,12 +154,4 @@ type DropReq struct {
 }
 
 type DropResp struct {
-}
-
-func Drop(s article.ArticleService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(DropReq)
-		err := s.Drop(ctx, req.ID, req.UserID)
-		return DropResp{}, err
-	}
 }

@@ -22,4 +22,8 @@ fi
 
 echo "protoc --proto_path=$protoPath --go_out=$out --go-grpc_out=$out $1"
 
-protoc --proto_path=$protoPath --go_out=$out --go-grpc_out=$out $1
+# protoc --proto_path=$protoPath --go_out=$out --go-grpc_out=$out $1
+protoc --proto_path=$protoPath --go_out=$out --go-grpc_opt=require_unimplemented_servers=false --go-grpc_out=$out $1 
+# 下面这个是正常的
+# protoc --go_out=. --go-grpc_opt=require_unimplemented_servers=false --go-grpc_out=. proto/*.proto 
+# https://github.com/grpc/grpc-go/issues/3794
