@@ -1,0 +1,6 @@
+
+address = "ns.consul.8500"
+
+[check]
+interval="10s"
+timeout="1s"

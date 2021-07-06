@@ -6,8 +6,9 @@
 # sql> flush privileges;
 user = "root"
 password = "nqq123"
-host = "172.31.74.249"
-port = 3306
+# host = "172.31.74.249"
+# port = 3306
+name="mysql"
 network = "tcp"
 dbname = "real_world_medium"
 timeout = "10s"

@@ -14,14 +14,14 @@ import (
 
 //Config 启动的配置项
 type Config struct {
-	User     string
-	Password string
-	Network  string
-	Host     string
-	Port     int
-	Name     string
-	Charset  string
-	Timeout  string
+	User     string `toml:"user"`
+	Password string `toml:"password"`
+	Network  string `toml:"network"`
+	Host     string `toml:"host"`
+	Port     int    `toml:"port"`
+	Name     string `toml:"name"`
+	Charset  string `toml:"charset"`
+	Timeout  string `toml:"timeout"`
 }
 
 //MysqlHandler handler of mysql

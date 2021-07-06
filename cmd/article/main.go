@@ -16,6 +16,7 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/endpoints"
 	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
 	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database/mysql"
+	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 	"iohttps.com/live/realworld-medium-rewrite/service/api"
 	"iohttps.com/live/realworld-medium-rewrite/service/article"
 	"iohttps.com/live/realworld-medium-rewrite/transport"
@@ -61,7 +62,7 @@ func main() {
 
 func Start(IP, port string, handler database.DbHandler) {
 	//1. New Article Interactor
-	articleItor := usecases.NewArticleInteractor(handler)
+	articleItor := usecases.ArticleInteractor{ArticleRepo: interfaces.NewArticleRepo(handler)}
 	//2. New Article Service
 	articleService := article.NewArticleService(logger, articleItor)
 	//3. Make Endpoints
@@ -98,5 +99,6 @@ func Start(IP, port string, handler database.DbHandler) {
 }
 
 func shutDown() {
+	// TODO:在服务退出时执行程序需要退出的  <06-07-21, bantana> //
 	level.Info(logger).Log("server shutdown")
 }

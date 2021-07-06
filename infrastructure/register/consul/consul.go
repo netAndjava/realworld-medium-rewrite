@@ -9,6 +9,18 @@ import (
 	"iohttps.com/live/realworld-medium-rewrite/infrastructure/register"
 )
 
+//Config 启动的配置项
+type Config struct {
+	Address string `toml:"address"`
+	Check   Check  `toml:"check"`
+}
+
+type Check struct {
+	Interval string `toml:"interval"`
+	Timeout  string `toml:"timeout"`
+	Notes    string `toml:"notes"`
+}
+
 type consulRegistrar struct {
 	api.Config
 	api.AgentCheck
@@ -17,7 +29,6 @@ type consulRegistrar struct {
 func NewConsulRegister(cfg api.Config, check api.AgentCheck) register.Registrar {
 	return &consulRegistrar{Config: cfg, AgentCheck: check}
 }
-
 func (r *consulRegistrar) Register(serviceIP string, servicePort int, serviceName string, logger log.Logger) (sd.Registrar, error) {
 	//1. 创建Consul客户端连接Consul service
 	var client consul.Client
