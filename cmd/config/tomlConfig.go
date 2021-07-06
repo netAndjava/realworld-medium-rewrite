@@ -22,4 +22,5 @@ func Decode(file string, v interface{}) (toml.MetaData, error) {
 type Server struct {
 	IP   string
 	Port string
+	Name string
 }

@@ -23,11 +23,11 @@ type Check struct {
 
 type consulRegistrar struct {
 	api.Config
-	api.AgentCheck
+	api.AgentServiceCheck
 }
 
-func NewConsulRegister(cfg api.Config, check api.AgentCheck) register.Registrar {
-	return &consulRegistrar{Config: cfg, AgentCheck: check}
+func NewConsulRegister(cfg api.Config, check api.AgentServiceCheck) register.Registrar {
+	return &consulRegistrar{Config: cfg, AgentServiceCheck: check}
 }
 func (r *consulRegistrar) Register(serviceIP string, servicePort int, serviceName string, logger log.Logger) (sd.Registrar, error) {
 	//1. 创建Consul客户端连接Consul service
@@ -35,7 +35,7 @@ func (r *consulRegistrar) Register(serviceIP string, servicePort int, serviceNam
 	{
 		// consulCfg := api.DefaultConfig()
 		// consulCfg.Address = serviceIP + ":" + servicePort
-		consulClient, err := api.NewClient(r.Config)
+		consulClient, err := api.NewClient(&r.Config)
 		if err != nil {
 			logger.Log("create consul client err:", err)
 			return nil, err
@@ -55,8 +55,8 @@ func (r *consulRegistrar) Register(serviceIP string, servicePort int, serviceNam
 		Name:    serviceName,
 		Address: serviceIP,
 		Port:    servicePort,
-		Check:   &r.AgentCheck,
+		Check:   &r.AgentServiceCheck,
 	}
 	//4. 注册服务
-	return consul.NewRegistrar(client, registeration, logger), nil
+	return consul.NewRegistrar(client, &registeration, logger), nil
 }
