@@ -20,7 +20,7 @@ type Endpoints struct {
 	Drop                     endpoint.Endpoint
 }
 
-func makeEndpoints(s article.ArticleService) Endpoints {
+func MakeEndpoints(s article.ArticleService) Endpoints {
 	return Endpoints{
 		Write:                    makeWriteEndpoint(s),
 		ViewDraftArticles:        makeViewDraftArticlesEndpoint(s),

@@ -5,11 +5,17 @@ import (
 	"errors"
 
 	"iohttps.com/live/realworld-medium-rewrite/domain"
+	"iohttps.com/live/realworld-medium-rewrite/infrastructure/database"
+	"iohttps.com/live/realworld-medium-rewrite/interfaces"
 )
 
 // ArticleInteractor article interactor
 type ArticleInteractor struct {
 	ArticleRepo domain.ArticleRepository
+}
+
+func NewArticleInteractor(handler database.DbHandler) ArticleInteractor {
+	return ArticleInteractor{ArticleRepo: interfaces.NewArticleRepo(handler)}
 }
 
 // Write the user writes an article

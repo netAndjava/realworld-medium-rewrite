@@ -2,7 +2,6 @@ package transport
 
 import (
 	"context"
-	"log"
 
 	gt "github.com/go-kit/kit/transport/grpc"
 	"iohttps.com/live/realworld-medium-rewrite/domain"
@@ -22,7 +21,7 @@ type grpcServer struct {
 	drop                     gt.Handler
 }
 
-func NewArticleGRPCServer(endpoints endpoints.Endpoints, logger log.Logger) pb.ArticleServiceServer {
+func NewArticleGRPCServer(endpoints endpoints.Endpoints) pb.ArticleServiceServer {
 	return &grpcServer{
 		write:                    gt.NewServer(endpoints.Write, decodeWriteReq, encodeWriteResp, nil),
 		viewDraftArticles:        gt.NewServer(endpoints.ViewDraftArticles, decodeViewDraftArticlesReq, encodeViewDraftArticleResp, nil),
