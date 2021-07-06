@@ -51,7 +51,7 @@ func (r *consulRegistrar) Register(serviceIP string, servicePort int, serviceNam
 	// }
 	//3. 设置要注册的微服务信息
 	registeration := api.AgentServiceRegistration{
-		ID:      serviceName + uuid.New(),
+		ID:      serviceName + uuid.New().String(),
 		Name:    serviceName,
 		Address: serviceIP,
 		Port:    servicePort,

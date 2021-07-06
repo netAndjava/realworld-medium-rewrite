@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"net"
@@ -61,9 +62,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// TODO:1.指定grpc  2.获取实际物理IP<06-07-21, bantana> //
-	registrar := consul.NewConsulRegister(consulapi.Config{Address: consulConf.Address}, consulapi.AgentServiceCheck{GRPC: "", Interval: consulConf.Check.Interval, Timeout: consulConf.Check.Timeout, Notes: consulConf.Check.Notes})
-
 	f := flag.String("config", "./dev.toml", "please input config file")
 	flag.Parse()
 	var server config.Server
@@ -72,6 +70,10 @@ func main() {
 		level.Error(logger).Log("config file:%s err:%v\n", *f, err)
 		os.Exit(1)
 	}
+
+	// TODO:1.指定grpc  2.获取实际物理IP<06-07-21, bantana> //
+	registrar := consul.NewConsulRegister(consulapi.Config{Address: consulConf.Address}, consulapi.AgentServiceCheck{GRPC: "", Interval: consulConf.Check.Interval, Timeout: consulConf.Check.Timeout, Notes: consulConf.Check.Notes})
+
 	Start(server, handler, registrar)
 }
 
@@ -101,7 +103,8 @@ func Start(server config.Server, handler database.DbHandler, registrar register.
 
 	port, _ := strconv.Atoi(server.Port)
 	//regsiter self
-	rgtrar, err := registrar.Register(server.IP, port, server.Name, logger)
+	ip, _ := getIP()
+	rgtrar, err := registrar.Register(ip, port, server.Name, logger)
 	//6. Register GRPC Service Server
 	if err != nil {
 		logger.Log("Register err:", err)
@@ -118,11 +121,32 @@ func Start(server config.Server, handler database.DbHandler, registrar register.
 	//7. 优雅的退出
 	err = <-errs
 
-	shutDown()
+	//graceful shut down
+	func() {
+		level.Info(logger).Log("server shutdown")
+		rgtrar.Deregister()
+	}()
+
 	level.Error(logger).Log("exit", err)
 }
 
-func shutDown() {
-	// TODO:在服务退出时执行程序需要退出的  <06-07-21, bantana> //
-	level.Info(logger).Log("server shutdown")
+func getIP() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, address := range addrs {
+		// 检查ip地址判断是否回环地址
+		if ipNet, ok := address.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+			if ipNet.IP.To4() != nil {
+				return ipNet.IP.String(), nil
+			}
+
+		}
+	}
+
+	return "", errors.New("Can not find the client ip address")
+
 }
