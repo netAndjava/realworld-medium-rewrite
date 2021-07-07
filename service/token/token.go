@@ -37,16 +37,16 @@ func Start(address string, handler database.DbHandler) {
 }
 
 func (server *tokenServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	tokenID, err := server.tokenItor.Login(domain.NUUID(req.UserId), usecases.GenerateToken)
+	tokenID, err := server.tokenItor.Generate(domain.NUUID(req.UserId), usecases.GenerateToken)
 	return &pb.LoginResponse{TokenId: string(tokenID)}, err
 }
 
-func (server *tokenServer) IsLoggedin(ctx context.Context, req *pb.IsLoggedinRequest) (*pb.IsLoggedinResponse, error) {
-	token, err := server.tokenItor.IsLoggedin(usecases.SUUID(req.TokenId))
+func (server *tokenServer) IsLogedin(ctx context.Context, req *pb.IsLogedinRequest) (*pb.IsLogedinResponse, error) {
+	token, err := server.tokenItor.IsLogedin(usecases.SUUID(req.TokenId))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.IsLoggedinResponse{Token: &pb.Token{TokenId: string(token.ID), UserId: int64(token.UserID)}}, nil
+	return &pb.IsLogedinResponse{Token: &pb.Token{TokenId: string(token.ID), UserId: int64(token.UserID)}}, nil
 
 }
 

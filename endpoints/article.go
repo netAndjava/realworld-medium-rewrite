@@ -86,7 +86,7 @@ func makePublishEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(PublishReq)
 		err := s.Publish(ctx, req.Article)
-		return PunlishResp{}, err
+		return PublishResp{}, err
 	}
 }
 
@@ -102,7 +102,7 @@ func makeViewPublicArticlesEndpoint(s article.ArticleService) endpoint.Endpoint 
 	}
 }
 
-type PunlishResp struct {
+type PublishResp struct {
 }
 
 type ViewPublicArticlesReq struct {
@@ -136,7 +136,7 @@ func makeRepublishEndpoint(s article.ArticleService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(PublishReq)
 		err := s.Republish(ctx, req.Article)
-		return PunlishResp{}, err
+		return PublishResp{}, err
 	}
 }
 

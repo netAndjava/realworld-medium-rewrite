@@ -31,15 +31,16 @@ type TokenInteractor struct {
 	TokenRepos TokenRepository
 }
 
+// uid, tokenService get a token banding uid,
 //Login 判断用户登录
-func (itor TokenInteractor) Login(userID domain.NUUID, generate func() SUUID) (SUUID, error) {
+func (itor TokenInteractor) Generate(userID domain.NUUID, generate func() SUUID) (SUUID, error) {
 	token := generate()
 	err := itor.TokenRepos.Save(Token{ID: token, UserID: userID})
 	return token, err
 }
 
-//IsLoggedin 检查用户是否登录
-func (itor TokenInteractor) IsLoggedin(tokenID SUUID) (Token, error) {
+//IsLogedin 检查用户是否登录
+func (itor TokenInteractor) IsLogedin(tokenID SUUID) (Token, error) {
 	if len(tokenID) == 0 {
 		return Token{}, errors.New("token不能为空")
 	}
