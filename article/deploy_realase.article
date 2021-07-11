@@ -10,14 +10,21 @@ Deploy And Release
 
 * practice
 
+** article service register 
+
+1. config a nameserver
+
+2. 在容器中启动article service，指定容器的dns为配置的nameserver
+
 ** mysql数据库的部署
    
-1. 将部署mysql的容器单独加入一个pod中，使用etcd注册mysql服务的配置
-
-   1.使用容器部署mysql数据库服务
-   
-   2.将mysql的配置自动注册到etcd服务中
-
-   3.修改程序从etcd中获取mysql数据库的配置
+1. 将部署mysql的容器单独加入一个pod中，mysql服务的配置到nameserver中
 
 
+** mysql srevice discovery
+
+1. start mysql in container
+
+2. register mysql to namerserver
+
+3. discovery mysql service with gokit lib

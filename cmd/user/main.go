@@ -25,6 +25,7 @@ func main() {
 	if err != nil {
 		log.Fatal("connect db err:", err)
 	}
+	// defer handler.C
 
 	var serverConf config.Server
 	_, err = config.Decode(*c, &serverConf)

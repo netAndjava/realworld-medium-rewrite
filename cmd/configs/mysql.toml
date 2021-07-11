@@ -6,9 +6,8 @@
 # sql> flush privileges;
 user = "root"
 password = "nqq123"
-# host = "172.31.74.249"
-# port = 3306
-name="mysql"
+host="mysql.service.nqq"
+port = 3306
 network = "tcp"
 dbname = "real_world_medium"
 timeout = "10s"
