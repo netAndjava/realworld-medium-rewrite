@@ -9,13 +9,13 @@ mycontainer=$(buildah from ubuntu:dev)
 mymount=$(buildah mount $mycontainer)
 
 #4. create directory to save config file
-buildah run --isolation=chroot $mycontainer -- sh -c "mkdir -p /var/etcd/"
+buildah run --isolation=chroot $mycontainer -- sh -c "mkdir -p /var/etc/"
 
 #5  copy program and config file
 cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/article $mymount/usr/local/bin
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/dev.toml $mymount/usr/local/bin
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/mysql.toml $mymount/usr/local/bin
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/consul.toml $mymount/usr/local/bin
+cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/dev.toml $mymount/var/etc/
+cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/mysql.toml $mymount/var/etc/
+cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/consul.toml $mymount/var/etc/
 
 #6 config author,user,enviroment information
 buildah config --cmd '["article","-db","/var/etcd/mysql.toml","-consul","/var/etcd/consul.toml","-config","/var/etcd/dev.toml"]' $mycontainer
