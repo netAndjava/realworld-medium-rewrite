@@ -18,7 +18,7 @@ cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/mysql.toml $my
 cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/consul.toml $mymount/var/etc/
 
 #6 config author,user,enviroment information
-buildah config --cmd '["article","-db","/var/etcd/mysql.toml","-consul","/var/etcd/consul.toml","-config","/var/etcd/dev.toml"]' $mycontainer
+buildah config --cmd '["article","-db","/var/etc/mysql.toml","-consul","/var/etc/consul.toml","-config","/var/etc/dev.toml"]' $mycontainer
 
 buildah config --author "nqq@aozsky.com" $mycontainer
 
