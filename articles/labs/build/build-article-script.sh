@@ -12,7 +12,7 @@ mymount=$(buildah mount $mycontainer)
 buildah run --isolation=chroot $mycontainer -- sh -c "mkdir -p /var/etc/"
 
 #5  copy program and config file
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/article $mymount/usr/local/bin
+cp ./article $mymount/usr/local/bin
 cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/dev.toml $mymount/var/etc/
 cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/mysql.toml $mymount/var/etc/
 cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/consul.toml $mymount/var/etc/

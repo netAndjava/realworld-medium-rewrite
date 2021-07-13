@@ -9,4 +9,4 @@ sh ~/go/src/iohttps.com/live/realworld-medium-rewrite/articles/labs/clean_articl
 # 4. run container and start service
 sh ~/go/src/iohttps.com/live/realworld-medium-rewrite/articles/labs/article.sh
 
-rm ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/article
+rm article
