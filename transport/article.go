@@ -22,16 +22,17 @@ type grpcServer struct {
 }
 
 func NewArticleGRPCServer(endpoints endpoints.Endpoints) pb.ArticleServiceServer {
+
 	return &grpcServer{
-		write:                    gt.NewServer(endpoints.Write, decodeWriteReq, encodeWriteResp, nil),
-		viewDraftArticles:        gt.NewServer(endpoints.ViewDraftArticles, decodeViewDraftArticlesReq, encodeViewDraftArticleResp, nil),
+		write:                    gt.NewServer(endpoints.Write, decodeWriteReq, encodeWriteResp),
+		viewDraftArticles:        gt.NewServer(endpoints.ViewDraftArticles, decodeViewDraftArticlesReq, encodeViewDraftArticleResp),
 		view:                     gt.NewServer(endpoints.View, decodeViewReq, encodeViewResp),
 		publish:                  gt.NewServer(endpoints.Publish, decodePublishReq, encodePublishResp),
-		viewPublicArticles:       gt.NewServer(endpoints.ViewPublicArticles, decodeViewPublicArticleReq, encodeViewPublicArticleResp, nil),
-		viewRecentArticles:       gt.NewServer(endpoints.ViewRecentArticles, nil, encodeViewRecentArticlesResp, nil),
-		viewDraftOfPublicArticle: gt.NewServer(endpoints.ViewDraftOfPublicArticle, decodeViewReq, encodeViewResp, nil),
-		republish:                gt.NewServer(endpoints.Republish, decodePublishReq, encodePublishResp, nil),
-		drop:                     gt.NewServer(endpoints.Drop, decodeDropReq, encodeDropResp, nil),
+		viewPublicArticles:       gt.NewServer(endpoints.ViewPublicArticles, decodeViewPublicArticleReq, encodeViewPublicArticleResp),
+		viewRecentArticles:       gt.NewServer(endpoints.ViewRecentArticles, nil, encodeViewRecentArticlesResp),
+		viewDraftOfPublicArticle: gt.NewServer(endpoints.ViewDraftOfPublicArticle, decodeViewReq, encodeViewResp),
+		republish:                gt.NewServer(endpoints.Republish, decodePublishReq, encodePublishResp),
+		drop:                     gt.NewServer(endpoints.Drop, decodeDropReq, encodeDropResp),
 	}
 }
 
@@ -171,10 +172,10 @@ func encodeDropResp(ctx context.Context, resp interface{}) (interface{}, error) 
 	return endpoints.DropResp{}, nil
 }
 
-func (s *grpcServer) mustEmbedUnimplementedArticleServiceServer() {
-	//不知道这个函数什么作用
-	panic("not implemented") // TODO: Implement
-}
+// func (s *grpcServer) mustEmbedUnimplementedArticleServiceServer() {
+// 	//不知道这个函数什么作用
+// 	panic("not implemented") // TODO: Implement
+// }
 
 func ConvertArticle(art domain.Article) *pb.Article {
 	return &pb.Article{Id: int64(art.ID), Title: art.Title, Content: art.Content, Status: int32(art.Status), AuthorId: int64(art.AuthorID)}

@@ -89,7 +89,7 @@ func Start(server config.Server, handler database.DbHandler, registrar register.
 	errs := make(chan error)
 	//5. 监控退出信号
 	go func() {
-		c := make(chan os.Signal)
+		c := make(chan os.Signal, 1)
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGABRT)
 		errs <- fmt.Errorf("%s", <-c)
 	}()
@@ -146,6 +146,6 @@ func getIP() (string, error) {
 		}
 	}
 
-	return "", errors.New("Can not find the client ip address")
+	return "", errors.New("can not find the client ip address")
 
 }

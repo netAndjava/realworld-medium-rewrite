@@ -29,7 +29,7 @@ func MakeEndpoints(s article.ArticleService) Endpoints {
 		ViewPublicArticles:       makeViewPublicArticlesEndpoint(s),
 		ViewRecentArticles:       makeViewRecentArticlesEndpoint(s),
 		ViewDraftOfPublicArticle: makeViewDraftOfPublicArticleEndpoint(s),
-		Republish:                makePublishEndpoint(s),
+		Republish:                makeRepublishEndpoint(s),
 		Drop:                     makeDropEndpoint(s),
 	}
 }
