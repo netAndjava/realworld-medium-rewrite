@@ -1,5 +1,4 @@
-
-address = "ns.consul.8500"
+address = "http://ns.service.nqq:8500"
 
 [check]
 interval="10s"

@@ -34,7 +34,12 @@ func NewMysql(c Config) (database.DbHandler, error) {
 	if len(c.Charset) == 0 {
 		c.Charset = "utf8"
 	}
-	return NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=%s&&timeout=%s", c.User, c.Password, c.Network, c.Host, c.Port, c.Name, c.Charset, c.Timeout))
+	handler, err := NewMysqlHandler(fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=%s&&timeout=%s", c.User, c.Password, c.Network, c.Host, c.Port, c.Name, c.Charset, c.Timeout))
+	if err != nil {
+		return handler, err
+	}
+	err = handler.Ping()
+	return handler, err
 }
 
 //NewMysqlHandler new mysqlHandler

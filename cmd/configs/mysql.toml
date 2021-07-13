@@ -9,5 +9,5 @@ password = "nqq123"
 host="mysql.service.nqq"
 port = 3306
 network = "tcp"
-dbname = "real_world_medium"
+dbname = "realworld"
 timeout = "10s"

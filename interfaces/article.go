@@ -16,7 +16,7 @@ func NewArticleRepo(helper database.DbHandler) domain.ArticleRepository {
 
 //Create .....
 func (repo *ArticleRepo) Create(a domain.Article) error {
-	_, err := repo.Handler.Execute(`insert into t_article (id,title,content,status,userID) values(?,?,?,?,?)`, a.ID, a.Title, a.Status, a.AuthorID)
+	_, err := repo.Handler.Execute(`insert into t_article (id,title,content,status,userId) values(?,?,?,?,?)`, a.ID, a.Title, a.Status, a.AuthorID)
 	return err
 }
 
@@ -54,7 +54,7 @@ func (repo *ArticleRepo) ViewPublicArticles(userID domain.NUUID) ([]domain.Artic
 //GetAuthorArticleByStatus ........
 func (repo *ArticleRepo) GetAuthorArticleByStatus(userID domain.NUUID, status domain.PublicStatus) ([]domain.Article, error) {
 	var articles []domain.Article
-	rows, err := repo.Handler.Query(`select id,title,content where status=?,userId=?`, status, userID)
+	rows, err := repo.Handler.Query(`select id,title,content from t_article where status=?,userId=?`, status, userID)
 	if err != nil {
 		return []domain.Article{}, err
 	}

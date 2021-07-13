@@ -37,11 +37,13 @@ func init() {
 }
 
 func main() {
+	dbConfig := flag.String("db", "../configs/mysql.toml", "please input config file of db")
+	consulCfgPath := flag.String("consul", "../configs/consul.toml", "please input config file path for consul")
+	f := flag.String("config", "./dev.toml", "please input config file")
+	flag.Parse()
 
 	//init db handler
 	var dbConf mysql.Config
-	dbConfig := flag.String("db", "./configs/mysql.toml", "please input config file of db")
-	flag.Parse()
 	_, err := config.Decode(*dbConfig, &dbConf)
 	if err != nil {
 		level.Error(logger).Log("decode config file:%s of db err:%v", *dbConfig, err)
@@ -55,19 +57,16 @@ func main() {
 	}
 
 	var consulConf consul.Config
-	consulCfgPath := flag.String("consul", "../configs/consul.toml", "please input config file path for consul")
 	config.Decode(*consulCfgPath, &consulConf)
 	if err != nil {
-		level.Error(logger).Log("decode config file:%s of consul err:%v", *dbConfig, err)
+		level.Error(logger).Log("decode consul file:%s of consul err:%v", *dbConfig, err)
 		os.Exit(1)
 	}
 
-	f := flag.String("config", "./dev.toml", "please input config file")
-	flag.Parse()
 	var server config.Server
 	_, err = config.Decode(*f, &server)
 	if err != nil {
-		level.Error(logger).Log("config file:%s err:%v\n", *f, err)
+		level.Error(logger).Log("decode config file:%s err:%v\n", *f, err)
 		os.Exit(1)
 	}
 
@@ -123,8 +122,8 @@ func Start(server config.Server, handler database.DbHandler, registrar register.
 
 	//graceful shut down
 	func() {
-		level.Info(logger).Log("server shutdown")
 		rgtrar.Deregister()
+		level.Info(logger).Log("server shutdown")
 	}()
 
 	level.Error(logger).Log("exit", err)
