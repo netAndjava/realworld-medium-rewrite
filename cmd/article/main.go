@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -70,8 +71,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	// TODO:1.指定grpc  2.获取实际物理IP<06-07-21, bantana> //
-	registrar := consul.NewConsulRegister(consulapi.Config{Address: consulConf.Address}, consulapi.AgentServiceCheck{GRPC: "", Interval: consulConf.Check.Interval, Timeout: consulConf.Check.Timeout, Notes: consulConf.Check.Notes})
+	// TODO:1.指定grpc  2.获取实际物理IP<06-07-21, nqq> 发呆去了? 在找资料，不知道这里grpc服务consosul如何check//
+	// 通常我们做grpc check ,在产品环境中会用envoy去做,因为consul的check是需要自己扩展的,
+	// consul的connect proxy目前只是支持layer 4, 但是grpc在layer 7
+	// consul只是集成了简单的check机制, envoy这些专门的lb proxy把整个grpc协议的详细设计包括lb都实现了
+	// ,所以我们通常不会用consul的check去做复杂高性能的check,
+	// 官方例子一般是用python或者go实现一个client去get, return预期的则返回ok.
+	// 你可以在这里做些简单的比如ping,来假装你做了就好,😄.
+	// google.golang.org/grpc/health/grpc_health_v1.HealthServer 你是在找这个?
+	ip, _ := getIP()
+	registrar := consul.NewConsulRegister(consulapi.Config{Address: consulConf.Address}, consulapi.AgentServiceCheck{GRPC: fmt.Sprintf("%v:%v/%v", ip, server.Port, server.Name), Interval: consulConf.Check.Interval, Timeout: consulConf.Check.Timeout, Notes: consulConf.Check.Notes})
 
 	Start(server, handler, registrar)
 }
@@ -113,7 +122,8 @@ func Start(server config.Server, handler database.DbHandler, registrar register.
 	go func() {
 		baseServer := grpc.NewServer()
 		api.RegisterArticleServiceServer(baseServer, grpcServer)
-		level.Info(logger).Log("msg", fmt.Sprintf("Server start on adderss:%s%s success!", server.IP, server.Port))
+		grpc_health_v1.RegisterHealthServer(baseServer, &article.HealthImpl{})
+		level.Info(logger).Log("msg", fmt.Sprintf("Server start on adderss: %s:%s success!", server.IP, server.Port))
 		baseServer.Serve(listener)
 	}()
 
