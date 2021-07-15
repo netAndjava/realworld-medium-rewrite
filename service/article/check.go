@@ -15,7 +15,7 @@ type HealthImpl struct{}
 // <14-07-21, nqq> //
 
 func (h *HealthImpl) Check(ctx context.Context, req *grpc_health_v1.HealthCheckRequest) (*grpc_health_v1.HealthCheckResponse, error) {
-	fmt.Println("this is check")
+	fmt.Println("this is checking")
 	return &grpc_health_v1.HealthCheckResponse{
 		Status: grpc_health_v1.HealthCheckResponse_SERVING,
 	}, nil
