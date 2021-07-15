@@ -9,16 +9,16 @@ mycontainer=$(buildah from ubuntu:dev)
 mymount=$(buildah mount $mycontainer)
 
 #4. create directory to save config file
-buildah run --isolation=chroot $mycontainer -- sh -c "mkdir -p /var/etc/"
+buildah run --isolation=chroot $mycontainer -- sh -c "mkdir -p /usr/local/etc/article/"
 
 #5  copy program and config file
 cp ./article $mymount/usr/local/bin
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/dev.toml $mymount/var/etc/
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/mysql.toml $mymount/var/etc/
-cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/consul.toml $mymount/var/etc/
+cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/dev.toml $mymount/usr/local/etc/article/
+cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/mysql.toml $mymount/usr/local/etc/article/
+cp ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/configs/consul.toml $mymount/usr/local/etc/article/
 
 #6 config author,user,enviroment information
-buildah config --cmd '["article","-db","/var/etc/mysql.toml","-consul","/var/etc/consul.toml","-config","/var/etc/dev.toml"]' $mycontainer
+buildah config --cmd '["article","-db","/usr/local/etc/article/mysql.toml","-consul","/usr/local/etc/article/consul.toml","-config","/usr/local/etc/article/dev.toml"]' $mycontainer
 
 buildah config --author "nqq@aozsky.com" $mycontainer
 

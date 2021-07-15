@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -ex
 
 # 1. build
 go build -o article ~/go/src/iohttps.com/live/realworld-medium-rewrite/cmd/article/main.go
