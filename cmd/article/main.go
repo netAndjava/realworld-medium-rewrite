@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -124,6 +125,8 @@ func Start(server config.Server, handler database.DbHandler, registrar register.
 		api.RegisterArticleServiceServer(baseServer, grpcServer)
 		grpc_health_v1.RegisterHealthServer(baseServer, &article.HealthImpl{})
 		level.Info(logger).Log("msg", fmt.Sprintf("Server start on adderss: %s:%s success!", server.IP, server.Port))
+		// Register reflection service on gRPC server. 用于grpcurl查询服务接口用
+		reflection.Register(baseServer)
 		baseServer.Serve(listener)
 	}()
 
