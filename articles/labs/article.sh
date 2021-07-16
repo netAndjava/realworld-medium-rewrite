@@ -12,7 +12,7 @@ podman network create $network
 podman pod create --name $pod --share net,cgroup,ipc
 
 #1. create container and run program
-podman run -dt --name $s1 --hostname $s1 --network $network --pod $pod --dns $ip_ns --dns-search ".service.nqq" -P hub.iohttps.com/article:dev bash
+podman run -dt --name $s1 --hostname $s1 --network $network --pod $pod --dns $ip_ns --dns-search "service.nqq" -P hub.iohttps.com/article:dev bash
 
 podman exec -dt $s1 article -db /usr/local/etc/article/mysql.toml -consul /usr/local/etc/article/consul.toml -config /usr/local/etc/article/dev.toml 
 
